@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1001735908357",
+    "project_id": "gpgropup",
+    "storage_bucket": "gpgropup.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001735908357:android:4a5ef85afbe37ad873806c",
+        "android_client_info": {
+          "package_name": "com.ad.gpgroup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1001735908357-3fq9mngc3rii9ldddndmlvvmu6ije67o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ad.gpgroup",
+            "certificate_hash": "c76d1c6568fb07cab0a3b15ba5b4a7d69f7695b2"
+          }
+        },
+        {
+          "client_id": "1001735908357-daiut8tfvt9ur7i06vg9ed9untcrdlcn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdfGEVBJ2I0pTVe5DXpzB61jrdx4IqNlY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1001735908357-daiut8tfvt9ur7i06vg9ed9untcrdlcn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
