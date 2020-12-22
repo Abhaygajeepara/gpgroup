@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
+import 'package:gpgroup/app_localization/app_localizations.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -45,7 +46,7 @@ class _RegisterState extends State<Register> {
 
                     SizedBox(height: 10,),
                     Text(
-                      'Register',
+                     'Register',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize:CommonAssets.titletextsize,
@@ -70,17 +71,17 @@ class _RegisterState extends State<Register> {
                         child: Column(
                           children: [
                             TextFormField(
-                              decoration: loginAndsignincommoninputdecoration.copyWith(labelText: 'Email'),
-                              validator: (val) => val.isEmpty ?'Enter The Correct Email':null,
+                              decoration: loginAndsignincommoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Email')),
+                              validator: (val) => val.isEmpty ?AppLocalizations.of(context).translate('EnterEmail'):null,
                               onChanged: (val)=> email =val,
                             ),
                             SizedBox(height:20,),
                             TextFormField(
                               obscureText: _vision,
-                              decoration: loginAndsignincommoninputdecoration.copyWith(labelText: 'Password',suffixIcon: IconButton(
+                              decoration: loginAndsignincommoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Password'),suffixIcon: IconButton(
                                 onPressed:_visibility,
                                 icon:_vision == true ? Icon(Icons.visibility_off,color:  Colors.black,):Icon(Icons.visibility,color: Colors.black),),),
-                              validator: (val) => val.isEmpty ?'Enter The Password':null,
+                              validator: (val) => val.isEmpty ?AppLocalizations.of(context).translate('EnterPassword'):null,
                               onChanged: (val)=> password =val,
 
                             ),
@@ -95,7 +96,7 @@ class _RegisterState extends State<Register> {
                                   print(result);
                                   if(result == 'email-already-in-use'){
                                     setState(() {
-                                      error = 'Email Is Exist';
+                                      error = AppLocalizations.of(context).translate('EmailIsExist');
                                     });
 
                                   }
@@ -107,7 +108,7 @@ class _RegisterState extends State<Register> {
                                 }
                               },
                               child: Text(
-                                'Register In',
+                                AppLocalizations.of(context).translate('Register'),
                                 style: TextStyle(
                                     color: Colors.white
                                 ),
@@ -150,8 +151,8 @@ class _RegisterState extends State<Register> {
                                     Divider(),
                                     Expanded(
                                       flex:2,child: Text(
-                                      'Register With Google'
-                                      ,style: TextStyle(fontSize: 16.0),
+                                        AppLocalizations.of(context).translate('RegisterWithGoogle'),
+                                      style: TextStyle(fontSize: 16.0),
                                     ),)
                                   ],
                                 ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gpgroup/Commonassets/Widgets/Bottombar.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
-import 'package:gpgroup/Pages/Rules/Rules.dart';
+import 'file:///E:/Work/Flutter/gpgroup/lib/Pages/Workshop/Structure/buildingstructure.dart';
+
+
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 
@@ -20,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
             AppLocalizations.of(context).translate('second_string'),
           ),
           Text(
-            AppLocalizations.of(context).translate('first_string'),
+            AppLocalizations.of(context).translate('Sites'),
           ),
           RaisedButton(
             onPressed: ()async{
@@ -34,13 +37,14 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: (){
           Navigator.push(context, PageRouteBuilder(
-              pageBuilder: (_,__,____) => Rules(),
+              pageBuilder: (_,__,____) => BuildingStructure(),
             transitionDuration: Duration(milliseconds: 1),
           ));
         },
         backgroundColor: Colors.black,
         child: Icon(Icons.business),
       ),
+      bottomNavigationBar:CustomButtomBar(context)
     );
   }
 }

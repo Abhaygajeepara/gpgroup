@@ -1,0 +1,24 @@
+{
+  "first_string": "नमस्ते अभय",
+  "second_string": "स्वागत हे",
+  "Flats": "फ्लैटों",
+  "Floors": "मंजिलों",
+  "Email": "ईमेल",
+  "Login": "लॉग इन",
+  "Password": "पासवर्ड",
+  "CreateAccount": "खाता बनाएं ",
+  "LogInWithGoogle": "गूगल के साथ लॉगिन करें",
+  "Register": "रजिस्टर",
+  "RegisterWithGoogle": "गूगल के साथ रजिस्टर करें",
+
+  "InvalidEmail": "अवैध ईमेल",
+  "WrongPassword": "गलत पासवर्ड",
+  "EmailIsNotExist": "ईमेल मौजूद नहीं है",
+  "EnterEmail": "ईमेल दर्ज करें",
+  "EnterPassword": "पास वर्ड दर्ज करें",
+  "EmailIsExist": "ईमेल मौजूद है",
+
+  "Home": "હોમ",
+  "Sites": "साइटों",
+  "Setting": "सेटिंग"
+}

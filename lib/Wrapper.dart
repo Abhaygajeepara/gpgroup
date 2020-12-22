@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Pages/Home.dart';
-import 'file:///D:/app/gpgroup/lib/Pages/Auth/LogIn.dart';
+
+import 'Pages/Auth/LogIn.dart';
+
 
 class Wrapper extends StatefulWidget {
   @override

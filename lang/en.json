@@ -1,4 +1,5 @@
 {
+
   "first_string": "Hello Abhay",
   "second_string": "Welcome",
   "Flats": "Flats",
@@ -7,5 +8,18 @@
   "Login": "Log In",
   "Password": "Password",
   "CreateAccount": "Create Account",
-  "loginWithgoogle": "LogIn With Google"
+  "LogInWithGoogle": "LogIn With Google",
+  "Register": "Register",
+  "RegisterWithGoogle": "Register With Google",
+
+  "InvalidEmail": "Invalid Email",
+  "WrongPassword": "Wrong Password",
+  "EmailIsNotExist": "Email Is Not Exist",
+  "EnterEmail": "Enter The Correct Email",
+  "EnterPassword": "Enter The Password",
+  "EmailIsExist": "Email Is Exist",
+
+  "Home": "Home",
+  "Sites": "Sites",
+  "Setting": "Setting"
 }

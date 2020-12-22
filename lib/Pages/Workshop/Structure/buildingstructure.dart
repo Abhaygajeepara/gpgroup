@@ -3,12 +3,12 @@ import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
-class Rules extends StatefulWidget {
+class BuildingStructure extends StatefulWidget {
   @override
-  _RulesState createState() => _RulesState();
+  _BuildingStructureState createState() => _BuildingStructureState();
 }
 
-class _RulesState extends State<Rules> {
+class _BuildingStructureState extends State<BuildingStructure> {
 final _formkey = GlobalKey<FormState>();
   int nu =15;
   int floors = 0;

@@ -6,6 +6,7 @@ import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart'
 import 'package:gpgroup/Pages/Auth/Register.dart';
 import 'package:gpgroup/Pages/Home.dart';
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
+import 'package:gpgroup/app_localization/app_localizations.dart';
 class LogIn extends StatefulWidget {
   @override
   _LogInState createState() => _LogInState();
@@ -50,7 +51,7 @@ class _LogInState extends State<LogIn> {
 
                     SizedBox(height: 10,),
                     Text(
-                      'Log In',
+                      'Login',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize:CommonAssets.titletextsize,
@@ -75,14 +76,14 @@ class _LogInState extends State<LogIn> {
                         child: Column(
                           children: [
                             TextFormField(
-                              decoration: loginAndsignincommoninputdecoration.copyWith(labelText: 'Email'),
-                              validator: (val) => val.isEmpty ?'Enter The Correct Email':null,
+                              decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Email')),
+                              validator: (val) => val.isEmpty ?AppLocalizations.of(context).translate('EnterEmail'):null,
                               onChanged: (val)=> email =val,
                             ),
                             SizedBox(height:20,),
                             TextFormField(
                             obscureText: _vision,
-                              decoration: loginAndsignincommoninputdecoration.copyWith(labelText: 'Password',suffixIcon: IconButton(
+                              decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Password'),suffixIcon: IconButton(
                                 onPressed:_visibility,
                                 icon:_vision == true ? Icon(Icons.visibility_off,color:  Colors.black,):Icon(Icons.visibility,color: Colors.black),),
                                 errorStyle: TextStyle(
@@ -92,7 +93,7 @@ class _LogInState extends State<LogIn> {
 
 
                                 ),),
-                              validator: (val) => val.isEmpty ?'Enter The Password':null,
+                              validator: (val) => val.isEmpty ?AppLocalizations.of(context).translate('EnterPassword'):null,
                               onChanged: (val)=> password =val,
 
                             ),
@@ -107,18 +108,18 @@ class _LogInState extends State<LogIn> {
                                   print(result);
                                   if(result == 'invalid-email'){
                                     setState(() {
-                                      error = 'Invalid Email';
+                                      error = AppLocalizations.of(context).translate('InvalidEmail');
                                     });
 
                                   }
                                   else if(result == 'wrong-password'){
                                     setState(() {
-                                      error = 'Wrong Password';
+                                      error = AppLocalizations.of(context).translate('WrongPassword');
                                     });
 
                                   } else if(result == 'user-not-found'){
                                     setState(() {
-                                      error = 'Email Is Not Exist';
+                                      error = AppLocalizations.of(context).translate('EmailIsNotExist');
                                     });
 
                                   }
@@ -129,7 +130,7 @@ class _LogInState extends State<LogIn> {
                                 }
                               },
                               child: Text(
-                                'Log In',
+                                AppLocalizations.of(context).translate('Login'),
                                 style: TextStyle(
                                     color: Colors.white
                                 ),
@@ -148,7 +149,7 @@ class _LogInState extends State<LogIn> {
                                 );
                               },
                               child: Text(
-                                'Create A Account',
+                                AppLocalizations.of(context).translate('CreateAccount'),
                                 style: TextStyle(
                                   color: Colors.blue,
                                   fontSize: 16.0,
@@ -189,8 +190,8 @@ class _LogInState extends State<LogIn> {
                                     Divider(),
                                     Expanded(
                                       flex:2,child: Text(
-                                      'LogIn With Google'
-                                      ,style: TextStyle(fontSize: 16.0),
+                                        AppLocalizations.of(context).translate('LogInWithGoogle'),
+                                      style: TextStyle(fontSize: 16.0),
                                     ),)
                                   ],
                                 ),

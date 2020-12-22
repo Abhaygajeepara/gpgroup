@@ -60,7 +60,7 @@ flutter:
     - assets/
     - lang/en.json
     - lang/gu.json
-    - lang/sk.json
+    - lang/hi.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

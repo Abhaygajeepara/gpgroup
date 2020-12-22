@@ -50,6 +50,7 @@ Future<dynamic> loginWithGoogle() async {
 
 
   } catch (e) {
+    print('error');
     print(e.code);
 
     return false;

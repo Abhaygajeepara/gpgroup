@@ -7,5 +7,18 @@
   "Login": "પ્રવેશ કરો",
   "Password": "પાસવર્ડ",
   "CreateAccount": "ખાતું બનાવો",
-  "LogInWithGoogle": "ગૂગલ સાથે લોગઇન"
+  "LogInWithGoogle": "ગૂગલ સાથે લોગઇન",
+  "Register": "નોંધણી કરો",
+  "RegisterWithGoogle": "ગૂગલ સાથે નોંધણી કરો",
+
+  "InvalidEmail": "અમાન્ય ઇમેઇલ",
+  "WrongPassword": "ખોટો પાસવર્ડ",
+  "EmailIsNotExist": "ઇમેઇલ અસ્તિત્વમાં નથી",
+  "EnterEmail": "ઇમેઇલ દાખલ કરો",
+  "EnterPassword": "પાસવર્ડ દાખલ કરો",
+  "EmailIsExist": "ઇમેઇલ અસ્તિત્વમાં છે",
+
+  "Home": "હોમ",
+  "Sites": "સાઇટ્સ",
+  "Setting": "સેટિંગ"
 }
