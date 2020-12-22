@@ -34,17 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.push(context, PageRouteBuilder(
-              pageBuilder: (_,__,____) => BuildingStructure(),
-            transitionDuration: Duration(milliseconds: 1),
-          ));
-        },
-        backgroundColor: Colors.black,
-        child: Icon(Icons.business),
-      ),
-      bottomNavigationBar:CustomButtomBar(context)
+
+      bottomNavigationBar:CustomButtomBar(context,0)
     );
   }
 }
