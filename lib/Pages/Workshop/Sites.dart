@@ -10,23 +10,24 @@ class Sites extends StatefulWidget {
 class _SitesState extends State<Sites> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: CommonAppbar(),
-        body: Text('Display Number Available Sites'),
-
-
-        floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            Navigator.push(context, PageRouteBuilder(
-              pageBuilder: (_,__,____) => BuildingStructure(),
-              transitionDuration: Duration(milliseconds: 1),
-            ));
-          },
-          backgroundColor: Colors.black,
-          child: Icon(Icons.business),
-        ),
-        bottomNavigationBar:CustomButtomBar(context,1)
-    );
+    return Text('Display Number Available Sites');
+    // return Scaffold(
+    //     appBar: CommonAppbar(),
+    //     body: Text('Display Number Available Sites'),
+    //
+    //
+    //     floatingActionButton: FloatingActionButton(
+    //       onPressed: (){
+    //         Navigator.push(context, PageRouteBuilder(
+    //           pageBuilder: (_,__,____) => BuildingStructure(),
+    //           transitionDuration: Duration(milliseconds: 1),
+    //         ));
+    //       },
+    //       backgroundColor: Colors.black,
+    //       child: Icon(Icons.business),
+    //     ),
+    //     bottomNavigationBar:CustomButtomBar(context,1)
+    // );
   }
   }
 

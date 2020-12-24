@@ -10,36 +10,32 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: CommonAppbar(),
-        body:Container(
-          child: ListView(
-            children: [
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Profile'),
+    return Container(
+      child: ListView(
+        children: [
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profile'),
 
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.rule),
-                  title: Text('Rules'),
-
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.language),
-                  title: Text('Language'),
-
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-        bottomNavigationBar:CustomButtomBar(context,2)
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.rule),
+              title: Text('Rules'),
+
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: Icon(Icons.language),
+              title: Text('Language'),
+
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

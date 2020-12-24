@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Pages/Home.dart';
+import 'package:gpgroup/Providers/BotttomNavigationProvider.dart';
+import 'package:provider/provider.dart';
 
 import 'Pages/Auth/LogIn.dart';
 
@@ -23,7 +25,10 @@ class _WrapperState extends State<Wrapper> {
           return LogIn();
         }
         else{
-          return HomeScreen();
+          return ChangeNotifierProvider<BottomNavigationProvider>.value(
+            value: BottomNavigationProvider(),
+              child: HomeScreen()
+          );
         }
       },
     );

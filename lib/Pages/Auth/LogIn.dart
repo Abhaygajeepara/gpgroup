@@ -125,9 +125,7 @@ class _LogInState extends State<LogIn> {
                                   }
 
                                 }
-                                else{
-                                  return null;
-                                }
+
                               },
                               child: Text(
                                 AppLocalizations.of(context).translate('Login'),
