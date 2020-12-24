@@ -16,16 +16,7 @@ class _SitesState extends State<Sites> {
     //     body: Text('Display Number Available Sites'),
     //
     //
-    //     floatingActionButton: FloatingActionButton(
-    //       onPressed: (){
-    //         Navigator.push(context, PageRouteBuilder(
-    //           pageBuilder: (_,__,____) => BuildingStructure(),
-    //           transitionDuration: Duration(milliseconds: 1),
-    //         ));
-    //       },
-    //       backgroundColor: Colors.black,
-    //       child: Icon(Icons.business),
-    //     ),
+    //     floatingActionButton:
     //     bottomNavigationBar:CustomButtomBar(context,1)
     // );
   }

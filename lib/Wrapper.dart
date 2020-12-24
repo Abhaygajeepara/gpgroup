@@ -16,6 +16,10 @@ class Wrapper extends StatefulWidget {
 class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider<BottomNavigationProvider>.value(
+        value: BottomNavigationProvider(),
+        child: HomeScreen()
+    );
     return StreamBuilder(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context,AsyncSnapshot<User> snapshot) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Widgets/Bottombar.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
+import 'package:gpgroup/Pages/Workshop/Structure/buildingstructure.dart';
 import 'package:gpgroup/Providers/BotttomNavigationProvider.dart';
 
 
@@ -27,6 +28,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: CommonAppbar(),
       body: HomeBody(bottomTab: bottomTab,),
+        floatingActionButton: bottomTab == 1 ? FloatingActionButton(
+              onPressed: (){
+                Navigator.push(context, PageRouteBuilder(
+                  pageBuilder: (_,__,____) => BuildingStructure(),
+                  transitionDuration: Duration(milliseconds: 1),
+                ));
+              },
+              backgroundColor: Colors.black,
+              child: Icon(Icons.business),
+            ) : Container(),
         bottomNavigationBar:CustomButtomBar(context,bottomTab,Provider.of<BottomNavigationProvider>(context,listen: false)),
     );
   }

@@ -12,7 +12,7 @@ class _BuildingStructureState extends State<BuildingStructure> {
 final _formkey = GlobalKey<FormState>();
   int nu =15;
   int floors = 0;
-int flats = 0;
+int flats = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -35,19 +35,23 @@ int flats = 0;
                 children: [
                   Expanded(
                     child: TextFormField(
-                      decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Floors'),),
+                      maxLength: 2,
+                      decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Floors'),counterText: ""),
                       // validator: (val) => val.isEmpty ?'Enter The Number':null,
                       onChanged: (val)=> floors =int.parse(val),
                     ),
                   ),
                   SizedBox(width: 10,),
-                  Expanded(
-                    child: TextFormField(
-                      decoration: loginAndsignincommoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Flats'),),
-                      // validator: (val) => val.isEmpty ?'Enter The Number':null,
-                      onChanged: (val)=> flats =int.parse(val),
+
+                    Expanded(
+                      child: TextFormField(
+                        maxLength: 1,
+                        decoration: loginAndsignincommoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Flats'),counterText: ""),
+                        validator: (val) => val.isEmpty ?'Enter The Number':null,
+                        onChanged: (val)=> flats =int.parse(val),
+                      ),
                     ),
-                  )
+
                 ],
               ),
             ),
@@ -110,7 +114,7 @@ print(floor.toString());
                     itemCount: flat,itemBuilder: (context,index){
                       int newflat = index  + 1;
                   return Container(
-                    width: width* 0.8 / flat ,
+                    width: width* 0.85 / flat ,
                     height: height / nu,
                     child: Card(
                       child: Center(
