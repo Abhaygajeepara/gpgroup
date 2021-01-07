@@ -17,6 +17,7 @@ Widget CustomButtomBar(BuildContext context,int pageindex,BottomNavigationProvid
     currentIndex: pageindex,
     items: [
       BottomNavigationBarItem(
+
         icon: Icon(Icons.home),
         label: AppLocalizations.of(context).translate('Home'),
       ),

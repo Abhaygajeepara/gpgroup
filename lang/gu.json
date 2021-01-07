@@ -20,5 +20,21 @@
 
   "Home": "હોમ",
   "Sites": "સાઇટ્સ",
-  "Setting": "સેટિંગ"
+  "Setting": "સેટિંગ",
+
+  "Profile": "પ્રોફાઇલ",
+  "Rules": "નિયમો",
+  "Language": "ભાષા",
+  "LogOut": "લૉગ આઉટ",
+
+  "AddRules": "Add Rules",
+  "EnterRuleInEnglish": "અંગ્રેજીમાં નિયમ દાખલ કરો",
+  "EnterRuleInGujarati": "ગુજરાતીમાં નિયમ દાખલ કરો",
+  "EnterRuleInHindi": "હિન્દીમાં નિયમ દાખલ કરો",
+  "AddRules": "નિયમો ઉમેરો",
+
+  "YouWantToDeleteThisRule": "તમે આ નિયમ ને કાઢી નાખવા માંગો છો ?",
+  "AreYouSure": "શું તમને ખાતરી છે?",
+  "Cancel": "રદ કરો",
+  "Delete": "કાઢી નાંખવું"
 }

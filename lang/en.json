@@ -21,5 +21,21 @@
 
   "Home": "Home",
   "Sites": "Sites",
-  "Setting": "Setting"
+  "Setting": "Setting",
+
+  "Profile": "Profile",
+  "Rules": "Rules",
+  "Language": "Language",
+  "LogOut": "Log Out",
+
+  "AddRules": "Add Rules",
+  "EnterRuleInEnglish": "Enter Rule In English",
+  "EnterRuleInGujarati": "Enter Rule In Gujarati",
+  "EnterRuleInHindi": "Enter Rule In Hindi",
+  "AddRules": "Add Rules",
+
+  "YouWantToDeleteThisRule": "You Want To Delete This Rule ?",
+  "AreYouSure": "Are You Sure ?",
+  "Cancel": "Cancel",
+  "Delete": "Delete"
 }

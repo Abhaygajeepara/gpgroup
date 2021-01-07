@@ -10,7 +10,7 @@ class BuildingStructure extends StatefulWidget {
 
 class _BuildingStructureState extends State<BuildingStructure> {
 final _formkey = GlobalKey<FormState>();
-  int nu =15;
+  // int nu =15;
   int floors = 0;
 int flats = 2;
 
@@ -20,7 +20,7 @@ int flats = 2;
     final height = MediaQuery.of(context).size.height;
   
     return Scaffold(
-      appBar: CommonAppbarForHome(context),
+      appBar: CommonAppbar(Container()),
       body:Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -28,31 +28,34 @@ int flats = 2;
           height: height,
           child: Column(
             children: [
-            Form(
-              key: _formkey,
-              child: Row(
+            Container(
+              height: height *0.08,
+              child: Form(
+                key: _formkey,
+                child: Row(
 
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      maxLength: 2,
-                      decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Floors'),counterText: ""),
-                      // validator: (val) => val.isEmpty ?'Enter The Number':null,
-                      onChanged: (val)=> floors =int.parse(val),
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-
+                  children: [
                     Expanded(
                       child: TextFormField(
-                        maxLength: 1,
-                        decoration: loginAndsignincommoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Flats'),counterText: ""),
-                        validator: (val) => val.isEmpty ?'Enter The Number':null,
-                        onChanged: (val)=> flats =int.parse(val),
+                        maxLength: 2,
+                        decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Floors'),counterText: ""),
+                        // validator: (val) => val.isEmpty ?'Enter The Number':null,
+                        onChanged: (val)=> floors =int.parse(val),
                       ),
                     ),
+                    SizedBox(width: 10,),
 
-                ],
+                      Expanded(
+                        child: TextFormField(
+                          maxLength: 1,
+                          decoration: loginAndsignincommoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Flats'),counterText: ""),
+                          validator: (val) => val.isEmpty ?'Enter The Number':null,
+                          onChanged: (val)=> flats =int.parse(val),
+                        ),
+                      ),
+
+                  ],
+                ),
               ),
             ),
               SizedBox(height: 20,),
@@ -113,14 +116,18 @@ print(floor.toString());
                     scrollDirection: Axis.horizontal,
                     itemCount: flat,itemBuilder: (context,index){
                       int newflat = index  + 1;
-                  return Container(
-                    width: width* 0.85 / flat ,
-                    height: height / nu,
-                    child: Card(
-                      child: Center(
+                  return Padding(
+                    padding:  EdgeInsets.symmetric(horizontal:width * 0.003),
+                    child: Container(
+                      width: width* 0.85 / 3 ,
 
-                          child: Text(floornumber.toString()+'0'+newflat.toString())
+                      height: height / floornumber,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black)
                       ),
+                      child: Center(child: Text(floornumber.toString()+'0'+newflat.toString(),style: TextStyle(
+                        fontWeight:FontWeight.bold
+                      ),))
                     ),
                   );
                 }),

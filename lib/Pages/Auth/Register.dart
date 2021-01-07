@@ -100,6 +100,9 @@ class _RegisterState extends State<Register> {
                                     });
 
                                   }
+                                  else{
+                                    Navigator.pop(context);
+                                  }
 
 
                                 }

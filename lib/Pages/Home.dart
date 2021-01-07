@@ -26,18 +26,28 @@ class _HomeScreenState extends State<HomeScreen> {
     final bottomTab = Provider.of<BottomNavigationProvider>(context).CurrentTab;
     print(bottomTab.toString());
     return Scaffold(
-      appBar: CommonAppbar(),
+      appBar: CommonAppbar(Container()),
       body: HomeBody(bottomTab: bottomTab,),
-        floatingActionButton: bottomTab == 1 ? FloatingActionButton(
-              onPressed: (){
-                Navigator.push(context, PageRouteBuilder(
-                  pageBuilder: (_,__,____) => BuildingStructure(),
-                  transitionDuration: Duration(milliseconds: 1),
-                ));
-              },
-              backgroundColor: Colors.black,
-              child: Icon(Icons.business),
-            ) : Container(),
+      floatingActionButton: bottomTab == 1 ? FloatingActionButton(
+        onPressed: (){
+          Navigator.push(context, PageRouteBuilder(
+            pageBuilder: (_,__,____) => BuildingStructure(),
+            transitionDuration: Duration(milliseconds: 1),
+          ));
+        },
+        backgroundColor: Colors.black,
+        child: Icon(Icons.business),
+      ) : Container(),
+        // floatingActionButton: bottomTab == 1 ? FloatingActionButton(
+        //       onPressed: (){
+        //         Navigator.push(context, PageRouteBuilder(
+        //           pageBuilder: (_,__,____) => BuildingStructure(),
+        //           transitionDuration: Duration(milliseconds: 1),
+        //         ));
+        //       },
+        //       backgroundColor: Colors.black,
+        //       child: Icon(Icons.business),
+        //     ) : Container(),
         bottomNavigationBar:CustomButtomBar(context,bottomTab,Provider.of<BottomNavigationProvider>(context,listen: false)),
     );
   }

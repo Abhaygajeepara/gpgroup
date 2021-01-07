@@ -1,6 +1,5 @@
 # gpgroup
-
-nilesh bhai gpgroup
+nelish bhai gpgroup
 
 ## Getting Started
 

@@ -10,15 +10,14 @@ class Sites extends StatefulWidget {
 class _SitesState extends State<Sites> {
   @override
   Widget build(BuildContext context) {
-    return Text('Display Number Available Sites');
-    // return Scaffold(
-    //     appBar: CommonAppbar(),
-    //     body: Text('Display Number Available Sites'),
-    //
-    //
-    //     floatingActionButton:
-    //     bottomNavigationBar:CustomButtomBar(context,1)
-    // );
+    // return Text('Display Number Available Sites');
+    return Scaffold(
+
+        body: Text('Display Number Available Sites'),
+
+
+
+    );
   }
   }
 
