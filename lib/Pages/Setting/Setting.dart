@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Widgets/Bottombar.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Pages/Setting/SettingsScreens/Rules.dart';
-import 'package:gpgroup/Pages/Workshop/Structure/buildingstructure.dart';
+
 import 'package:gpgroup/Service/Auth/LoginAuto.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 class SettingScreen extends StatefulWidget {
@@ -27,7 +27,7 @@ class _SettingScreenState extends State<SettingScreen> {
             child: ListTile(
               onTap: (){
                 return    Navigator.push(context, PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => Rules(),
+                  pageBuilder: (_, __, ___) => Rules(isshowAddRulesButton: true,),
                   transitionDuration: Duration(seconds: 0),
                 ),);
                 print('s');

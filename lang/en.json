@@ -3,7 +3,13 @@
   "first_string": "Hello Abhay",
   "second_string": "Welcome",
   "Flats": "Flats",
-  "Floors": "Floor",
+  "Floors": "Floors",
+  "Shops": "Shops",
+  "StartingNumber": "Starting Number",
+  "Part": "Part",
+  "House": "House",
+
+
   "Email": "Email",
   "Login": "Log In",
   "Password": "Password",
@@ -32,10 +38,18 @@
   "EnterRuleInEnglish": "Enter Rule In English",
   "EnterRuleInGujarati": "Enter Rule In Gujarati",
   "EnterRuleInHindi": "Enter Rule In Hindi",
-  "AddRules": "Add Rules",
 
   "YouWantToDeleteThisRule": "You Want To Delete This Rule ?",
   "AreYouSure": "Are You Sure ?",
   "Cancel": "Cancel",
-  "Delete": "Delete"
+  "Delete": "Delete",
+
+  "numberofflatsare246": "Number Of Flats Are 2,4,6",
+  "ProjectName": "Project Name",
+  "AddProject": "Add Project",
+
+  "Structure": "Structure",
+  "EnterProjectName": "Enter The Project Name",
+  "SelectRules":"Select Rules"
+
 }

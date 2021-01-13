@@ -3,6 +3,12 @@
   "second_string": "स्वागत हे",
   "Flats": "फ्लैटों",
   "Floors": "मंजिलों",
+  "Shops": "दुकानें",
+  "Part": "अंश",
+  "House": "घर",
+
+
+  "StartingNumber": "प्रारंभ संख्या",
   "Email": "ईमेल",
   "Login": "लॉग इन",
   "Password": "पासवर्ड",
@@ -27,7 +33,7 @@
   "Language": "भाषा",
   "LogOut": "लॉग आउट",
 
-  "AddRules": "Add Rules",
+
   "EnterRuleInEnglish": "अंग्रेजी में नियम दर्ज करें",
   "EnterRuleInGujarati": "गुजराती में नियम दर्ज करें",
   "EnterRuleInHindi": "हिंदी में नियम दर्ज करें",
@@ -36,5 +42,12 @@
   "YouWantToDeleteThisRule": "आप इस नियम को हटाना चाहते हैं?",
   "AreYouSure": "क्या आपको यकीन है ?",
   "Cancel": "रद्द करना",
-  "Delete": "हटाएं"
+  "Delete": "हटाएं",
+  "numberofflatsare246": "फ्लैटों की संख्या 2,4,6 है",
+  "ProjectName": "परियोजना का नाम",
+  "AddProject": "प्रोजेक्ट जोड़ें",
+  "Structure": "संरचना",
+  "EnterProjectName": "प्रोजेक्ट का नाम दर्ज करें",
+  "SelectRules":"नियमों का चयन करें"
+
 }

@@ -7,7 +7,7 @@ class CommonAssets{
   static Color AppbarTextColor = Colors.white;
   static String apptitle = 'GP Group ';
   // only for loading page
-  static Color apptitletextColor =Colors.blue;
+  static Color registerTextColor =Colors.blue;
 
   static Color standardtextcolor = Colors.black;
   static double titletextsize  = 25.0;
@@ -15,7 +15,7 @@ class CommonAssets{
   static Color circularLoading = Colors.blue;
   static Color circularLoadingbackgroud = Colors.black;
 
-
+  static Color dividercolor = Colors.black;
 
 
   //server error

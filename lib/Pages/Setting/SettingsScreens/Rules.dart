@@ -9,6 +9,8 @@ import 'package:gpgroup/Service/Rules/Rules.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 
 class Rules extends StatefulWidget {
+  bool isshowAddRulesButton;
+  Rules({@required this.isshowAddRulesButton});
   @override
   _RulesState createState() => _RulesState();
 }
@@ -22,9 +24,15 @@ class _RulesState extends State<Rules> {
 
   @override
   Widget build(BuildContext context) {
+    bool _isdeleteon  ;
+    widget.isshowAddRulesButton ? _isdeleteon= true:_isdeleteon = false;
     final size = MediaQuery.of(context).size;
     return Scaffold(
-        appBar: CommonAppbar(Container()
+        appBar: CommonAppbar(
+
+
+            Container()
+
             //     PopupMenuButton(itemBuilder: (BuildContext contex){
             //   return {'Logout', 'Settings'}.map((String choice) {
             //     return PopupMenuItem<String>(
@@ -47,9 +55,10 @@ class _RulesState extends State<Rules> {
                    return     PageView(
                           controller: _pageContoller,
                           children: [
-                            RulesLanguage(rulesdata: snapshot.data.english,rulesModel: snapshot.data,),
-                            RulesLanguage(rulesdata: snapshot.data.gujarati,rulesModel: snapshot.data,),
-                            RulesLanguage(rulesdata: snapshot.data.hindi,rulesModel: snapshot.data,),
+                            // isdeleteon's local variable define above
+                            RulesLanguage(rulesdata: snapshot.data.english,rulesModel: snapshot.data,isdeleteon: _isdeleteon,),
+                            RulesLanguage(rulesdata: snapshot.data.gujarati,rulesModel: snapshot.data,isdeleteon: _isdeleteon,),
+                            RulesLanguage(rulesdata: snapshot.data.hindi,rulesModel: snapshot.data,isdeleteon: _isdeleteon,),
                           ],
                         );
                       }
@@ -64,7 +73,7 @@ class _RulesState extends State<Rules> {
                 }
               )
             )),
-            Padding(
+           widget.isshowAddRulesButton? Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -82,7 +91,7 @@ class _RulesState extends State<Rules> {
                         });
                   },
                   child: Text(
-                    'Add Rules',
+    AppLocalizations.of(context).translate("AddRules"),
                     style: TextStyle(
                         color: CommonAssets.AppbarTextColor,
                         fontWeight: FontWeight.w700,
@@ -90,7 +99,7 @@ class _RulesState extends State<Rules> {
                   ),
                 ),
               ),
-            ),
+            ):Container(),
           ],
         ));
   }
@@ -99,62 +108,65 @@ class _RulesState extends State<Rules> {
     final size = MediaQuery.of(context).size;
     return AlertDialog(
       content: SingleChildScrollView(
-        child: Form(
-          key: _fomrkey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.of(context).translate("Rules"),
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: size.height * 0.03),
-              ),
-              SizedBox(
-                height: size.height * 0.04,
-              ),
-              TextFormField(
-                validator: (val) =>
-                    val.isEmpty ?  AppLocalizations.of(context).translate("EnterRuleInEnglish") : null,
+        child: Container(
+          width: size.width *0.8,
+          child: Form(
+            key: _fomrkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppLocalizations.of(context).translate("Rules"),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: size.height * 0.03),
+                ),
+                SizedBox(
+                  height: size.height * 0.04,
+                ),
+                TextFormField(
+                  validator: (val) =>
+                      val.isEmpty ?  AppLocalizations.of(context).translate("EnterRuleInEnglish") : null,
 
-                decoration:
-                    commoninputdecoration.copyWith(labelText: 'English'),
-                onChanged: (val) {
-                  setState(() {
-                    english = val.toString();
-                  });
-                },
-              ),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              TextFormField(
-                validator: (val) =>
-                    val.isEmpty ?  AppLocalizations.of(context).translate("EnterRuleInGujarati")  : null,
-                decoration:
-                    commoninputdecoration.copyWith(labelText: 'Gujarati'),
-                onChanged: (val) {
-                  setState(() {
-                    gujarati = val.toString();
-                  });
-                },
-              ),
-              SizedBox(
-                height: size.height * 0.02,
-              ),
-              TextFormField(
-                validator: (val) =>
-                    val.isEmpty ?   AppLocalizations.of(context).translate("EnterRuleInHindi") : null,
-                decoration:
-                    commoninputdecoration.copyWith(labelText: 'Hindi'),
-                onChanged: (val) {
-                  setState(() {
-                    hindi = val.toString();
-                  });
-                },
-              ),
-            ],
+                  decoration:
+                      commoninputdecoration.copyWith(labelText: 'English'),
+                  onChanged: (val) {
+                    setState(() {
+                      english = val.toString();
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                TextFormField(
+                  validator: (val) =>
+                      val.isEmpty ?  AppLocalizations.of(context).translate("EnterRuleInGujarati")  : null,
+                  decoration:
+                      commoninputdecoration.copyWith(labelText: 'Gujarati'),
+                  onChanged: (val) {
+                    setState(() {
+                      gujarati = val.toString();
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                TextFormField(
+                  validator: (val) =>
+                      val.isEmpty ?   AppLocalizations.of(context).translate("EnterRuleInHindi") : null,
+                  decoration:
+                      commoninputdecoration.copyWith(labelText: 'Hindi'),
+                  onChanged: (val) {
+                    setState(() {
+                      hindi = val.toString();
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -167,7 +179,7 @@ class _RulesState extends State<Rules> {
               dynamic result = await  CompanyRules().AddRules(english, gujarati, hindi);
               if(result == null)
                 {
-                return  Navigator.pop(context);
+                return   Navigator.pop(context);
                 }
               else{
                 return print('sss');

@@ -3,6 +3,12 @@
   "second_string": "સ્વાગત છે",
   "Flats": "ફ્લેટ્સ",
   "Floors": "માળ",
+  "Shops": "દુકાનો",
+  "Part": "ભાગ",
+  "House": "ઘર",
+
+
+  "StartingNumber": "પ્રારંભિક સંખ્યા",
   "Email": "ઇમેઇલ",
   "Login": "પ્રવેશ કરો",
   "Password": "પાસવર્ડ",
@@ -27,7 +33,7 @@
   "Language": "ભાષા",
   "LogOut": "લૉગ આઉટ",
 
-  "AddRules": "Add Rules",
+
   "EnterRuleInEnglish": "અંગ્રેજીમાં નિયમ દાખલ કરો",
   "EnterRuleInGujarati": "ગુજરાતીમાં નિયમ દાખલ કરો",
   "EnterRuleInHindi": "હિન્દીમાં નિયમ દાખલ કરો",
@@ -36,5 +42,13 @@
   "YouWantToDeleteThisRule": "તમે આ નિયમ ને કાઢી નાખવા માંગો છો ?",
   "AreYouSure": "શું તમને ખાતરી છે?",
   "Cancel": "રદ કરો",
-  "Delete": "કાઢી નાંખવું"
+  "Delete": "કાઢી નાંખવું",
+
+  "numberofflatsare246": "ફ્લેટોની સંખ્યા 2,4,6 છે",
+  "ProjectName": "પ્રોજેક્ટ નામ",
+  "AddProject": "પ્રોજેક્ટ ઉમેરો",
+  "Structure": "માળખું",
+  "EnterProjectName": "પ્રોજેક્ટ નામ દાખલ કરો",
+  "SelectRules":"નિયમો પસંદ કરો"
+
 }

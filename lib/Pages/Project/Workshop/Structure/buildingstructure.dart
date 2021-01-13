@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
@@ -37,6 +39,7 @@ int flats = 2;
                   children: [
                     Expanded(
                       child: TextFormField(
+                        keyboardType: TextInputType.phone,
                         maxLength: 2,
                         decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Floors'),counterText: ""),
                         // validator: (val) => val.isEmpty ?'Enter The Number':null,
@@ -48,9 +51,33 @@ int flats = 2;
                       Expanded(
                         child: TextFormField(
                           maxLength: 1,
+                          keyboardType: TextInputType.phone,
                           decoration: loginAndsignincommoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Flats'),counterText: ""),
-                          validator: (val) => val.isEmpty ?'Enter The Number':null,
-                          onChanged: (val)=> flats =int.parse(val),
+                         // validator: (val) => val.isEmpty ?'Enter The Number':null,
+                          onChanged: (val){
+
+                            //flats =int.parse(val)
+                            setState(() {
+
+                              if(int.parse(val) == 2 ||int.parse(val) == 4 || int.parse(val) == 6){
+                                flats =int.parse(val);
+
+                              }
+                              else{
+                                print('ss');
+                                Fluttertoast.showToast(
+                                    msg: AppLocalizations.of(context).translate('numberofflatsare246'),
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Theme.of(context).primaryColor,
+                                    textColor: CommonAssets.AppbarTextColor,
+                                    fontSize: height *0.02
+                                );
+                              }
+
+                            });
+                          },
                         ),
                       ),
 
@@ -97,9 +124,10 @@ print(floor.toString());
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
+            foregroundColor: Colors.lightBlue,
             child:Text(floornumber.toString(),style: TextStyle(
       color: Colors.white,
-      fontSize: 16.0,
+      fontSize: height *0.02,
      ),) ,
           ),
         ),
@@ -119,13 +147,15 @@ print(floor.toString());
                   return Padding(
                     padding:  EdgeInsets.symmetric(horizontal:width * 0.003),
                     child: Container(
-                      width: width* 0.85 / 3 ,
+                      width: width* 0.75 / flat ,
 
                       height: height / floornumber,
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.black)
                       ),
-                      child: Center(child: Text(floornumber.toString()+'0'+newflat.toString(),style: TextStyle(
+                      child: Center(child: Text(
+                        floornumber.toString()+'0'+newflat.toString(),style: TextStyle(
+                        fontSize: height * 0.015,
                         fontWeight:FontWeight.bold
                       ),))
                     ),

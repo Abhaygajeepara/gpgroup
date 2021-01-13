@@ -37,7 +37,7 @@ class _RegisterState extends State<Register> {
                     Text(
                       CommonAssets.apptitle.toString(),
                       style: TextStyle(
-                          color:CommonAssets.apptitletextColor,
+                          color:CommonAssets.registerTextColor,
                           fontSize: 25.0,
                           fontWeight: FontWeight.w500
 
@@ -89,7 +89,7 @@ class _RegisterState extends State<Register> {
                             RaisedButton(
                               padding: EdgeInsets.symmetric(horizontal: width * 0.15,vertical: height * 0.02),
                               shape: StadiumBorder(),
-                              color: CommonAssets.apptitletextColor,
+                              color: CommonAssets.registerTextColor,
                               onPressed: ()async{
                                 if(_registerformkey.currentState.validate()){
                                   dynamic result = await  LogInAndSignIn().RegisterwithEmail(email,password);

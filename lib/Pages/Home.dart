@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Widgets/Bottombar.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
-import 'package:gpgroup/Pages/Workshop/Structure/buildingstructure.dart';
+import 'package:gpgroup/Pages/Project/Creatingproject.dart';
+import 'package:gpgroup/Pages/Project/Workshop/Sites.dart';
+import 'package:gpgroup/Pages/Project/Workshop/Structure/HousingStructure.dart';
+
 import 'package:gpgroup/Providers/BotttomNavigationProvider.dart';
 
 
@@ -10,9 +13,9 @@ import 'package:gpgroup/Service/Auth/LoginAuto.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 import 'package:provider/provider.dart';
 
-import '../Wrapper.dart';
+
 import 'Setting/Setting.dart';
-import 'Workshop/Sites.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,14 +27,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final bottomTab = Provider.of<BottomNavigationProvider>(context).CurrentTab;
-    print(bottomTab.toString());
+    //print(bottomTab.toString());
     return Scaffold(
       appBar: CommonAppbar(Container()),
       body: HomeBody(bottomTab: bottomTab,),
       floatingActionButton: bottomTab == 1 ? FloatingActionButton(
         onPressed: (){
           Navigator.push(context, PageRouteBuilder(
-            pageBuilder: (_,__,____) => BuildingStructure(),
+         //    pageBuilder: (_,__,____) => BuildingStructure(),
+           pageBuilder: (_,__,___)=> CreatingProject(),
             transitionDuration: Duration(milliseconds: 1),
           ));
         },

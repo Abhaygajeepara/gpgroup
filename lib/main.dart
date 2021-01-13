@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gpgroup/Wrapper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,12 +14,18 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MaterialApp(
       color: Color(0xff73c5bc),
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor:  Color(0xff73c5bc),
-        errorColor: Colors.white70
+      //  primaryColor:  Color(0xff73c5bc),
+          primaryColor:  Colors.black.withOpacity(0.6),
+       bottomAppBarColor: Colors.lightBlue,
+
       ),
     supportedLocales: [
     Locale('en', 'US'),

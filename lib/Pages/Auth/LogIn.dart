@@ -42,7 +42,7 @@ class _LogInState extends State<LogIn> {
                     Text(
                       CommonAssets.apptitle.toString(),
                       style: TextStyle(
-                          color:CommonAssets.apptitletextColor,
+                          color:CommonAssets.registerTextColor,
                           fontSize: 25.0,
                           fontWeight: FontWeight.w500
 
@@ -101,7 +101,7 @@ class _LogInState extends State<LogIn> {
                             RaisedButton(
                               padding: EdgeInsets.symmetric(horizontal: width * 0.15,vertical: height * 0.02),
                               shape: StadiumBorder(),
-                              color: CommonAssets.apptitletextColor,
+                              color: CommonAssets.registerTextColor,
                               onPressed: ()async{
                                 if(_loginformkey.currentState.validate()){
                                   dynamic result = await  LogInAndSignIn().autoLogin(email,password);

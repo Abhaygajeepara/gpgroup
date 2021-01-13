@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 
 InputDecoration commoninputdecoration = InputDecoration(
+
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.blueGrey),
     ),
@@ -23,7 +24,7 @@ InputDecoration commoninputdecoration = InputDecoration(
 );
 
 InputDecoration loginAndsignincommoninputdecoration = InputDecoration(
-    
+
     enabledBorder: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.blueGrey),
       borderRadius: BorderRadius.circular(10.0)
