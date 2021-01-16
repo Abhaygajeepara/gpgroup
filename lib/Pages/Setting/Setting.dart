@@ -27,7 +27,7 @@ class _SettingScreenState extends State<SettingScreen> {
             child: ListTile(
               onTap: (){
                 return    Navigator.push(context, PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => Rules(isshowAddRulesButton: true,),
+                  pageBuilder: (_, __, ___) => Rules(isshowAddRulesButton: true,selectdRulesindex: [],),
                   transitionDuration: Duration(seconds: 0),
                 ),);
                 print('s');

@@ -124,7 +124,8 @@ print(floor.toString());
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: CircleAvatar(
-            foregroundColor: Colors.lightBlue,
+          //  foregroundColor: Theme.of(context).primaryColor,
+            backgroundColor: Theme.of(context).primaryColor,
             child:Text(floornumber.toString(),style: TextStyle(
       color: Colors.white,
       fontSize: height *0.02,

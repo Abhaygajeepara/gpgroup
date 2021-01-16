@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
 import 'package:gpgroup/Model/Setting/RulesModel.dart';
-import 'package:gpgroup/Service/Rules/Rules.dart';
+import 'package:gpgroup/Service/Database/Rules.dart';
+
 import 'package:gpgroup/app_localization/app_localizations.dart';
 class RulesLanguage extends StatefulWidget {
   List<String> rulesdata ;
   RulesModel rulesModel;
   bool isdeleteon;
-  RulesLanguage({@required this.rulesdata,@required this.rulesModel,@required this.isdeleteon});
+  List<int> selectedrulesindex ;
+  RulesLanguage({@required this.rulesdata,@required this.rulesModel,@required this.isdeleteon,@required this.selectedrulesindex});
   bool createlist = true; //
   @override
   _RulesLanguageState createState() => _RulesLanguageState();
@@ -23,12 +25,20 @@ class _RulesLanguageState extends State<RulesLanguage> {
 
   final _fomrkey= GlobalKey<FormState>();
   List<bool> _rulescheck ;
-  List<String> _selectedrules=[];
+  List<int> _selectedrules=[];
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    print(widget.selectedrulesindex);
     _rulescheck = List<bool>.filled(widget.rulesdata.length, false);
+      for(int i = 0;i<widget.selectedrulesindex.length;i++){
+          setState(() {
+            _rulescheck[widget.selectedrulesindex[i]] = true;
+            _selectedrules.add(widget.selectedrulesindex[i]);
+          });
+      }
+
   }
 
   @override
@@ -64,7 +74,7 @@ class _RulesLanguageState extends State<RulesLanguage> {
                           content: Text(AppLocalizations.of(context).translate('YouWantToDeleteThisRule')),
                           actions: [
                             RaisedButton(
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).buttonColor,
                               shape: StadiumBorder(),
                               onPressed: ()async{
                                 Navigator.pop(context);
@@ -78,7 +88,7 @@ class _RulesLanguageState extends State<RulesLanguage> {
 
                             ),
                             RaisedButton(
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).buttonColor,
                               shape: StadiumBorder(),
                               onPressed: ()async{
                                 await CompanyRules().deleteRules(widget.rulesModel.english[index],widget.rulesModel.hindi[index],widget.rulesModel.gujarati[index],);
@@ -118,18 +128,19 @@ class _RulesLanguageState extends State<RulesLanguage> {
                   )
               ),
               child: CheckboxListTile(
-
-
+                activeColor: Theme.of(context).primaryColor,
                 value: _rulescheck[index],
                 onChanged: (val){
                   setState(() {
                     _rulescheck[index]= val;
                     if(val){
-                      _selectedrules.add(widget.rulesdata[index]);
+                     // _selectedrules.add(widget.rulesdata[index]);
+                       _selectedrules.add(index);
 
                     }
                     else{
-                      _selectedrules.remove(widget.rulesdata[index]);
+                    //  _selectedrules.remove(widget.rulesdata[index]);
+                       _selectedrules.remove(index);
                     }
 
                   });
@@ -155,7 +166,10 @@ class _RulesLanguageState extends State<RulesLanguage> {
              shape: StadiumBorder(),
              color: Theme.of(context).primaryColor,
              onPressed: ()async {
-           return    Navigator.pop(context,_selectedrules);
+               List<List<dynamic>> _localallrules = [_selectedrules,widget.rulesdata]
+               ;
+
+           return    Navigator.pop(context,_localallrules);
              },
              child: Text(
                AppLocalizations.of(context).translate("SelectRules"),

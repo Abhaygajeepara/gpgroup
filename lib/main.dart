@@ -19,11 +19,13 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
-      color: Color(0xff73c5bc),
+      color: Color(0xff0b4cbc),
       title: 'Flutter Demo',
       theme: ThemeData(
-      //  primaryColor:  Color(0xff73c5bc),
-          primaryColor:  Colors.black.withOpacity(0.6),
+       primaryColor:  Color(0xff45a891),
+      buttonColor: Colors.black,
+
+        //  primaryColor:  Colors.black.withOpacity(0.6),
        bottomAppBarColor: Colors.lightBlue,
 
       ),

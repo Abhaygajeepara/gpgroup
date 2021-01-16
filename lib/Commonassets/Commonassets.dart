@@ -17,6 +17,10 @@ class CommonAssets{
 
   static Color dividercolor = Colors.black;
 
+  static Color errorColor = Colors.red;
+  static Color boxBorderColors= Colors.black;
+  static Color iconcolor = Colors.white;
+  static Color iconBackGroundColor = Colors.black;
 
   //server error
   static String snapshoterror = 'Server Error';

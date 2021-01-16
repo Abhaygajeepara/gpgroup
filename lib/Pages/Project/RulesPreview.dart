@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
-class PreviewRules extends StatefulWidget {
+class RulesPreview extends StatefulWidget {
   List<String> rules ;
-  PreviewRules({@required this.rules});
+  List<int> rulesindex ;
+  RulesPreview({@required this.rules,@required this.rulesindex});
   @override
-  _PreviewRulesState createState() => _PreviewRulesState();
+  _RulesPreviewState createState() => _RulesPreviewState();
 }
 
-class _PreviewRulesState extends State<PreviewRules> {
+class _RulesPreviewState extends State<RulesPreview> {
   @override
   Widget build(BuildContext context) {
+
     final size = MediaQuery.of(context).size;
     return Scaffold(
     appBar: CommonAppbar(Container()),
       body: ListView.builder(
-          itemCount: widget.rules.length,
+          itemCount: widget.rulesindex.length,
           itemBuilder: (context,index){
           return  Card(
 
@@ -31,7 +33,7 @@ class _PreviewRulesState extends State<PreviewRules> {
 
 
                 title: Text(
-                  widget.rules[index],
+                  widget.rules[widget.rulesindex[index]],
                   style: TextStyle(
                       fontSize: size.height *0.02
                   ),

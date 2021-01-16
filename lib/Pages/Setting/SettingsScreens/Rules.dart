@@ -5,12 +5,14 @@ import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart'
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Model/Setting/RulesModel.dart';
 import 'package:gpgroup/Pages/Setting/SettingsScreens/Rules/RulesLanguage/RulesLanguage.dart';
-import 'package:gpgroup/Service/Rules/Rules.dart';
+import 'package:gpgroup/Service/Database/Rules.dart';
+
 import 'package:gpgroup/app_localization/app_localizations.dart';
 
 class Rules extends StatefulWidget {
   bool isshowAddRulesButton;
-  Rules({@required this.isshowAddRulesButton});
+  List<int> selectdRulesindex ;
+  Rules({@required this.isshowAddRulesButton,@required this.selectdRulesindex});
   @override
   _RulesState createState() => _RulesState();
 }
@@ -56,9 +58,9 @@ class _RulesState extends State<Rules> {
                           controller: _pageContoller,
                           children: [
                             // isdeleteon's local variable define above
-                            RulesLanguage(rulesdata: snapshot.data.english,rulesModel: snapshot.data,isdeleteon: _isdeleteon,),
-                            RulesLanguage(rulesdata: snapshot.data.gujarati,rulesModel: snapshot.data,isdeleteon: _isdeleteon,),
-                            RulesLanguage(rulesdata: snapshot.data.hindi,rulesModel: snapshot.data,isdeleteon: _isdeleteon,),
+                            RulesLanguage(rulesdata: snapshot.data.english,rulesModel: snapshot.data,isdeleteon: _isdeleteon,selectedrulesindex: widget.selectdRulesindex,),
+                            RulesLanguage(rulesdata: snapshot.data.gujarati,rulesModel: snapshot.data,isdeleteon: _isdeleteon,selectedrulesindex: widget.selectdRulesindex,),
+                            RulesLanguage(rulesdata: snapshot.data.hindi,rulesModel: snapshot.data,isdeleteon: _isdeleteon,selectedrulesindex: widget.selectdRulesindex,),
                           ],
                         );
                       }
@@ -82,7 +84,7 @@ class _RulesState extends State<Rules> {
                       horizontal: size.width * 0.3,
                       vertical: size.height * 0.015),
                   shape: StadiumBorder(),
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).buttonColor,
                   onPressed: () {
                     return showDialog(
                         context: context,
@@ -173,7 +175,7 @@ class _RulesState extends State<Rules> {
       actions: [
         RaisedButton(
           shape: StadiumBorder(),
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).buttonColor,
           onPressed: () async{
             if (_fomrkey.currentState.validate()) {
               dynamic result = await  CompanyRules().AddRules(english, gujarati, hindi);

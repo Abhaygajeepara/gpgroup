@@ -1,13 +1,18 @@
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
+import 'package:gpgroup/Model/Structure/HousingModel.dart';
 
 import 'package:gpgroup/Pages/Project/Workshop/Structure/CommercialArcade.dart';
 import 'package:gpgroup/Pages/Project/Workshop/Structure/HousingStructure.dart';
 import 'package:gpgroup/Pages/Project/Workshop/Structure/buildingstructure.dart';
-import 'package:gpgroup/Pages/Project/showrules.dart';
+import 'package:gpgroup/Pages/Project/RulesPreview.dart';
 import 'package:gpgroup/Pages/Setting/SettingsScreens/Rules.dart';
+import 'package:gpgroup/Service/Database/ProjectServices.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 
 class CreatingProject extends StatefulWidget {
@@ -22,10 +27,16 @@ class CreatingProject extends StatefulWidget {
 class CreatingProjectState extends State<CreatingProject> {
   final _formkey = GlobalKey<FormState>();
   String projectname;
-  List<String> _rules= List();
- 
+  List<int> _selectedRulesIndex= List();
+  List<String> _allrules= List();
+  List<String> _selectedRules= List();
+  bool errorrules = false;
+  bool errorstructure =false;
+  List<CreateHousingStrctureModel> _partslist= List(); // for house
+
   @override
   Widget build(BuildContext context) {
+
     final size= MediaQuery.of(context).size;
     return Scaffold(
       // Appbar
@@ -51,101 +62,117 @@ class CreatingProjectState extends State<CreatingProject> {
                     Container(
                       padding: EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width *0.01),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black)
+                        border: Border.all(color: errorrules? CommonAssets.errorColor:CommonAssets.boxBorderColors)
                       ),
                       width: size.width,
                       child:Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            AppLocalizations.of(context).translate('Rules'),
-                            style: TextStyle(
-                                fontSize: size.height *0.02,
-                                fontWeight: FontWeight.bold
-                            ),
-                          ),
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                             Text(
+                               AppLocalizations.of(context).translate('Rules'),
+                               style: TextStyle(
+                                   fontSize: size.height *0.02,
+                                   fontWeight: FontWeight.bold
+                               ),
+                             ),
+                             Text(
+                               _selectedRulesIndex.length.toString() ,
+                               style: TextStyle(
+                                   fontSize: size.height *0.02,
+                                   fontWeight: FontWeight.bold
+                               ),
+                             ),
+                           ],
+                         ),
                           SizedBox(height:  size.height  *0.02,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
 
-                              // Text(
-                              // AppLocalizations.of(context).translate('Rules'),
-                              //
-                              // style: TextStyle(
-                              //   fontSize: size.height* 0.02,
-                              //   fontWeight: FontWeight.w700
-                              // ),),
-                              RaisedButton.icon(
-                              shape: StadiumBorder(),
-                                color: Theme.of(context).primaryColor,
-                                  label: Text(
-                                    AppLocalizations.of(context).translate('AddRules'),
-                                    style:   TextStyle(
-                                      color: CommonAssets.AppbarTextColor,
-                                      fontSize: size.height *0.02
-                                  ), ),
-                                  icon: Icon(Icons.add,color: CommonAssets.AppbarTextColor,),
+
+                             IconButton(
+
+
+
+                                  icon: Icon(Icons.add,color: CommonAssets.iconBackGroundColor),
                                   onPressed: () async {
                                 dynamic res = await Navigator.push(context, PageRouteBuilder(
-                                    pageBuilder: (_,__,___)=>Rules(isshowAddRulesButton: false,),
+                                    pageBuilder: (_,__,___)=>Rules(isshowAddRulesButton: false,selectdRulesindex: _selectedRulesIndex,),
                                     transitionDuration: Duration(seconds: 0)
 
                                 ));
                             if(mounted) setState((){
 
                                if(res!= null){
-                                 _rules = res;
-                                 print(_rules);
+                                 _selectedRulesIndex = res[0]; // selected rules for all rules
+                                 _allrules = res[1];// all rules of project
+                                    errorrules =false;
+                                 _selectedRules.clear();
+                                    for(int i =0;i<_selectedRulesIndex.length;i++){
+                                      _selectedRules.add(_allrules[_selectedRulesIndex[i]]);
+                                      print(_selectedRules);
+                                    }
+                                // print(_allrules);
                                }
 
                              });
                               }),
-                              RaisedButton.icon(
-                                  shape: StadiumBorder(),
-                                  color: Theme.of(context).primaryColor,
-                                  icon: Icon(Icons.remove_red_eye_sharp, color: CommonAssets.AppbarTextColor,),
-                                  label: Text(
-                                    'Preview',
-                                    style:   TextStyle(
-                                        color: CommonAssets.AppbarTextColor,
-                                        fontSize: size.height *0.02
-                                    ),
-                                  ),
+
+                              IconButton(
+
+
+                                  icon: Icon(Icons.remove_red_eye_sharp, color: CommonAssets.iconBackGroundColor,),
+
                                   onPressed: () async {
                                     dynamic res = await Navigator.push(context, PageRouteBuilder(
-                                        pageBuilder: (_,__,___)=>PreviewRules(rules: _rules,),
+                                        pageBuilder: (_,__,___)=>RulesPreview(rules: _allrules,rulesindex:_selectedRulesIndex ),
                                         transitionDuration: Duration(seconds: 0)
 
                                     ));
                                     if(mounted) setState((){
 
                                       if(res!= null){
-                                        _rules = res;
-                                        print(_rules);
+                                        _selectedRulesIndex = res;
+                                        errorrules = false;
+                                        print(_selectedRulesIndex);
                                       }
 
+                                    });
+                                  }),
+                              IconButton(
+
+                                //color: Theme.of(context).primaryColor,
+                                  icon: Icon(Icons.delete, color:CommonAssets.iconBackGroundColor),
+
+                                  onPressed: () {
+                                    setState(() {
+                                      _selectedRulesIndex.clear();
                                     });
                                   }),
 
                             ],
                           ),
-                          Center(
-                            child: RaisedButton.icon(
-                                shape: StadiumBorder(),
-                                color: Theme.of(context).primaryColor,
-                                icon: Icon(Icons.remove_red_eye_sharp, color: CommonAssets.AppbarTextColor,),
-                                label: Text(
-                                  'Delete Rules',
-                                  style:   TextStyle(
-                                      color: CommonAssets.AppbarTextColor,
-                                      fontSize: size.height *0.02
-                                  ),
-                                ),
-                                onPressed: () {
-                                  _rules.clear();
-                                }),
-                          ),
+                          // Center(
+                          //   child: RaisedButton.icon(
+                          //       shape: StadiumBorder(),
+                          //       color: Theme.of(context).primaryColor,
+                          //       icon: Icon(Icons.remove_red_eye_sharp, color: CommonAssets.AppbarTextColor,),
+                          //       label: Text(
+                          //         'Delete Rules',
+                          //         style:   TextStyle(
+                          //             color: CommonAssets.AppbarTextColor,
+                          //             fontSize: size.height *0.02
+                          //         ),
+                          //       ),
+                          //       onPressed: () {
+                          //        setState(() {
+                          //          _selectedRulesIndex.clear();
+                          //        });
+                          //       }),
+                          // ),
 
 
 
@@ -166,7 +193,7 @@ class CreatingProjectState extends State<CreatingProject> {
 
                       padding: EdgeInsets.symmetric(vertical: size.height *0.02,horizontal: size.width *0.01),
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black)
+                          border: Border.all(color: errorstructure? CommonAssets.errorColor:CommonAssets.boxBorderColors)
                       ),
                       width: size.width,
                       child: Row(
@@ -174,21 +201,32 @@ class CreatingProjectState extends State<CreatingProject> {
                         children: [
 
                           GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, PageRouteBuilder(
+                            onTap: ()async{
+                            dynamic res =  await Navigator.push(context, PageRouteBuilder(
                                 //    pageBuilder: (_,__,____) => BuildingStructure(),
                                 pageBuilder: (_,__,___)=> HousingStructure(),
                                 transitionDuration: Duration(milliseconds: 1),
                               ));
+                            if(res != null)
+                              {
+                                if(mounted) setState(() {
+                                  _partslist  = res;
+                                  errorstructure = false;
+
+                                });
+
+                              }
+
+
                             },
                             child: CircleAvatar(
                               radius: size.height *0.04,
                               child: Icon(
                                   Icons.house,
-                              color: CommonAssets.AppbarTextColor,
+                              color: CommonAssets.iconcolor,
                                 size: size.height *0.05,
                               ),
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: CommonAssets.iconBackGroundColor,
                             ),
                           ),
                           GestureDetector(
@@ -204,10 +242,10 @@ class CreatingProjectState extends State<CreatingProject> {
                               child: Icon(
 
                                 Icons.apartment,
-                                color: CommonAssets.AppbarTextColor,
+                                color: CommonAssets.iconcolor,
                                 size: size.height *0.05,
                               ),
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: CommonAssets.iconBackGroundColor,
                             ),
                           ),
                           GestureDetector(
@@ -223,26 +261,44 @@ class CreatingProjectState extends State<CreatingProject> {
                               child: Icon(
 
                                 Icons.storefront,
-                                color: CommonAssets.AppbarTextColor,
+                                color: CommonAssets.iconcolor,
                                 size: size.height *0.05,
                               ),
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: CommonAssets.iconBackGroundColor,
                             ),
                           )
                         ],
                       ),
                     ),
                     SizedBox(height: size.height *0.02,),
+
                     Center(
                       child: RaisedButton(
                         padding: EdgeInsets.symmetric(vertical: size.height *0.02,horizontal: size.width *0.05),
                           shape: StadiumBorder(),
                           onPressed: (){
                         if(_formkey.currentState.validate()){
+                            if(_selectedRulesIndex.length <=0  ){
+                                setState(() {
+                                  errorrules = true;
+                                });
+                            }
+
+                            else if(_partslist.length <=0  ){
+                              print('change code');
+                              // TODO Add diffrent format data ;
+
+                              setState(() {
+                                errorstructure = true;
+                              });
+                            }
+                            else{
+                              ProjectsDatabaseService().createProject(_partslist, projectname, _selectedRules);
+                            }
 
                         }
                       },
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).buttonColor,
                         child: Text(
                             AppLocalizations.of(context).translate('AddProject'),
                           style: TextStyle(

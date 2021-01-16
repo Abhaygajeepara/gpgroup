@@ -229,6 +229,32 @@ class _HousingStructureState extends State<HousingStructure> {
                           )
                       );
                     }),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.01, vertical: size.height * 0.005),
+                child: Center(
+                  child: RaisedButton(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.3,
+                        vertical: size.height * 0.015),
+                    shape: StadiumBorder(),
+                    color: Theme.of(context).buttonColor,
+                    onPressed: () {
+                      // TODO : ADD data in localization;s file
+                      print(_partslist.length);
+                     Navigator.pop(context,_partslist);
+                    },
+                    child: Text(
+                     // AppLocalizations.of(context).translate("Add"),
+                      "Add",
+                      style: TextStyle(
+                          color: CommonAssets.AppbarTextColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: size.height * 0.020),
+                    ),
+                  ),
+                ),
               )
             ],
           )
