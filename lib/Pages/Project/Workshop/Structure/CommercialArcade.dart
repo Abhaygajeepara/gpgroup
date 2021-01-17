@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
+import 'package:gpgroup/Model/Structure/CommercialArcadeModel.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 import 'package:zoom_widget/zoom_widget.dart';
 
@@ -16,19 +17,43 @@ class _CommercialArcadeState extends State<CommercialArcade> {
   int floors = 0;
   int shop_per_floor = 0;
   int selectdfloor ;
-  int staringnumber = 1000;
+  int staringnumber = 1;
+  int differentialvalue = 1000;
   int number = 0;
   List<List<int>> building= List();
+  List<CommercialArcadeModel> _commercialModel = List();
   void allocationnumber(){
     if(selectdfloor != null){
-      number = (selectdfloor * 100) +staringnumber;
+      number = (selectdfloor * differentialvalue) +staringnumber;
     }
+  }
+  getModel(){
+    print('Commercial');
+
+    _commercialModel.clear();
+    for(int i  =0;i<floors;i++){
+      int staring = (i * differentialvalue) +staringnumber;
+      List<int> _flatsList =List();
+      for(int j =0;j<shop_per_floor;j++){
+
+        _flatsList.add(staring + j);
+
+
+      }
+
+      _commercialModel.add(CommercialArcadeModel(floorNumber: i+1, shops:  _flatsList));
+      staring = staring +100;
+      // print(_commercialModel[i].floorNumber);
+      // print(_commercialModel[i].shops);
+    }
+
   }
 
 
   @override
   Widget build(BuildContext context) {
     allocationnumber();
+    getModel();
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CommonAppbar(Container()),
@@ -41,32 +66,51 @@ class _CommercialArcadeState extends State<CommercialArcade> {
               padding:  EdgeInsets.symmetric(horizontal:size.width *0.01,vertical: size.height *0.01),
               child: Container(
                 //color: Colors.white,
-                height: size.height  *0.1,
-                child: Row(
+
+                child: Column(
                   children: [
-                    Expanded(child: TextFormField(
-                      keyboardType: TextInputType.phone,
-                      maxLength: 1,
-                      onChanged: (val)=> floors = int.parse(val),
-                      decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Floors')),
-                    )),
-                    SizedBox(width: size.width *0.01,),
-                    Expanded(child: TextFormField(
-                    keyboardType: TextInputType.phone,
-                      maxLength: 3,
-                    onChanged: (val)=> shop_per_floor = int.parse(val),
-                      decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Shops')),
-                    )),
-                    SizedBox(width: size.width *0.01,),
-                    Expanded(child: TextFormField(
-                      initialValue: staringnumber.toString(),
-                      keyboardType: TextInputType.phone,
-                      maxLength: 4,
-                      onChanged: (val)=> staringnumber = int.parse(val),
-                      decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('StartingNumber')),
-                    )),
+                    Row(
+                      children: [
+                        Expanded(child: TextFormField(
+                          keyboardType: TextInputType.phone,
+                          maxLength: 1,
+                          onChanged: (val)=> floors = int.parse(val),
+                          decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Floors')),
+                        )),
+                        SizedBox(width: size.width *0.01,),
+                        Expanded(child: TextFormField(
+                          keyboardType: TextInputType.phone,
+                          maxLength: 3,
+                          onChanged: (val)=> shop_per_floor = int.parse(val),
+                          decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Shops')),
+                        )),
+
+
+                      ],
+                    ),
+                    SizedBox(height: size.width *0.01,),
+                    Row(
+                      children: [
+
+                        Expanded(child: TextFormField(
+                          initialValue: staringnumber.toString(),
+                          keyboardType: TextInputType.phone,
+                          maxLength: 4,
+                          onChanged: (val)=> staringnumber = int.parse(val),
+                          decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('StartingNumber')),
+                        )),
+                        SizedBox(width: size.width *0.01,),
+                        Expanded(child: TextFormField(
+                          initialValue: differentialvalue.toString(),
+                          keyboardType: TextInputType.phone,
+                          maxLength: 4,
+                          onChanged: (val)=> differentialvalue = int.parse(val),
+                          decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('NumberGap')),
+                        )),
+                      ],
+                    ),
                   ],
-                ),
+                )
               ),
             ),
             Divider(color: CommonAssets.dividercolor,),
@@ -185,7 +229,32 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                         )
                     );
                   }),
-            )
+            ),
+          _commercialModel.length >0?  Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: size.width * 0.01, vertical: size.height * 0.005),
+              child: Center(
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: size.width * 0.3,
+                      vertical: size.height * 0.015),
+                  shape: StadiumBorder(),
+                  color: Theme.of(context).buttonColor,
+                  onPressed: () {
+                    return Navigator.pop(context,_commercialModel);
+                  },
+
+                  child: Text(
+
+                    AppLocalizations.of(context).translate("Add"),
+                    style: TextStyle(
+                        color: CommonAssets.AppbarTextColor,
+                        fontWeight: FontWeight.w700,
+                        fontSize: size.height * 0.020),
+                  ),
+                ),
+              ),
+            ):Container(),
           ],
         )
       ),

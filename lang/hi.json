@@ -43,11 +43,12 @@
   "AreYouSure": "क्या आपको यकीन है ?",
   "Cancel": "रद्द करना",
   "Delete": "हटाएं",
-  "numberofflatsare246": "फ्लैटों की संख्या 2,4,6 है",
+  "numberofflatsare246": "फ्लैटों की संख्या 2,4,6,8 है",
   "ProjectName": "परियोजना का नाम",
   "AddProject": "प्रोजेक्ट जोड़ें",
   "Structure": "संरचना",
   "EnterProjectName": "प्रोजेक्ट का नाम दर्ज करें",
-  "SelectRules":"नियमों का चयन करें"
-
+  "SelectRules":"नियमों का चयन करें",
+  "Add":"जोड़ना",
+  "NumberGap": "नंबर गैप"
 }

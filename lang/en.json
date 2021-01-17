@@ -44,12 +44,14 @@
   "Cancel": "Cancel",
   "Delete": "Delete",
 
-  "numberofflatsare246": "Number Of Flats Are 2,4,6",
+  "numberofflatsare246": "Number Of Flats Are 2,4,6,8",
   "ProjectName": "Project Name",
   "AddProject": "Add Project",
+  "Add":"Add",
 
   "Structure": "Structure",
   "EnterProjectName": "Enter The Project Name",
-  "SelectRules":"Select Rules"
+  "SelectRules":"Select Rules",
+  "NumberGap": "Number Gap"
 
 }

@@ -230,7 +230,7 @@ class _HousingStructureState extends State<HousingStructure> {
                       );
                     }),
               ),
-              Padding(
+           _partslist.length >0?   Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.01, vertical: size.height * 0.005),
                 child: Center(
@@ -246,8 +246,7 @@ class _HousingStructureState extends State<HousingStructure> {
                      Navigator.pop(context,_partslist);
                     },
                     child: Text(
-                     // AppLocalizations.of(context).translate("Add"),
-                      "Add",
+                      AppLocalizations.of(context).translate("Add"),
                       style: TextStyle(
                           color: CommonAssets.AppbarTextColor,
                           fontWeight: FontWeight.w700,
@@ -255,7 +254,7 @@ class _HousingStructureState extends State<HousingStructure> {
                     ),
                   ),
                 ),
-              )
+              ):Container()
             ],
           )
       ),

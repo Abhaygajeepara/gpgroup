@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
+import 'package:gpgroup/Model/Structure/BulidingStructureModel.dart';
+import 'package:gpgroup/Model/Structure/CommercialArcadeModel.dart';
 import 'package:gpgroup/Model/Structure/HousingModel.dart';
 
 import 'package:gpgroup/Pages/Project/Workshop/Structure/CommercialArcade.dart';
@@ -33,7 +35,9 @@ class CreatingProjectState extends State<CreatingProject> {
   bool errorrules = false;
   bool errorstructure =false;
   List<CreateHousingStrctureModel> _partslist= List(); // for house
-
+  List<BuildingStructureModel> _buildingList = List(); // fro bulidings
+  List<CommercialArcadeModel> _commercialModel= List();
+  int selectedFormat ;
   @override
   Widget build(BuildContext context) {
 
@@ -62,7 +66,9 @@ class CreatingProjectState extends State<CreatingProject> {
                     Container(
                       padding: EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width *0.01),
                       decoration: BoxDecoration(
-                        border: Border.all(color: errorrules? CommonAssets.errorColor:CommonAssets.boxBorderColors)
+                        border: Border.all(color: errorrules? CommonAssets.errorColor:CommonAssets.boxBorderColors),
+
+                      
                       ),
                       width: size.width,
                       child:Column(
@@ -127,6 +133,7 @@ class CreatingProjectState extends State<CreatingProject> {
                                   icon: Icon(Icons.remove_red_eye_sharp, color: CommonAssets.iconBackGroundColor,),
 
                                   onPressed: () async {
+                                    
                                     dynamic res = await Navigator.push(context, PageRouteBuilder(
                                         pageBuilder: (_,__,___)=>RulesPreview(rules: _allrules,rulesindex:_selectedRulesIndex ),
                                         transitionDuration: Duration(seconds: 0)
@@ -230,12 +237,19 @@ class CreatingProjectState extends State<CreatingProject> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, PageRouteBuilder(
+                            onTap: ()async{
+                              dynamic res = await Navigator.push(context, PageRouteBuilder(
                                 //    pageBuilder: (_,__,____) => BuildingStructure(),
                                 pageBuilder: (_,__,___)=> BuildingStructure(),
-                                transitionDuration: Duration(milliseconds: 1),
+                                transitionDuration: Duration(milliseconds: 0),
                               ));
+                              print('return ');
+                              if(mounted) setState(() {
+                               if(res != null){
+                                 _buildingList = res;
+                                 print(_buildingList.length);
+                               }
+                              });
                             },
                             child: CircleAvatar(
                               radius: size.height *0.04,
@@ -249,12 +263,18 @@ class CreatingProjectState extends State<CreatingProject> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: (){
-                              Navigator.push(context, PageRouteBuilder(
+                            onTap: ()async{
+                             dynamic res = await Navigator.push(context, PageRouteBuilder(
                                 //    pageBuilder: (_,__,____) => BuildingStructure(),
                                 pageBuilder: (_,__,___)=> CommercialArcade(),
-                                transitionDuration: Duration(milliseconds: 1),
+                                transitionDuration: Duration(milliseconds: 0),
                               ));
+                             if(mounted) setState(() {
+                                if(res != null){
+                                  _commercialModel = res;
+                                  print(_commercialModel[0].shops);
+                                }
+                             });
                             },
                             child: CircleAvatar(
                               radius: size.height *0.04,
@@ -284,7 +304,7 @@ class CreatingProjectState extends State<CreatingProject> {
                                 });
                             }
 
-                            else if(_partslist.length <=0  ){
+                            else if(_partslist.length <=0  || _buildingList.length <=0|| _commercialModel.length <= 0 ){
                               print('change code');
                               // TODO Add diffrent format data ;
 
@@ -293,7 +313,9 @@ class CreatingProjectState extends State<CreatingProject> {
                               });
                             }
                             else{
-                              ProjectsDatabaseService().createProject(_partslist, projectname, _selectedRules);
+                            //  ProjectsDatabaseService().createHousingStructure(_partslist, projectname, _selectedRules);
+                            //  ProjectsDatabaseService().createBuildingStructure(_buildingList, projectname, _selectedRules);
+                               ProjectsDatabaseService().createCommercialStructure(_commercialModel, projectname, _selectedRules);
                             }
 
                         }

@@ -4,6 +4,7 @@ import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Commonassets/InputDecoration/CommonInputDecoration.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
+import 'package:gpgroup/Model/Structure/BulidingStructureModel.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 class BuildingStructure extends StatefulWidget {
   @override
@@ -15,23 +16,44 @@ final _formkey = GlobalKey<FormState>();
   // int nu =15;
   int floors = 0;
 int flats = 2;
+List<BuildingStructureModel> _buildingModel = List();
 
+  getModel(int _floor,int _flats){
+    print('ch');
+    int staring = 100;
+    _buildingModel.clear();
+   for(int i  =0;i<floors;i++){
+     List<int> _flatsList =List();
+     for(int j =0;j<_flats;j++){
+
+        _flatsList.add(staring + j+1);
+
+
+     }
+
+     _buildingModel.add(BuildingStructureModel(floorNumber: i+1, flats: _flatsList));
+     staring = staring +100;
+     print(_buildingModel[i].floorNumber);
+     print(_buildingModel[i].flats);
+   }
+
+  }
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    final size = MediaQuery.of(context).size;
+
   
     return Scaffold(
       appBar: CommonAppbar(Container()),
       body:Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          width: width,
-          height: height,
+          width: size.width,
+          height:size.height,
           child: Column(
             children: [
             Container(
-              height: height *0.08,
+              height: size.height *0.08,
               child: Form(
                 key: _formkey,
                 child: Row(
@@ -43,7 +65,12 @@ int flats = 2;
                         maxLength: 2,
                         decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Floors'),counterText: ""),
                         // validator: (val) => val.isEmpty ?'Enter The Number':null,
-                        onChanged: (val)=> floors =int.parse(val),
+                        onChanged: (val){
+                          setState(() {
+                            floors =int.parse(val);
+                            getModel(floors,flats);
+                          });
+                        }
                       ),
                     ),
                     SizedBox(width: 10,),
@@ -59,12 +86,12 @@ int flats = 2;
                             //flats =int.parse(val)
                             setState(() {
 
-                              if(int.parse(val) == 2 ||int.parse(val) == 4 || int.parse(val) == 6){
+                              if(int.parse(val) == 2 ||int.parse(val) == 4 || int.parse(val) == 6||int.parse(val) == 8){
                                 flats =int.parse(val);
-
+                                getModel(floors,flats);
                               }
                               else{
-                                print('ss');
+                               // print('ss');
                                 Fluttertoast.showToast(
                                     msg: AppLocalizations.of(context).translate('numberofflatsare246'),
                                     toastLength: Toast.LENGTH_SHORT,
@@ -72,7 +99,7 @@ int flats = 2;
                                     timeInSecForIosWeb: 1,
                                     backgroundColor: Theme.of(context).primaryColor,
                                     textColor: CommonAssets.AppbarTextColor,
-                                    fontSize: height *0.02
+                                    fontSize: size.height *0.02
                                 );
                               }
 
@@ -100,12 +127,37 @@ int flats = 2;
                   child: ListView.builder(
                       itemCount: floors ,
                       itemBuilder: (context,index){
-                        return ss(index,flats);
+                        return ModelStructure(index,flats);
                       }
                   ),
                 ),
 
-              )
+              ),
+             _buildingModel.length > 0 ? Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: size.width * 0.01, vertical: size.height * 0.005),
+                child: Center(
+                  child: RaisedButton(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.3,
+                        vertical: size.height * 0.015),
+                    shape: StadiumBorder(),
+                    color: Theme.of(context).buttonColor,
+                    onPressed: () {
+                      return Navigator.pop(context,_buildingModel);
+                    },
+
+                    child: Text(
+
+                    AppLocalizations.of(context).translate("Add"),
+                      style: TextStyle(
+                          color: CommonAssets.AppbarTextColor,
+                          fontWeight: FontWeight.w700,
+                          fontSize: size.height * 0.020),
+                    ),
+                  ),
+                ),
+              ):Container(),
             ],
           )
         ),
@@ -114,11 +166,13 @@ int flats = 2;
     );
   }
 
-  Widget ss(int floor,int flat){
+  Widget ModelStructure(int floor,int flat){
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-print(floor.toString());
+// print(floor.toString());
   int floornumber = floor +1;
+  int staring =100 * (floor+1);
+
     return Row(
       children: [
         Padding(
@@ -144,7 +198,8 @@ print(floor.toString());
 
                     scrollDirection: Axis.horizontal,
                     itemCount: flat,itemBuilder: (context,index){
-                      int newflat = index  + 1;
+                      int newflat = staring  + index +1;
+
                   return Padding(
                     padding:  EdgeInsets.symmetric(horizontal:width * 0.003),
                     child: Container(
@@ -155,7 +210,7 @@ print(floor.toString());
                         border: Border.all(color: Colors.black)
                       ),
                       child: Center(child: Text(
-                        floornumber.toString()+'0'+newflat.toString(),style: TextStyle(
+                        newflat.toString(),style: TextStyle(
                         fontSize: height * 0.015,
                         fontWeight:FontWeight.bold
                       ),))

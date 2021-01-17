@@ -44,11 +44,12 @@
   "Cancel": "રદ કરો",
   "Delete": "કાઢી નાંખવું",
 
-  "numberofflatsare246": "ફ્લેટોની સંખ્યા 2,4,6 છે",
+  "numberofflatsare246": "ફ્લેટોની સંખ્યા 2,4,6,8 છે",
   "ProjectName": "પ્રોજેક્ટ નામ",
   "AddProject": "પ્રોજેક્ટ ઉમેરો",
   "Structure": "માળખું",
   "EnterProjectName": "પ્રોજેક્ટ નામ દાખલ કરો",
-  "SelectRules":"નિયમો પસંદ કરો"
-
+  "SelectRules":"નિયમો પસંદ કરો",
+  "Add":"ઉમેરો",
+  "NumberGap": "નંબર ગેપ"
 }
