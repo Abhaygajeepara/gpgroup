@@ -11,7 +11,7 @@ class RulesLanguage extends StatefulWidget {
   bool isdeleteon;
   List<int> selectedrulesindex ;
   RulesLanguage({@required this.rulesdata,@required this.rulesModel,@required this.isdeleteon,@required this.selectedrulesindex});
-  bool createlist = true; //
+
   @override
   _RulesLanguageState createState() => _RulesLanguageState();
 }
@@ -166,10 +166,9 @@ class _RulesLanguageState extends State<RulesLanguage> {
              shape: StadiumBorder(),
              color: Theme.of(context).primaryColor,
              onPressed: ()async {
-               List<List<dynamic>> _localallrules = [_selectedrules,widget.rulesdata]
-               ;
 
-           return    Navigator.pop(context,_localallrules);
+
+           return    Navigator.pop(context,_selectedrules);
              },
              child: Text(
                AppLocalizations.of(context).translate("SelectRules"),

@@ -41,7 +41,7 @@ class _CommercialArcadeState extends State<CommercialArcade> {
 
       }
 
-      _commercialModel.add(CommercialArcadeModel(floorNumber: i+1, shops:  _flatsList));
+      _commercialModel.add(CommercialArcadeModel(floorNumber: i, shops:  _flatsList));
       staring = staring +100;
       // print(_commercialModel[i].floorNumber);
       // print(_commercialModel[i].shops);

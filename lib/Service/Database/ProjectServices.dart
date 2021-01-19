@@ -6,11 +6,18 @@ import 'package:gpgroup/Model/Structure/HousingModel.dart';
 class ProjectsDatabaseService{
   final CollectionReference collectionReference = FirebaseFirestore.instance.collection('Project');
 
-  Future createHousingStructure(List<CreateHousingStrctureModel> structure,String projectName,List<String> rules)async{
+  Future CreateProject(String projectName,List<List<String>> rules,String typeofBuilding)async{
     await  collectionReference.doc(projectName).set({
-      'Rules':FieldValue.arrayUnion(rules),
+      'EnglishRules':FieldValue.arrayUnion(rules[0]),
+      'GujaratiRules':FieldValue.arrayUnion(rules[1]),
+      'HindiRules':FieldValue.arrayUnion(rules[2]),
       'Reference':FieldValue.arrayUnion([]),
+      'TypeofBuilding':typeofBuilding
     });
+  }
+
+  Future createHousingStructure(List<CreateHousingStrctureModel> structure,String projectName,List<List<String>> rules)async{
+  await CreateProject(projectName, rules,'Society');
   for(int i =0;i <structure.length;i++ ){
     await  collectionReference.doc(projectName).update({
 
@@ -26,11 +33,8 @@ class ProjectsDatabaseService{
   }
   }
 
-  Future createBuildingStructure(List<BuildingStructureModel> structure,String projectName,List<String> rules)async{
-    await  collectionReference.doc(projectName).set({
-      'Rules':FieldValue.arrayUnion(rules),
-      'Reference':FieldValue.arrayUnion([]),
-    });
+  Future createBuildingStructure(List<BuildingStructureModel> structure,String projectName,List<List<String>> rules)async{
+    await CreateProject(projectName, rules,'Apartment');
     for(int i =0;i <structure.length;i++ ){
       await  collectionReference.doc(projectName).update({
 
@@ -46,11 +50,8 @@ class ProjectsDatabaseService{
     }
   }
 
-  Future createCommercialStructure(List<CommercialArcadeModel> structure,String projectName,List<String> rules)async{
-    await  collectionReference.doc(projectName).set({
-      'Rules':FieldValue.arrayUnion(rules),
-      'Reference':FieldValue.arrayUnion([]),
-    });
+  Future createCommercialStructure(List<CommercialArcadeModel> structure,String projectName,List<List<String>> rules)async{
+    await CreateProject(projectName, rules,'CommercialArcade ');
     for(int i =0;i <structure.length;i++ ){
       await  collectionReference.doc(projectName).update({
 
