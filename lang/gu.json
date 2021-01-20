@@ -51,5 +51,9 @@
   "EnterProjectName": "પ્રોજેક્ટ નામ દાખલ કરો",
   "SelectRules":"નિયમો પસંદ કરો",
   "Add":"ઉમેરો",
-  "NumberGap": "નંબર ગેપ"
+  "NumberGap": "નંબર ગેપ",
+  "Houses": "મકાન",
+  "Apartments":"એપાર્ટમેન્ટ્સ",
+  "CommercialBuilding": "વાણિજ્યિક મકાન",
+  "MixedUse":"મિશ્રિત ઉપયોગ"
 }

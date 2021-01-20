@@ -10,9 +10,9 @@ import 'package:gpgroup/Service/Database/Rules.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 
 class Rules extends StatefulWidget {
-  bool isshowAddRulesButton;
-  List<int> selectdRulesindex ;
-  Rules({@required this.isshowAddRulesButton,@required this.selectdRulesindex});
+
+
+
   @override
   _RulesState createState() => _RulesState();
 }
@@ -27,7 +27,7 @@ class _RulesState extends State<Rules> {
   @override
   Widget build(BuildContext context) {
     bool _isdeleteon  ;
-    widget.isshowAddRulesButton ? _isdeleteon= true:_isdeleteon = false;
+
     final size = MediaQuery.of(context).size;
     return Scaffold(
         appBar: CommonAppbar(
@@ -58,9 +58,9 @@ class _RulesState extends State<Rules> {
                           controller: _pageContoller,
                           children: [
                             // isdeleteon's local variable define above
-                            RulesLanguage(rulesdata: snapshot.data.english,rulesModel: snapshot.data,isdeleteon: _isdeleteon,selectedrulesindex: widget.selectdRulesindex,),
-                            RulesLanguage(rulesdata: snapshot.data.gujarati,rulesModel: snapshot.data,isdeleteon: _isdeleteon,selectedrulesindex: widget.selectdRulesindex,),
-                            RulesLanguage(rulesdata: snapshot.data.hindi,rulesModel: snapshot.data,isdeleteon: _isdeleteon,selectedrulesindex: widget.selectdRulesindex,),
+                            RulesLanguage(rulesdata: snapshot.data.english,rulesModel: snapshot.data, ),
+                            RulesLanguage(rulesdata: snapshot.data.gujarati,rulesModel: snapshot.data, ),
+                            RulesLanguage(rulesdata: snapshot.data.hindi,rulesModel: snapshot.data,),
                           ],
                         );
                       }
@@ -75,7 +75,7 @@ class _RulesState extends State<Rules> {
                 }
               )
             )),
-           widget.isshowAddRulesButton? Padding(
+        Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -101,7 +101,7 @@ class _RulesState extends State<Rules> {
                   ),
                 ),
               ),
-            ):Container(),
+            ),
           ],
         ));
   }

@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/CommonLoading.dart';
@@ -31,435 +29,312 @@ class CreatingProject extends StatefulWidget {
 }
 
 class CreatingProjectState extends State<CreatingProject> {
-  final _formkey = GlobalKey<FormState>();
-  String projectname;
-  List<int> _selectedRulesIndex= List();
-  List<String> _allrules= List();
-  List<String> _englishRules= List();
-  List<String> _gujaratiRules= List();
-  List<String> _hindiRules= List();
-  bool isLoading = false;
 
+  /*
+  pageindex
+  0 = mainscreen,
+  1 = structure type
+  3,4,5,6 = for  particular structure
+
+
+     */
+  final _formkey = GlobalKey<FormState>();
+
+  int pageInedx = 0;
+  String projectname;
+  List<int> _selectedRulesIndex = List();
+  bool isLoading = false;
+  List<bool> _rulescheck;
+  bool issrulescheck = false;
   bool errorrules = false;
-  bool errorstructure =false;
-  List<CreateHousingStrctureModel> _partslist= List(); // for house
-  List<BuildingStructureModel> _buildingList = List(); // fro bulidings
-  List<CommercialArcadeModel> _commercialList= List();
-  int selectedFormat ;
-  int showStructure =0;
+  bool errorstructure = false;
+  int selectedFormat;
+  int showStructure = 0;
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    return WillPopScope(
+      onWillPop: (){
+        return   showDialog(
+          context: context,
+        builder: (context){
+          return AlertDialog(
+            title: Text(AppLocalizations.of(context).translate('AreYouSure')),
+            content: Text(
+                'You Want Leave This Page'),
+            actions: [
+              FlatButton(onPressed: (){
 
-    final size= MediaQuery.of(context).size;
-    return  Scaffold(
-      // Appbar
-      appBar: CommonAppbar(Container()),
-      body:isLoading ?CircularLoading() :StreamBuilder<RulesModel>(
-        stream: CompanyRules().RULESDATA,
-        builder: (context,rulesSnapshot){
-          if(rulesSnapshot.hasData)
-            {
-              RulesModel data = rulesSnapshot.data;
-              return SingleChildScrollView(
-                child: Padding(
-                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width *0.01),
-                  child: Column(
-
-                    children: [
-                      Form(
-                        key: _formkey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextFormField(
-
-                              onChanged: (val)=> projectname  = val,
-                              validator: (val)=> val.isEmpty ? "Enter The Project Name":null,
-                              decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('ProjectName')),
-                            ),
-                            SizedBox(height: size.height *0.01,),
-                            Container(
-                              padding: EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.width *0.01),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: errorrules? CommonAssets.errorColor:CommonAssets.boxBorderColors),
-
-
-                              ),
-                              width: size.width,
-                              child:Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context).translate('Rules'),
-                                        style: TextStyle(
-                                            fontSize: size.height *0.02,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                      Text(
-                                        _selectedRulesIndex.length.toString() ,
-                                        style: TextStyle(
-                                            fontSize: size.height *0.02,
-                                            fontWeight: FontWeight.bold
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height:  size.height  *0.02,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-
-
-                                      IconButton(
-
-
-
-                                          icon: Icon(Icons.add,color: CommonAssets.iconBackGroundColor),
-                                          onPressed: () async {
-                                            dynamic res = await Navigator.push(context, PageRouteBuilder(
-                                                pageBuilder: (_,__,___)=>Rules(isshowAddRulesButton: false,selectdRulesindex: _selectedRulesIndex,),
-                                                transitionDuration: Duration(seconds: 0)
-
-                                            ));
-                                            if(mounted) setState((){
-
-                                              if(res!= null){
-                                                _selectedRulesIndex = res; // selected rules for all rules
-
-                                                errorrules =false;
-                                                _englishRules.clear();
-                                                _hindiRules.clear();
-                                                _gujaratiRules.clear();
-                                                for(int i =0;i<_selectedRulesIndex.length;i++){
-                                                  _englishRules.add(data.english[_selectedRulesIndex[i]]);
-                                                  _hindiRules.add(data.hindi[_selectedRulesIndex[i]]);
-                                                  _gujaratiRules.add(data.gujarati[_selectedRulesIndex[i]]);
-
-                                                }
-
-                                              }
-
-
-                                            });
-                                          }),
-
-                                      IconButton(
-
-
-                                          icon: Icon(Icons.remove_red_eye_sharp, color: CommonAssets.iconBackGroundColor,),
-
-                                          onPressed: () async {
-
-                                            dynamic res = await Navigator.push(context, PageRouteBuilder(
-                                                pageBuilder: (_,__,___)=>RulesPreview(english: _englishRules,gujarati: _gujaratiRules,hindi: _hindiRules, ),
-                                                transitionDuration: Duration(seconds: 0)
-
-                                            ));
-                                            if(mounted) setState((){
-
-                                              if(res!= null){
-                                                _selectedRulesIndex = res;
-                                                errorrules = false;
-
-                                              }
-
-                                            });
-                                          }),
-                                      IconButton(
-
-                                        //color: Theme.of(context).primaryColor,
-                                          icon: Icon(Icons.delete, color:CommonAssets.iconBackGroundColor),
-
-                                          onPressed: () {
-                                            setState(() {
-                                              _selectedRulesIndex.clear();
-                                              _englishRules.clear();
-                                              _hindiRules.clear();
-                                              _gujaratiRules.clear();
-
-                                            });
-                                          }),
-
-                                    ],
-                                  ),
-
-
-
-
-                                ],
-                              ),
-
-                            ),
-                            SizedBox(height: size.height* 0.01,),
-                            Text(
-                              AppLocalizations.of(context).translate('Structure'),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: size.height *0.03
-                              ),
-                            ),
-                            Container(
-
-                              padding: EdgeInsets.symmetric(vertical: size.height *0.02,horizontal: size.width *0.01),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: errorstructure? CommonAssets.errorColor:CommonAssets.boxBorderColors)
-                              ),
-                              width: size.width,
-                              child:showStructure == 0? Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                                children: [
-                                  // three button of Structure filed in ui
-                                  HosingButton(size),
-                                  BuildingButton(size),
-                                  CommercialShopButton(size),
-                                  hybridStructure(size),
-
-
-                                ],
-                              ):Container(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    if(showStructure == 1)
-                                      HosingButton(size),
-                                    if(showStructure == 2)
-                                      BuildingButton(size),
-                                    if(showStructure == 3)
-                                      CommercialShopButton(size),
-                                   
-                                    IconButton(
-                                      icon: Icon(Icons.delete),
-                                      onPressed: (){
-                                        setState(() {
-                                          showStructure = 0;
-                                          _commercialList.clear();
-                                          _partslist.clear();
-                                          _buildingList.clear();
-                                        });
-                                      },
-                                    )
-
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: size.height *0.02,),
-
-                            Center(
-                              child: RaisedButton(
-                                padding: EdgeInsets.symmetric(vertical: size.height *0.02,horizontal: size.width *0.05),
-                                shape: StadiumBorder(),
-                                onPressed: ()async{
-                                  if(_formkey.currentState.validate()){
-                                    if(_selectedRulesIndex.length <=0  ){
-                                      setState(() {
-                                        errorrules = true;
-                                      });
-                                    }
-
-                                    else if (showStructure == 0){
-                                      if(_partslist.length <=0  || _buildingList.length <=0|| _commercialList.length <= 0 ){
-
-                                        setState(() {
-                                          errorstructure = true;
-                                        });
-                                      }
-                                    }
-                                    else{
-                                      List<List<String>> rules =[_englishRules,_gujaratiRules,_hindiRules];
-                                      setState(() {
-                                      isLoading = true;
-                                      });
-                                      if(showStructure == 1){
-                                      await  ProjectsDatabaseService().createHousingStructure(_partslist, projectname, rules);
-
-                                      }
-                                      else if(showStructure == 2)
-                                      {
-                                      await  ProjectsDatabaseService().createBuildingStructure(_buildingList, projectname, rules);
-                                      }
-                                      else if(showStructure == 3){
-
-                                      await  ProjectsDatabaseService().createCommercialStructure(_commercialList, projectname, rules);
-                                      }
-                                      else{
-                                      //  print("showStructure either 0  or ");
-                                      }
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-
-                                    }
-
-                                  }
-                                },
-                                color: Theme.of(context).buttonColor,
-                                child: Text(
-                                  AppLocalizations.of(context).translate('AddProject'),
-                                  style: TextStyle(
-                                      color: CommonAssets.AppbarTextColor,
-                                      fontSize: size.height *0.02
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
+                 Navigator.pop(context);
+              }, child: Text(
+                  AppLocalizations.of(context).translate('Cancel'),
+                style: TextStyle(
+                  color: Theme.of(context).errorColor
                 ),
-              );
-            }
-          else{
-            return CircularLoading();
-          }
-        },
+              )),
+              FlatButton(onPressed: (){
+                Navigator.pop(context);
+               return Navigator.pop(context);
+              }, child: Text('Yes',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor
+                ),),
+              ),
 
-      )
+            ],
+          );
+        }
+        );
+      },
+      child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            pageInedx != 0
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: FloatingActionButton(
+                      heroTag: UniqueKey(),
+                      onPressed: () {
+                        setState(() {
+                          if(pageInedx == 3 ||pageInedx == 4 || pageInedx == 5 ||pageInedx == 6){
+                            setState(() {
+                              pageInedx = 1;
+                            });
+                          }
+                      else  if (pageInedx > 0)
+                      {
+                          setState(() {
+                            pageInedx = pageInedx - 1;
+                          });
+                          }
+                        });
+                      },
+                      child: Icon(
+                        Icons.navigate_before_outlined,
+                        color: CommonAssets.AppbarTextColor,
+                      ),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    ),
+                  )
+                : Container(),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: FloatingActionButton(
+                heroTag: UniqueKey(),
+                onPressed: () {
+                  if(pageInedx == 0){
+                    if(_formkey.currentState.validate()){
+                      setState(() {
+                        pageInedx = pageInedx + 1;
+                      });
+                    }
+                  }
+                },
+                child: Icon(
+                  Icons.navigate_next_outlined,
+                  color: CommonAssets.AppbarTextColor,
+                ),
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+            )
+          ],
+        ),
+        appBar: CommonAppbar(Container()),
+        body: isLoading
+            ? CircularLoading()
+            : Padding(
+              padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.01),
+              child: StreamBuilder<RulesModel>(
+                  stream: CompanyRules().RULESDATA,
+                  builder: (context, rulesSnapshot) {
+                    if (rulesSnapshot.hasData) {
+                      if (issrulescheck == false) {
+                        _rulescheck = List<bool>.filled(
+                            rulesSnapshot.data.english.length, false);
+                      }
+                      RulesModel data = rulesSnapshot.data;
+                      return getbody(data);
+                    } else {
+                      return CircularLoading();
+                    }
+                  },
+                ),
+            ),
+        // bottomNavigationBar: BottomAppBar(
+        //   color: Colors.transparent,
+        //   child: Text('bottom screen widget'),
+        //   elevation: 0,
+        // ),
+      ),
     );
   }
-  Widget HosingButton(Size size){
-    return GestureDetector(
-      onTap: ()async{
-        dynamic res =  await Navigator.push(context, PageRouteBuilder(
-          //    pageBuilder: (_,__,____) => BuildingStructure(),
-          pageBuilder: (_,__,___)=> HousingStructure(),
-          transitionDuration: Duration(milliseconds: 1),
-        ));
 
-        if(mounted) setState(() {
-          if(res != null)
-          {
-            _partslist  = res;
-            errorstructure = false;
-            showStructure = 1;
-          }
-          else{
-            showStructure = 0;
-          }
+  Widget getbody(RulesModel _rulesModelGet) {
+    final size = MediaQuery.of(context).size;
+    if (pageInedx == 0) {
+      return mainScreen(_rulesModelGet);
+    } else if (pageInedx == 1) {
+      return structureType(size);
+    } else {
+      return Center(child: Container(child: Text('Page index ${pageInedx}')));
+    }
+  }
 
+  Widget mainScreen(RulesModel _rulesmodel_main) {
+    final size = MediaQuery.of(context).size;
+    PageController _pageController = PageController(initialPage: 0);
+    return Column(
+      children: [
+        Form(
+          key: _formkey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                initialValue: projectname ==  null?'': projectname.toString(),
+                onChanged: (val) => projectname = val,
+                validator: (val) =>
+                    val.isEmpty ? "Enter The Project Name" : null,
+                decoration: commoninputdecoration.copyWith(
+                    labelText:
+                        AppLocalizations.of(context).translate('ProjectName')),
+              ),
+              SizedBox(
+                height: size.height * 0.01,
+              ),
+            ],
+          ),
+        ),
+        Divider(
+          color: Theme.of(context).primaryColor,
+          thickness: 2,
+        ),
+        Expanded(
+            child: PageView(
+          controller: _pageController,
+          children: [
+            rulesWidget(_rulesmodel_main.english),
+            rulesWidget(_rulesmodel_main.gujarati),
+            rulesWidget(_rulesmodel_main.hindi),
+
+          ],
+        ))
+      ],
+    );
+  }
+
+  Widget rulesWidget(List<String> _rules) {
+    final size = MediaQuery.of(context).size;
+    return ListView.builder(
+        itemCount: _rules.length,
+        itemBuilder: (context, index) {
+          return CheckboxListTile(
+            activeColor: Theme.of(context).primaryColor,
+            value: _rulescheck[index],
+            onChanged: (val) {
+              setState(() {
+                if (issrulescheck == false) {
+                  issrulescheck = true;
+                }
+                _rulescheck[index] = val;
+                if (val) {
+                  _selectedRulesIndex.add(index);
+
+                } else {
+                  _selectedRulesIndex.remove(index);
+
+                }
+                print("Selected rules ${_selectedRulesIndex}");
+              });
+            },
+            title: Text(
+              _rules[index].toString(),
+              style: TextStyle(fontSize: size.height * 0.02),
+            ),
+          );
         });
-
-
-
-
-      },
-      child: CircleAvatar(
-        radius: size.height *0.04,
-        child: Icon(
-          Icons.house,
-          color: CommonAssets.iconcolor,
-          size: size.height *0.05,
-        ),
-        backgroundColor: CommonAssets.iconBackGroundColor,
-      ),
-    );
   }
-
-  Widget BuildingButton(Size size){
-    return GestureDetector(
-      onTap: ()async{
-        dynamic res = await Navigator.push(context, PageRouteBuilder(
-          //    pageBuilder: (_,__,____) => BuildingStructure(),
-          pageBuilder: (_,__,___)=> BuildingStructure(),
-          transitionDuration: Duration(milliseconds: 0),
-        ));
-       // print('return ');
-        if(mounted) setState(() {
-          if(res != null){
-            _buildingList = res;
-          //  print(_buildingList.length);
-            showStructure = 2;
-            errorstructure = false;
-          }
-          else{
-            showStructure = 0;
-          }
-        });
+  Widget structureType(Size size){
+    List<Map> _typeofsttuctur = [
+      {
+        'type':AppLocalizations.of(context).translate("Houses"),
+        'detail':AppLocalizations.of(context).translate("Houses"),
+        'image':'assets/house.jpg',
       },
-      child: CircleAvatar(
-        radius: size.height *0.04,
-        child: Icon(
-
-          Icons.apartment,
-          color: CommonAssets.iconcolor,
-          size: size.height *0.05,
-        ),
-        backgroundColor: CommonAssets.iconBackGroundColor,
-      ),
-    );
-  }
-  Widget CommercialShopButton(Size size){
-    return GestureDetector(
-      onTap: ()async{
-        dynamic res = await Navigator.push(context, PageRouteBuilder(
-          //    pageBuilder: (_,__,____) => BuildingStructure(),
-          pageBuilder: (_,__,___)=> CommercialArcade(),
-          transitionDuration: Duration(milliseconds: 0),
-        ));
-        if(mounted) setState(() {
-          if(res != null){
-            _commercialList = res;
-            // print(_commercialModel[0].shops);
-            showStructure = 3;
-            errorstructure = false;
-          }
-          else{
-            showStructure = 0;
-          }
-        });
+      {
+        'type':AppLocalizations.of(context).translate("Apartments"),
+        'detail':AppLocalizations.of(context).translate("Apartments"),
+      'image':'assets/apartment.png',
       },
-      child: CircleAvatar(
-        radius: size.height *0.04,
-        child: Icon(
-
-          Icons.storefront,
-          color: CommonAssets.iconcolor,
-          size: size.height *0.05,
-        ),
-        backgroundColor: CommonAssets.iconBackGroundColor,
-      ),
-    );
-  }
-
-  Widget hybridStructure(Size size){
-    return GestureDetector(
-      onTap: ()async{
-        dynamic res = await Navigator.push(context, PageRouteBuilder(
-          //    pageBuilder: (_,__,____) => BuildingStructure(),
-          pageBuilder: (_,__,___)=> HybridStrcture(),
-          transitionDuration: Duration(milliseconds: 0),
-        ));
-        // if(mounted) setState(() {
-        //   if(res != null){
-        //     _commercialList = res;
-        //     // print(_commercialModel[0].shops);
-        //     showStructure = 3;
-        //     errorstructure = false;
-        //   }
-        //   else{
-        //     showStructure = 0;
-        //   }
-        // });
-
+      {
+        'type':AppLocalizations.of(context).translate("CommercialBuilding"),
+        'detail':AppLocalizations.of(context).translate("CommercialBuilding"),
+      'image':'assets/Commercial.jpg',
       },
-      child: CircleAvatar(
-        radius: size.height *0.04,
-        child: Icon(
-          
-          Icons.business_sharp,
-          color: CommonAssets.iconcolor,
-          size: size.height *0.05,
-        ),
-        backgroundColor: CommonAssets.iconBackGroundColor,
-      ),
+      {
+        'type':AppLocalizations.of(context).translate("MixedUse"),
+        'detail':AppLocalizations.of(context).translate("MixedUse"),
+        'image':'assets/mixed-use.png',
+      }
+
+    ];
+    return ListView.builder(
+      itemCount: _typeofsttuctur.length,
+      itemBuilder: (context,index){
+        return Container(
+          height: size.height *0.2,
+
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                pageInedx =  2+index;
+              });
+            },
+            child: Card(
+            child:
+            index.isEven?
+            Row(
+              children: [
+                Image.asset(
+                  _typeofsttuctur[index]['image'],
+                  width: size.width *0.35,
+                  fit: BoxFit.fitWidth,
+                ),
+                VerticalDivider(
+                  color:Theme.of(context).primaryColor,
+                ),
+                Expanded(child: Text(_typeofsttuctur[index]['detail'])),
+              ],
+            ):Row(
+              children: [
+
+                Expanded(child: Text(_typeofsttuctur[index]['detail'])),
+                VerticalDivider(
+                  color:Theme.of(context).primaryColor,
+                ),
+                Image.asset(
+                  _typeofsttuctur[index]['image'],
+                  width: size.width *0.35,
+                  fit: BoxFit.fitWidth,
+                ),
+
+
+              ],
+            ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

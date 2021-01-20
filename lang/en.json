@@ -52,6 +52,10 @@
   "Structure": "Structure",
   "EnterProjectName": "Enter The Project Name",
   "SelectRules":"Select Rules",
-  "NumberGap": "Number Gap"
+  "NumberGap": "Number Gap",
+  "Houses": "Houses",
+  "Apartments":"Apartments",
+  "CommercialBuilding": "Commercial Building",
+  "MixedUse":"Mixed-Use"
 
 }

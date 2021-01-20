@@ -50,5 +50,9 @@
   "EnterProjectName": "प्रोजेक्ट का नाम दर्ज करें",
   "SelectRules":"नियमों का चयन करें",
   "Add":"जोड़ना",
-  "NumberGap": "नंबर गैप"
+  "NumberGap": "नंबर गैप",
+  "Houses": "मकान",
+  "Apartments":"अपार्टमेंट",
+  "CommercialBuilding": "व्यावसायिक इमारत",
+  "MixedUse":"मिश्रित उपयोग"
 }
