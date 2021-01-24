@@ -5,6 +5,18 @@ import 'package:gpgroup/Model/Structure/HousingModel.dart';
 
 class ProjectsDatabaseService{
   final CollectionReference collectionReference = FirebaseFirestore.instance.collection('Project');
+  Future docexist(String val)async{
+    try{
+      final doc = await collectionReference.doc(val).get();
+      if(doc.data().length>0){
+        return "Name Exist";
+      }
+    }
+    catch(e){
+      print(e.toString());
+    }
+
+  }
 
   Future CreateProject(String projectName,List<List<String>> rules,String typeofBuilding)async{
     await  collectionReference.doc(projectName).set({

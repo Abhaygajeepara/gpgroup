@@ -717,9 +717,10 @@ print(pageIndex);
                                 width: size.width /3 ,
                                 //color: Colors.red,
                                 child: Card(
-                                  color: partindex == selected_part ?Colors.black.withOpacity(0.5):Colors.white,
+                                  color: partindex == selected_part ?Theme.of(context).primaryColor :Colors.white,
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
+                                        color: partindex == selected_part ?Colors.white :Colors.black,
                                       ),
                                       borderRadius: BorderRadius.circular(10.0)
                                   ),
@@ -1231,10 +1232,10 @@ print(pageIndex);
                                 width: size.width /3 ,
                                 //color: Colors.red,
                                 child: Card(
-                                  color: floorindex == commericalSelectdfloor ?Colors.black.withOpacity(0.5):Colors.white,
+                                  color: floorindex == commericalSelectdfloor ?Theme.of(context).primaryColor:Colors.white,
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
-                                          color: Colors.black
+                                          color: floorindex == commericalSelectdfloor ?Colors.white:Colors.black,
                                       ),
                                       borderRadius: BorderRadius.circular(10.0)
                                   ),
@@ -1400,7 +1401,7 @@ print(pageIndex);
         ),
 
       ),
-          _mixusebuildingModel.length >0||_mixupcommercialModel.length >0 ?Padding(
+          _mixusebuildingModel.length >0 && _mixupcommercialModel.length >0 ?Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: size.width * 0.01, vertical: size.height * 0.005),
             child: Center(
@@ -1677,13 +1678,13 @@ print(pageIndex);
                         color: Colors.black,
                         iconSize: size.height *0.04,
                         onPressed: (){
-                          print(_mixedusedbuildingList);
+
                           if(_mixeduseApartmentformkey0.currentState.validate()){
 
                             if(!_mixedusedbuildingList.contains(mixeduseApartmentname)){
                               setState(() {
                                 _mixedusedbuildingList.add(mixeduseApartmentname);
-
+                                print( "list of part of ${_mixedusedbuildingList}");
                               });
                             }
 
@@ -1816,6 +1817,88 @@ print(pageIndex);
               ),
             ),
             SizedBox(height: 20,),
+            Container(
+              color: Colors.white,
+              width: size.width,
+              height: size.height *0.1,
+              // child: Text(AppLocalizations.of(context).translate('Floors')),
+              child:Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                      padding:  EdgeInsets.only(left: size.width *0.02),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context).translate('Apartments'),
+                            style: TextStyle(
+                                fontSize: size.height *0.03,
+                                fontWeight: FontWeight.bold
+                            ),
+                          ),
+                          Padding(
+                              padding:   EdgeInsets.only(right: size.width *0.02),
+                              child: selectedBuilldingindex !=  null ? Text(
+                                _mixedusedbuildingList[selectedBuilldingindex].toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: size.height *0.02
+                                ),
+                              ):Container()
+                          )
+                        ],
+                      )
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _mixedusedbuildingList.length,
+                        itemBuilder: (context,partindex){
+
+                          return GestureDetector(
+                            onLongPress: (){
+                              setState(() {
+
+                              });
+                            },
+                            onTap: (){
+                              setState(() {
+                                selectedBuilldingindex = partindex;
+                                print("selectedBuilldingindex = ${selectedBuilldingindex}");
+                              });
+                            },
+                            child: Container(
+                                width: size.width /3 ,
+                                //color: Colors.red,
+                                child: Card(
+                                  color: partindex == selectedBuilldingindex ?Theme.of(context).primaryColor:CommonAssets.unselectedpart,
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        color: partindex == selectedBuilldingindex ?   CommonAssets.AppbarTextColor:CommonAssets.standardtextcolor,
+                                      ),
+                                      borderRadius: BorderRadius.circular(10.0)
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      _mixedusedbuildingList[partindex].toString(),
+                                      style: TextStyle(
+                                        fontSize: size.height *0.02,
+                                        color: partindex == selectedBuilldingindex ?   CommonAssets.AppbarTextColor:CommonAssets.standardtextcolor,
+                                      ),),
+                                  ),
+                                )
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ),
+
+    Divider(color: CommonAssets.dividercolor,),
+
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
@@ -1827,11 +1910,12 @@ print(pageIndex);
 
                     )
                 ),
-                child: ListView.builder(
-                    itemCount: mixuseFloors ,
+                child:  ListView.builder(
+                  //_mixusebuildingModel[selectedBuilldingindex].floorsandflats.length
+                    itemCount:   mixuseFloors,
                     itemBuilder: (context,index){
 
-                      return MixUseModelStructure(index,mixuseFlats,selectedBuilldingindex);
+                      return MixUseModelStructure(index,_mixusebuildingModel[selectedBuilldingindex].floorsandflats[index].flats.length);
                     }
                 ),
               ),
@@ -1870,7 +1954,7 @@ print(pageIndex);
   }
 
 
-  Widget MixUseModelStructure(int _floor,int _flat,int buildingindex){
+  Widget MixUseModelStructure(int _floor,int _flats){
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -1901,27 +1985,29 @@ print(pageIndex);
                 child: ListView.builder(
 
                     scrollDirection: Axis.horizontal,
-                    itemCount: _mixusebuildingModel[0].floorsandflats[0].flats.length,itemBuilder: (context,indexflat){
+                    itemCount: _mixusebuildingModel[selectedBuilldingindex].floorsandflats[_floor].flats.length
+                    ,itemBuilder: (context,indexflat){
 
 
                   return GestureDetector(
                     onTap: (){
                       setState(() {
-                       // _mixusebuildingModel[floor].flats.removeAt(index);
+                        _mixusebuildingModel[selectedBuilldingindex].floorsandflats[_floor].flats.removeAt(indexflat);
                       });
                     },
                     child: Padding(
                       padding:  EdgeInsets.symmetric(horizontal:width * 0.003),
                       child: Container(
-                          width: width* 0.75 / _flat ,
+                          width: width* 0.75 / _flats ,
 
                           height: height / floornumber,
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.black)
                           ),
                           child: Center(child: Text(
-                            _mixusebuildingModel[buildingindex].floorsandflats[_floor].flats[indexflat].toString()
+                            _mixusebuildingModel[selectedBuilldingindex].floorsandflats[_floor].flats[indexflat].toString()
                           ,style: TextStyle(
+
                               fontSize: height * 0.015,
                               fontWeight:FontWeight.bold
                           ),))
