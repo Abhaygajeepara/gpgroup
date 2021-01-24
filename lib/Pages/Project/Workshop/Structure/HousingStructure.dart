@@ -13,7 +13,7 @@ class HousingStructure extends StatefulWidget {
 }
 
 class _HousingStructureState extends State<HousingStructure> {
-  ScrollController scrollController;
+
   String part ;
   int house;
   int selected_part ;

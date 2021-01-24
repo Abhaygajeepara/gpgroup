@@ -13,38 +13,37 @@ class CommercialArcade extends StatefulWidget {
 }
 
 class _CommercialArcadeState extends State<CommercialArcade> {
-  ScrollController scrollController;
-  int floors = 0;
-  int shop_per_floor = 0;
-  int selectdfloor ;
-  int staringnumber = 1;
-  int differentialvalue = 1000;
-  int number = 0;
-  List<List<int>> building= List();
-  List<CommercialArcadeModel> _commercialModel = List();
-  void allocationnumber(){
-    if(selectdfloor != null){
-      number = (selectdfloor * differentialvalue) +staringnumber;
+
+  int mixupCommericalfloors = 0;
+  int mixupCommericalShop_per_floor = 0;
+  int mixupCommericalSelectdfloor ;
+  int mixupCommericalStaringnumber = 1;
+  int mixupCommericalDifferentialvalue = 1000;
+  int mixupCommericalNumber = 0;
+
+  List<CommercialArcadeModel> _mixupcommercialModel = List();
+  void mixupAllocationnumber(){
+    if(mixupCommericalSelectdfloor != null){
+      mixupCommericalNumber = (mixupCommericalSelectdfloor * mixupCommericalDifferentialvalue) +mixupCommericalStaringnumber;
     }
   }
-  getModel(){
-    print('Commercial');
+  mixupCommericalGetModel(){
 
-    _commercialModel.clear();
-    for(int i  =0;i<floors;i++){
-      int staring = (i * differentialvalue) +staringnumber;
+
+    _mixupcommercialModel.clear();
+    for(int i  =0;i<mixupCommericalfloors;i++){
+      int staring = (i * mixupCommericalDifferentialvalue) +mixupCommericalStaringnumber;
       List<int> _flatsList =List();
-      for(int j =0;j<shop_per_floor;j++){
+      for(int j =0;j<mixupCommericalShop_per_floor;j++){
 
         _flatsList.add(staring + j);
 
 
       }
 
-      _commercialModel.add(CommercialArcadeModel(floorNumber: i, shops:  _flatsList));
+      _mixupcommercialModel.add(CommercialArcadeModel(floorNumber: i, shops:  _flatsList));
       staring = staring +100;
-      // print(_commercialModel[i].floorNumber);
-      // print(_commercialModel[i].shops);
+
     }
 
   }
@@ -52,8 +51,8 @@ class _CommercialArcadeState extends State<CommercialArcade> {
 
   @override
   Widget build(BuildContext context) {
-    allocationnumber();
-    getModel();
+    mixupAllocationnumber();
+    mixupCommericalGetModel();
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CommonAppbar(Container()),
@@ -74,14 +73,14 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                         Expanded(child: TextFormField(
                           keyboardType: TextInputType.phone,
                           maxLength: 1,
-                          onChanged: (val)=> floors = int.parse(val),
+                          onChanged: (val)=> mixupCommericalfloors = int.parse(val),
                           decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Floors')),
                         )),
                         SizedBox(width: size.width *0.01,),
                         Expanded(child: TextFormField(
                           keyboardType: TextInputType.phone,
                           maxLength: 3,
-                          onChanged: (val)=> shop_per_floor = int.parse(val),
+                          onChanged: (val)=> mixupCommericalShop_per_floor = int.parse(val),
                           decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Shops')),
                         )),
 
@@ -93,18 +92,18 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                       children: [
 
                         Expanded(child: TextFormField(
-                          initialValue: staringnumber.toString(),
+                          initialValue: mixupCommericalStaringnumber.toString(),
                           keyboardType: TextInputType.phone,
                           maxLength: 4,
-                          onChanged: (val)=> staringnumber = int.parse(val),
+                          onChanged: (val)=> mixupCommericalStaringnumber = int.parse(val),
                           decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('StartingNumber')),
                         )),
                         SizedBox(width: size.width *0.01,),
                         Expanded(child: TextFormField(
-                          initialValue: differentialvalue.toString(),
+                          initialValue: mixupCommericalDifferentialvalue.toString(),
                           keyboardType: TextInputType.phone,
                           maxLength: 4,
-                          onChanged: (val)=> differentialvalue = int.parse(val),
+                          onChanged: (val)=> mixupCommericalDifferentialvalue = int.parse(val),
                           decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('NumberGap')),
                         )),
                       ],
@@ -137,8 +136,8 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                         ),
                         Padding(
                           padding:   EdgeInsets.only(right: size.width *0.02),
-                          child: selectdfloor !=  null ? Text(
-                            selectdfloor.toString(),
+                          child: mixupCommericalSelectdfloor !=  null ? Text(
+                            mixupCommericalSelectdfloor.toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: size.height *0.02
@@ -151,15 +150,15 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                   Expanded(
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: floors,
+                        itemCount: mixupCommericalfloors,
                         itemBuilder: (context,floorindex){
 
                           return GestureDetector(
                             onTap: (){
                               setState(() {
-                                selectdfloor = floorindex;
+                                mixupCommericalSelectdfloor = floorindex;
 
-                                print(number);
+                                print(mixupCommericalNumber);
                                 // print(selectdfloor.toString());
                               });
                             },
@@ -167,7 +166,7 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                                 width: size.width /3 ,
                                 //color: Colors.red,
                                 child: Card(
-                                  color: floorindex == selectdfloor ?Colors.black.withOpacity(0.5):Colors.white,
+                                  color: floorindex == mixupCommericalSelectdfloor ?Colors.black.withOpacity(0.5):Colors.white,
                                   shape: RoundedRectangleBorder(
                                      side: BorderSide(
                                        color: Colors.black
@@ -179,7 +178,7 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                                       floorindex.toString(),
                                       style: TextStyle(
                                           fontSize: size.height *0.02,
-                                        color: floorindex == selectdfloor ?Colors.white:CommonAssets.standardtextcolor,
+                                        color: floorindex == mixupCommericalSelectdfloor ?Colors.white:CommonAssets.standardtextcolor,
                                       ),),
                                   ),
                                 )
@@ -191,10 +190,10 @@ class _CommercialArcadeState extends State<CommercialArcade> {
               ),
             ),
             Divider(color: CommonAssets.dividercolor,),
-            selectdfloor == null?Expanded(child: Container()):Expanded(
+            mixupCommericalSelectdfloor == null?Expanded(child: Container()):Expanded(
               child: GridView.builder(
 
-      itemCount: shop_per_floor,
+      itemCount: mixupCommericalShop_per_floor,
                   gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 5,
                     childAspectRatio: (size.height /size.height *1.8)
@@ -205,7 +204,7 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                   //  building.add([shopindex]);
 
 
-                    int localshopnumber = number +shopindex;
+                    int localshopnumber = mixupCommericalNumber +shopindex;
 
                     return Container(
 
@@ -230,7 +229,7 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                     );
                   }),
             ),
-          _commercialModel.length >0?  Padding(
+          _mixupcommercialModel.length >0?  Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -241,7 +240,7 @@ class _CommercialArcadeState extends State<CommercialArcade> {
                   shape: StadiumBorder(),
                   color: Theme.of(context).buttonColor,
                   onPressed: () {
-                    return Navigator.pop(context,_commercialModel);
+                    return Navigator.pop(context,_mixupcommercialModel);
                   },
 
                   child: Text(

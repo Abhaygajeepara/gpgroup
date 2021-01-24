@@ -12,17 +12,17 @@ class BuildingStructure extends StatefulWidget {
 }
 
 class _BuildingStructureState extends State<BuildingStructure> {
-final _formkey = GlobalKey<FormState>();
+final _MixuseApartmentformkey = GlobalKey<FormState>();
   // int nu =15;
-  int floors = 0;
-int flats = 2;
-List<BuildingStructureModel> _buildingModel = List();
+  int mixuseFloors = 0;
+int mixuseFlats = 2;
+List<BuildingStructureModel> _mixusebuildingModel = List();
 
-  getModel(int _floor,int _flats){
+  MixuseGetModel(int _floor,int _flats){
     print('ch');
     int staring = 100;
-    _buildingModel.clear();
-   for(int i  =0;i<floors;i++){
+    _mixusebuildingModel.clear();
+   for(int i  =0;i<mixuseFloors;i++){
      List<int> _flatsList =List();
      for(int j =0;j<_flats;j++){
 
@@ -31,10 +31,10 @@ List<BuildingStructureModel> _buildingModel = List();
 
      }
 
-     _buildingModel.add(BuildingStructureModel(floorNumber: i+1, flats: _flatsList));
+     _mixusebuildingModel.add(BuildingStructureModel(floorNumber: i+1, flats: _flatsList));
      staring = staring +100;
-     print(_buildingModel[i].floorNumber);
-     print(_buildingModel[i].flats);
+     print(_mixusebuildingModel[i].floorNumber);
+     print(_mixusebuildingModel[i].flats);
    }
 
   }
@@ -55,7 +55,7 @@ List<BuildingStructureModel> _buildingModel = List();
             Container(
               height: size.height *0.08,
               child: Form(
-                key: _formkey,
+                key: _MixuseApartmentformkey,
                 child: Row(
 
                   children: [
@@ -67,8 +67,8 @@ List<BuildingStructureModel> _buildingModel = List();
                         // validator: (val) => val.isEmpty ?'Enter The Number':null,
                         onChanged: (val){
                           setState(() {
-                            floors =int.parse(val);
-                            getModel(floors,flats);
+                            mixuseFloors =int.parse(val);
+                            MixuseGetModel(mixuseFloors,mixuseFlats);
                           });
                         }
                       ),
@@ -87,8 +87,8 @@ List<BuildingStructureModel> _buildingModel = List();
                             setState(() {
 
                               if(int.parse(val) == 2 ||int.parse(val) == 4 || int.parse(val) == 6||int.parse(val) == 8){
-                                flats =int.parse(val);
-                                getModel(floors,flats);
+                                mixuseFlats =int.parse(val);
+                                MixuseGetModel(mixuseFloors,mixuseFlats);
                               }
                               else{
                                // print('ss');
@@ -125,15 +125,15 @@ List<BuildingStructureModel> _buildingModel = List();
                     )
                   ),
                   child: ListView.builder(
-                      itemCount: floors ,
+                      itemCount: _mixusebuildingModel.length ,
                       itemBuilder: (context,index){
-                        return ModelStructure(index,flats);
+                        return MixUseModelStructure(index,_mixusebuildingModel[index].flats.length);
                       }
                   ),
                 ),
 
               ),
-             _buildingModel.length > 0 ? Padding(
+             _mixusebuildingModel.length > 0 ? Padding(
                 padding: EdgeInsets.symmetric(
                     horizontal: size.width * 0.01, vertical: size.height * 0.005),
                 child: Center(
@@ -144,7 +144,7 @@ List<BuildingStructureModel> _buildingModel = List();
                     shape: StadiumBorder(),
                     color: Theme.of(context).buttonColor,
                     onPressed: () {
-                      return Navigator.pop(context,_buildingModel);
+                      return Navigator.pop(context,_mixusebuildingModel);
                     },
 
                     child: Text(
@@ -166,7 +166,7 @@ List<BuildingStructureModel> _buildingModel = List();
     );
   }
 
-  Widget ModelStructure(int floor,int flat){
+  Widget MixUseModelStructure(int floor,int flat){
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 // print(floor.toString());

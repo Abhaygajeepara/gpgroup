@@ -54,5 +54,6 @@
   "Houses": "मकान",
   "Apartments":"अपार्टमेंट",
   "CommercialBuilding": "व्यावसायिक इमारत",
-  "MixedUse":"मिश्रित उपयोग"
+  "MixedUse":"मिश्रित उपयोग",
+  "ApartmentName": "अपार्टमेंट का नाम"
 }

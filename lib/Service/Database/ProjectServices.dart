@@ -33,19 +33,31 @@ class ProjectsDatabaseService{
   }
   }
 
-  Future createBuildingStructure(List<BuildingStructureModel> structure,String projectName,List<List<String>> rules)async{
+  Future createApartmentStructure(List<BuildingStructureNumberModel> structure,String projectName,List<List<String>> rules)async{
     await CreateProject(projectName, rules,'Apartment');
     for(int i =0;i <structure.length;i++ ){
-      await  collectionReference.doc(projectName).update({
 
-        'Reference':FieldValue.arrayUnion([structure[i].floorNumber]),
+      await collectionReference.doc(projectName).update({
+        'Reference':FieldValue.arrayUnion([structure[i].buildingName])
       });
-      for(int j= 0 ;j<structure[i].flats.length;j++){
-
-        await    collectionReference.doc(projectName).collection(structure[i].floorNumber.toString()).doc(structure[i].flats[j].toString()).set({
-          'FlatNumber':structure[i].flats[j].toString()
-        });
+      for(int j=0;j<structure[i].floorsandflats.length;j++){
+        for(int k=0;k<structure[i].floorsandflats[j].flats.length;k++){
+          String docName = structure[i].buildingName+structure[i].floorsandflats[j].flats[k].toString();
+          await    collectionReference.doc(projectName).collection(structure[i].buildingName).doc(docName).set({
+            'Number':docName
+          });
+        }
       }
+      // await  collectionReference.doc(projectName).update({
+      //
+      //   'Reference':FieldValue.arrayUnion([structure[i].floorNumber]),
+      // });
+      // for(int j= 0 ;j<structure[i].flats.length;j++){
+      //
+      //   await    collectionReference.doc(projectName).collection(structure[i].floorNumber.toString()).doc(structure[i].flats[j].toString()).set({
+      //     'FlatNumber':structure[i].flats[j].toString()
+      //   });
+      // }
 
     }
   }
@@ -67,4 +79,36 @@ class ProjectsDatabaseService{
     }
   }
 
+  Future createMixeduseStructure(List<CommercialArcadeModel> commercialStructure, List<BuildingStructureNumberModel> buildingStructure,String projectName,List<List<String>> rules)async {
+    await CreateProject(projectName, rules, 'Mixed-Use ');
+    for (int i = 0; i < commercialStructure.length; i++) {
+      String docname = "Commercial"+commercialStructure[i].floorNumber.toString();
+      await collectionReference.doc(projectName).update({
+
+        'Reference': FieldValue.arrayUnion(
+            [docname]),
+      });
+      for (int j = 0; j < commercialStructure[i].shops.length; j++) {
+        String docname = "Commercial"+commercialStructure[i].floorNumber.toString();
+        await collectionReference.doc(projectName).collection(
+            docname).doc(
+            commercialStructure[i].shops[j].toString()).set({
+          'FlatNumber': commercialStructure[i].shops[j].toString()
+        });
+      }
+      for(int i =0;i <buildingStructure.length;i++ ){
+
+        await collectionReference.doc(projectName).update({
+          'Reference':FieldValue.arrayUnion([buildingStructure[i].buildingName])
+        });
+        for(int j=0;j<buildingStructure[i].floorsandflats.length;j++){
+          for(int k=0;k<buildingStructure[i].floorsandflats[j].flats.length;k++){
+            String docName = buildingStructure[i].buildingName+buildingStructure[i].floorsandflats[j].flats[k].toString();
+            await    collectionReference.doc(projectName).collection(buildingStructure[i].buildingName).doc(docName).set({
+              'Number':docName
+            });
+          }
+        }
+    }
+  }}
 }

@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
        primaryColor:  Color(0xff45a891),
       buttonColor: Colors.black,
 
+
         //  primaryColor:  Colors.black.withOpacity(0.6),
        bottomAppBarColor: Colors.lightBlue,
 

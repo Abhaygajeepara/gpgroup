@@ -22,6 +22,8 @@ class CommonAssets{
   static Color iconcolor = Colors.white;
   static Color iconBackGroundColor = Colors.black;
 
+
+  static Color unselectedpart = Colors.white;
   //server error
   static String snapshoterror = 'Server Error';
 }

@@ -56,6 +56,7 @@
   "Houses": "Houses",
   "Apartments":"Apartments",
   "CommercialBuilding": "Commercial Building",
-  "MixedUse":"Mixed-Use"
+  "MixedUse":"Mixed-Use",
+  "ApartmentName": "Apartment Name"
 
 }
