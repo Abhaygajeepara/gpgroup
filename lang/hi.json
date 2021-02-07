@@ -55,5 +55,22 @@
   "Apartments":"अपार्टमेंट",
   "CommercialBuilding": "व्यावसायिक इमारत",
   "MixedUse":"मिश्रित उपयोग",
-  "ApartmentName": "अपार्टमेंट का नाम"
+  "ApartmentName": "अपार्टमेंट का नाम",
+  "ThisProjectNameisexist":"इस परियोजना का नाम अस्तित्व है",
+  "EnterTheProjectName":"प्रोजेक्ट का नाम दर्ज करें",
+  "YouWantLeaveThisPage": "आप यह पृष्ठ छोड़ना चाहते हैं ?",
+
+  "Address": "पता",
+  "Landmark": "सीमा चिन्ह",
+
+  "Description": "विवरण",
+  "EnterTheAddress": "पता दर्ज करें",
+  "EnterTheLandmark": "मील का पत्थर दर्ज करें",
+  "EnterTheDescription": "विवरण दर्ज करें",
+  "SelectTheImage": "छवि का चयन करें",
+  "MinimumImageShouldBeOne": "न्यूनतम छवि एक होनी चाहिए",
+  "SelectImage": "छवि चुने",
+  "Update":"अपडेट करें",
+
+  "ViewSite":"साइट देखें"
 }

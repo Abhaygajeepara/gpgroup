@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gpgroup/Commonassets/CommonLoading.dart';
@@ -16,6 +18,8 @@ import 'package:gpgroup/Model/Structure/HousingModel.dart';
 import 'package:gpgroup/Service/Database/ProjectServices.dart';
 import 'package:gpgroup/Service/Database/Rules.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class CreatingProject extends StatefulWidget {
   CreatingProject() : super();
@@ -27,7 +31,11 @@ class CreatingProject extends StatefulWidget {
 }
 
 class CreatingProjectState extends State<CreatingProject> {
-
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
   /*
   pageindex
   0 = mainscreen,
@@ -36,10 +44,21 @@ class CreatingProjectState extends State<CreatingProject> {
 
 
      */
+
   final _formkey = GlobalKey<FormState>();
   final _houseFormkey = GlobalKey<FormState>();
+
+  File _image;
+  List<File> _imagefilelist = List();
+  int showimageindex = -1;
+
   int pageIndex = 0;
   String projectname;
+  String projectnNameError;
+  String landmark;
+  String address;
+  String description;
+
   List<int> _selectedRulesIndex = List();
   bool isLoading = false;
   List<bool> _rulescheck;
@@ -54,7 +73,7 @@ class CreatingProjectState extends State<CreatingProject> {
 
   // housing structures
   String part ;
-  int house;
+  int house = 0;
   int selected_part ;
   int staringnumber = 1;
   int number = 0;
@@ -104,6 +123,15 @@ class CreatingProjectState extends State<CreatingProject> {
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+  getimage(ImageSource source) async {
+    PickedFile pickfile = await ImagePicker().getImage(source: source);
+    setState(() {
+      showimageindex = -1;
+      _image = File(pickfile.path);
+      _imagefilelist.add(_image);
+    });
+
   }
   getModel(int _floor,int _flats){
     //print(_floor);
@@ -229,6 +257,9 @@ class CreatingProjectState extends State<CreatingProject> {
 
   @override
   Widget build(BuildContext context) {
+    // String projectName ="Abhay";
+    // String ProjectNameUpper =  projectName.substring(0,1).toUpperCase() + projectName.substring(1);
+    // print(ProjectNameUpper);
     final size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: (){
@@ -238,7 +269,9 @@ class CreatingProjectState extends State<CreatingProject> {
           return AlertDialog(
             title: Text(AppLocalizations.of(context).translate('AreYouSure')),
             content: Text(
-                'You Want Leave This Page'),
+
+            AppLocalizations.of(context).translate('YouWantLeaveThisPage')
+            ),
             actions: [
               FlatButton(onPressed: (){
 
@@ -303,12 +336,35 @@ class CreatingProjectState extends State<CreatingProject> {
               alignment: Alignment.bottomCenter,
               child: FloatingActionButton(
                 heroTag: UniqueKey(),
-                onPressed: () {
+                onPressed: () async{
                   if(pageIndex == 0){
                     if(_formkey.currentState.validate()){
-                      setState(() {
-                        pageIndex = pageIndex + 1;
-                      });
+                      final userexist = await ProjectsDatabaseService().projectExist(projectname);
+
+                      if(userexist== null){
+                        if(_imagefilelist.length  <=0){
+                          setState(() {
+                            projectnNameError =AppLocalizations.of(context).translate('SelectTheImage');
+                            print(projectnNameError);
+                          });
+                        }
+                        else{
+                          setState(() {
+                            pageIndex = pageIndex + 1;
+                          });
+                        }
+
+                      }
+                      else{
+
+                        setState(() {
+                            projectnNameError =AppLocalizations.of(context).translate('ThisProjectNameisexist');
+                           print(projectnNameError);
+                        });
+                      }
+
+
+
                     }
 
                   }
@@ -431,35 +487,214 @@ class CreatingProjectState extends State<CreatingProject> {
   Widget mainScreen() {
     final size = MediaQuery.of(context).size;
 
-    return Column(
-      children: [
-        Form(
-          key: _formkey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                initialValue: projectname ==  null?'': projectname.toString(),
-                onChanged: (val) => projectname = val,
-                validator: (val) =>
-                    val.isEmpty ? "Enter The Project Name" : null,
-                decoration: commoninputdecoration.copyWith(
-                    labelText:
-                        AppLocalizations.of(context).translate('ProjectName')),
-              ),
-              SizedBox(
-                height: size.height * 0.01,
-              ),
-            ],
-          ),
-        ),
-        Divider(
-          color: Theme.of(context).primaryColor,
-          thickness: 2,
-        ),
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Form(
+            key: _formkey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                projectnNameError==null?Container():Center(
+                  child: Text(
+                    projectnNameError,
+                    style: TextStyle(
+                      color: CommonAssets.errorColor,
+                    ),),
+                ),
+                SizedBox(
+                  height: size.height * 0.01,
+                ),
+                TextFormField(
+                  autofocus: false,
+                  initialValue: projectname ==  null?'': projectname.toString(),
+                  onChanged: (val){
+                    setState(() {
 
-      ],
-    );
+                      projectname  = val;
+                      projectnNameError = null;
+                    });
+                  },
+
+                  validator: (val) =>  nameValidator(val),
+
+                  decoration: commoninputdecoration.copyWith(
+                      labelText:
+                          AppLocalizations.of(context).translate('ProjectName')),
+                ),
+                SizedBox(
+                  height: size.height * 0.01,
+                ),
+                TextFormField(
+                  autofocus: false,
+                  initialValue: landmark ==  null?'': landmark.toString(),
+                  onChanged: (val)=> landmark= val,
+
+                  validator: (val) =>  val.isEmpty ?AppLocalizations.of(context).translate('EnterTheLandmark'):null,
+
+                  decoration: commoninputdecoration.copyWith(
+                      labelText:
+                      AppLocalizations.of(context).translate('Landmark')),
+                ),
+                SizedBox(
+                  height: size.height * 0.01,
+                ),
+                TextFormField(
+                  autofocus: false,
+                  initialValue: address ==  null?'': address.toString(),
+                  onChanged: (val)=> address= val,
+
+                  validator: (val) =>  val.isEmpty ?AppLocalizations.of(context).translate('EnterTheAddress'):null,
+                  maxLines: 2,
+                  decoration: commoninputdecoration.copyWith(
+                      labelText:
+                      AppLocalizations.of(context).translate('Address')),
+                ),
+                SizedBox(
+                  height: size.height * 0.01,
+                ),
+                TextFormField(
+                   maxLines: 4,
+                  autofocus: false,
+                  initialValue: description ==  null?'': description.toString(),
+                  onChanged: (val)=> description= val,
+
+                  validator: (val) =>  val.isEmpty ?AppLocalizations.of(context).translate('EnterTheDescription'):null,
+
+                  decoration: commoninputdecoration.copyWith(
+                      labelText: AppLocalizations.of(context).translate('Description')),
+                ),
+                SizedBox(
+                  height: size.height * 0.02,
+                ),
+                Container(
+             // height: size.height * 0.4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: size.width * 0.7,
+                    height: size.height * 0.32,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: CommonAssets.boxBorderColors,
+                              width: 0.5)),
+                      child: showimageindex == -1
+                          ? _image == null
+                              ? Center(
+                                  child: Text('Select Image'),
+                                )
+                              : Image.file(_image)
+                          : Image.file(_imagefilelist[showimageindex]),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      RaisedButton(
+                        shape: StadiumBorder(),
+                        color: CommonAssets.boxBorderColors,
+                        onPressed: () async{
+
+
+                            getimage(ImageSource.camera);
+
+
+                        },
+                        child: Icon(
+                          Icons.camera,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      SizedBox(
+                        width: size.width * 0.05,
+                      ),
+                      RaisedButton(
+                        shape: StadiumBorder(),
+                        color: CommonAssets.boxBorderColors,
+                        onPressed: ()async {
+                          var permission = await Permission.storage.status;
+                          if(permission.isDenied  || permission.isUndetermined){
+
+                            await Permission.storage.request();
+                          }
+                          else if(permission.isPermanentlyDenied)
+                          {
+                            return openAppSettings();
+                          }
+                          else if(permission.isGranted ){
+                            getimage(ImageSource.gallery);
+                          }
+                          else {
+                            return openAppSettings();
+                          }
+
+                        },
+                        child: Icon(
+                          Icons.folder,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: size.height *0.01,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                            color: CommonAssets.boxBorderColors,
+                            width: 0.5)),
+                   // width: size.width * 0.2,
+                    height: size.height *0.08,
+
+                    child: ListView.builder(
+
+                        itemCount: _imagefilelist.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                showimageindex = index;
+                              });
+                            },
+                            onLongPress: () {
+                              setState(() {
+                                print('ss');
+                                showimageindex = -1;
+                                _imagefilelist.removeAt(index);
+                              });
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                      color: CommonAssets.boxBorderColors,
+                                      width: 0.5)),
+                              child: Image.file(
+                                _imagefilelist[index],
+                                height: size.height * 0.8,
+                                width: size.width * 0.18,
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ),
+
+            // Divider(
+            //   color: Theme.of(context).primaryColor,
+            //   thickness: 2,
+            // ),
+          ],
+        ),
+      ),
+    ]));
   }
   //
  // // rules
@@ -616,11 +851,12 @@ print(pageIndex);
                         validator: Stringvalidation,
                         // keyboardType: TextInputType.text,
                         maxLength: 1,
-                        onChanged: (val)=> part = val,
+                        onChanged: (val)=> part = val.toUpperCase(),
                         decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Part')),
                       )),
                       SizedBox(width: size.width *0.01,),
                       Expanded(child: TextFormField(
+                        initialValue: house.toString(),
                         validator: numbervalidtion,
                         keyboardType: TextInputType.phone,
                         maxLength: 3,
@@ -797,7 +1033,7 @@ print(pageIndex);
                    setState(() {
                 isLoading = true;
                    });
-                  await ProjectsDatabaseService().createHousingStructure(_houseStructuure, projectname.toLowerCase(), rules);
+                  await ProjectsDatabaseService().createHousingStructure(_houseStructuure, projectname.toLowerCase(), rules,landmark,address,description,_imagefilelist);
                     setState(() {
                       isLoading = false;
                     });
@@ -841,7 +1077,7 @@ print(pageIndex);
                     validator: StringvalidationForAparment,
                     // keyboardType: TextInputType.text,
                     maxLength: 2,
-                    onChanged: (val)=>apartmentname = val,
+                    onChanged: (val)=>apartmentname = val.toUpperCase(),
                     decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('ApartmentName')),
                   )),
 
@@ -859,6 +1095,7 @@ print(pageIndex);
                             if(!_buildingList.contains(apartmentname)){
                               setState(() {
                                 _buildingList.add(apartmentname);
+                                getModel(floors,flats);
 
                               });
                             }
@@ -1035,7 +1272,7 @@ print(pageIndex);
 
                     });
 
-                   await ProjectsDatabaseService().createApartmentStructure(_buildingModel, projectname.toLowerCase(), rules);
+                   await ProjectsDatabaseService().createApartmentStructure(_buildingModel, projectname.toLowerCase(), rules,landmark,address,description,_imagefilelist);
                     Navigator.pop(context);
 
                   },
@@ -1137,6 +1374,7 @@ print(pageIndex);
                       Row(
                         children: [
                           Expanded(child: TextFormField(
+                            initialValue: commericalfloors.toString(),
                             keyboardType: TextInputType.phone,
                             maxLength: 1,
                             onChanged: (val)=> commericalfloors = int.parse(val),
@@ -1144,6 +1382,7 @@ print(pageIndex);
                           )),
                           SizedBox(width: size.width *0.01,),
                           Expanded(child: TextFormField(
+                            initialValue: commericalShop_per_floor.toString(),
                             keyboardType: TextInputType.phone,
                             maxLength: 3,
                             onChanged: (val)=> commericalShop_per_floor = int.parse(val),
@@ -1310,7 +1549,7 @@ print(pageIndex);
                   setState(() {
                     isLoading = true;
                   });
-                  await ProjectsDatabaseService().createCommercialStructure(_commercialModel, projectname.toLowerCase(), rules);
+                  await ProjectsDatabaseService().createCommercialStructure(_commercialModel, projectname.toLowerCase(), rules,landmark,address,description,_imagefilelist);
               return Navigator.pop(context);
                   },
 
@@ -1416,7 +1655,7 @@ print(pageIndex);
                   setState(() {
                   isLoading = true;
                   });
-                  await ProjectsDatabaseService().createMixeduseStructure(_mixupcommercialModel, _mixusebuildingModel, projectname.toLowerCase(), rules);
+                  await ProjectsDatabaseService().createMixeduseStructure(_mixupcommercialModel, _mixusebuildingModel, projectname.toLowerCase(), rules,landmark,address,description,_imagefilelist);
                   Navigator.pop(context);
                 },
 
@@ -1455,6 +1694,7 @@ print(pageIndex);
                       Row(
                         children: [
                           Expanded(child: TextFormField(
+                            initialValue: mixupCommericalfloors.toString(),
                             keyboardType: TextInputType.phone,
                             maxLength: 1,
                             onChanged: (val)=> mixupCommericalfloors = int.parse(val),
@@ -1462,6 +1702,7 @@ print(pageIndex);
                           )),
                           SizedBox(width: size.width *0.01,),
                           Expanded(child: TextFormField(
+                            initialValue: mixupCommericalShop_per_floor.toString(),
                             keyboardType: TextInputType.phone,
                             maxLength: 3,
                             onChanged: (val)=> mixupCommericalShop_per_floor = int.parse(val),
@@ -1666,7 +1907,7 @@ print(pageIndex);
                     validator: StringvalidationForAparment,
                     // keyboardType: TextInputType.text,
                     maxLength: 2,
-                    onChanged: (val)=>mixeduseApartmentname = val,
+                    onChanged: (val)=>mixeduseApartmentname = val.toUpperCase(),
                     decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('ApartmentName')),
                   )),
 
@@ -1684,6 +1925,7 @@ print(pageIndex);
                             if(!_mixedusedbuildingList.contains(mixeduseApartmentname)){
                               setState(() {
                                 _mixedusedbuildingList.add(mixeduseApartmentname);
+                                MixuseGetModel(mixuseFloors,mixuseFlats);
                                 print( "list of part of ${_mixedusedbuildingList}");
                               });
                             }
@@ -1765,6 +2007,7 @@ print(pageIndex);
                   children: [
                     Expanded(
                       child: TextFormField(
+                        initialValue: mixuseFloors.toString(),
                           keyboardType: TextInputType.phone,
                           maxLength: 2,
                           decoration: loginAndsignincommoninputdecoration.copyWith(labelText:  AppLocalizations.of(context).translate('Floors'),counterText: ""),
@@ -1781,6 +2024,7 @@ print(pageIndex);
 
                     Expanded(
                       child: TextFormField(
+                        initialValue: mixuseFlats.toString(),
                         maxLength: 1,
                         keyboardType: TextInputType.phone,
                         decoration: loginAndsignincommoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Flats'),counterText: ""),
@@ -2058,6 +2302,18 @@ print(pageIndex);
       return "Character Is Grater Than One";
     }
     else {
+      return null;
+    }
+  }
+
+   nameValidator(String val) {
+    final res =  ProjectsDatabaseService().projectExist(val);
+    if(val.isEmpty){
+      return AppLocalizations.of(context).translate('EnterTheProjectName');;
+    }
+
+    else{
+
       return null;
     }
   }

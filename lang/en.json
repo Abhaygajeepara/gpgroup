@@ -57,6 +57,22 @@
   "Apartments":"Apartments",
   "CommercialBuilding": "Commercial Building",
   "MixedUse":"Mixed-Use",
-  "ApartmentName": "Apartment Name"
+  "ApartmentName": "Apartment Name",
+  "ThisProjectNameisexist":"This Project Name Is Exists",
+  "EnterTheProjectName":"Enter The Project Name",
+  "YouWantLeaveThisPage": "You Want Leave This Page ?",
+
+  "Address": "Address",
+  "Landmark": "Landmark",
+  "Description": "Description",
+  "EnterTheAddress": "Enter The Address",
+  "EnterTheLandmark": "Enter The Landmark",
+  "EnterTheDescription": "Enter The Description",
+  "SelectTheImage": "Select The Image",
+  "MinimumImageShouldBeOne": "Minimum image Should Be One",
+  "SelectImage": "Select Image",
+  "Update":"Update",
+
+  "ViewSite":"View Site"
 
 }

@@ -56,5 +56,22 @@
   "Apartments":"એપાર્ટમેન્ટ્સ",
   "CommercialBuilding": "વાણિજ્યિક મકાન",
   "MixedUse":"મિશ્રિત ઉપયોગ",
-  "ApartmentName": "એપાર્ટમેન્ટનું નામ"
+  "ApartmentName": "એપાર્ટમેન્ટનું નામ",
+  "ThisProjectNameisexist":"આ પ્રોજેક્ટ નામ અસ્તિત્વમાં છે",
+  "EnterTheProjectName":"પ્રોજેક્ટ નામ દાખલ કરો",
+  "YouWantLeaveThisPage": "તમે આ પૃષ્ઠ છોડવા માંગો છો ?",
+
+  "Address": "સરનામું",
+  "Landmark": "સીમાચિહ્ન",
+  "Description": "વર્ણન",
+
+  "EnterTheAddress": "સરનામું દાખલ કરો",
+  "EnterTheLandmark": "લેન્ડમાર્ક દાખલ કરો",
+  "EnterTheDescription": "વર્ણન દાખલ કરો",
+  "SelectTheImage": "છબી પસંદ કરો",
+  "MinimumImageShouldBeOne": "ન્યૂનતમ છબી એક હોવી જોઈએ",
+  "SelectImage": "છબી પસંદ કરો",
+  "Update":"અપડેટ",
+
+  "ViewSite":"સાઇટ જુઓ"
 }

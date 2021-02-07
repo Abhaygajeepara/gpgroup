@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Pages/Home.dart';
 import 'package:gpgroup/Pages/Setting/Setting.dart';
 
@@ -10,13 +11,14 @@ import 'package:gpgroup/app_localization/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 Widget CustomButtomBar(BuildContext context,int pageindex,BottomNavigationProvider provider){
+
   return Theme(
     data: Theme.of(context).copyWith(
-      primaryColor: Colors.black
+      primaryColor:CommonAssets.bottomBarActiveButtonColor
     ),
     child: BottomNavigationBar(
       onTap: (val){
-      provider.setTab(val: val);
+        provider.setTab(val: val);
       },
       currentIndex: pageindex,
       items: [

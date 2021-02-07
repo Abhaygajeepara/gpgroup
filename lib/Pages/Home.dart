@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gpgroup/Commonassets/Widgets/Bottombar.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Pages/Project/Creatingproject.dart';
-import 'package:gpgroup/Pages/Project/Workshop/Sites.dart';
-import 'package:gpgroup/Pages/Project/Workshop/Structure/HousingStructure.dart';
+
+
+import 'package:gpgroup/Pages/Project/Sites.dart';
 
 import 'package:gpgroup/Providers/BotttomNavigationProvider.dart';
 
