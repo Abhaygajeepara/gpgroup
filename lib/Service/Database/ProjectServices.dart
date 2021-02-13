@@ -89,82 +89,85 @@ class ProjectsDatabaseService{
 
       'Reference':FieldValue.arrayUnion([res[i]]),
     });
+    await collectionReference.doc(projectName).collection(res[i]).doc().set({});
   }
   for(int i =0;i <structure.length;i++ ){
-    // await  collectionReference.doc(projectName).update({
+    structure[i].toMap();
+    print(structure[i].toMap());
+    await  collectionReference.doc(projectName).update({
+
+      'Structure':FieldValue.arrayUnion([structure[i].toMap()]),
+    });
+    // for(int j= 0 ;j<structure[i].totalhouse;j++){
+    //   int housenumber = j+1;
+    //   customerAndStructureDetails(projectName, structure[i].name, housenumber.toString());
     //
-    //   'Reference':FieldValue.arrayUnion([structure[i].name]),
-    // });
-    for(int j= 0 ;j<structure[i].totalhouse;j++){
-      int housenumber = j+1;
-      customerAndStructureDetails(projectName, structure[i].name, housenumber.toString());
-  // await    collectionReference.doc(projectName).collection(structure[i].name).doc(housenumber.toString()).set({
-  //       'Number':housenumber.toString()
-  //     });
-    }
+    // }
 
   }
   }
 
-  Future createApartmentStructure(List<BuildingStructureNumberModel> structure,String projectName,List<List<String>> rules,String landmark,String address,String description,List<File> ImageList)async{
+  Future createApartmentStructure(BuildingStructureNumberModel structure,String projectName,List<List<String>> rules,String landmark,String address,String description,List<File> ImageList)async{
     await CreateProject(projectName, rules,'Apartment',landmark,address,description,ImageList);
     List<String> res = [];
-    for(int i = 0;i<structure.length;i++){
-      res.add(structure[i].buildingName);
+
+    for(int i = 0;i<structure.floorsandflats['ListOfBuilding'].length;i++){
+      res.add(structure.floorsandflats['ListOfBuilding'][i]);
     }
     res.sort((a,b)=>a.compareTo(b));
+    await  collectionReference.doc(projectName).update({
+
+      'Structure':FieldValue.arrayUnion([structure.floorsandflats]),
+    });
     for(int i=0;i<res.length;i++){
       await  collectionReference.doc(projectName).update({
 
         'Reference':FieldValue.arrayUnion([res[i]]),
       });
+      await collectionReference.doc(projectName).collection(res[i]).doc().set({});
     }
-    for(int i =0;i <structure.length;i++ ){
 
-      // await collectionReference.doc(projectName).update({
-      //   'Reference':FieldValue.arrayUnion([structure[i].buildingName])
-      // });
-      for(int j=0;j<structure[i].floorsandflats.length;j++){
-        for(int k=0;k<structure[i].floorsandflats[j].flats.length;k++){
-          // String docName = structure[i].buildingName+structure[i].floorsandflats[j].flats[k].toString();
-          String docName = structure[i].floorsandflats[j].flats[k].toString();
-          customerAndStructureDetails(projectName, structure[i].buildingName, docName.toString());
-          // await    collectionReference.doc(projectName).collection(structure[i].buildingName).doc(docName).set({
-          //   'Number':docName
-          // });
-        }
-      }
-
-
-    }
   }
 
-  Future createCommercialStructure(List<CommercialArcadeModel> structure,String projectName,List<List<String>> rules,String landmark,String address,String description,List<File> ImageList)async{
+  Future createCommercialStructure(CommercialArcadeModel structure,String projectName,List<List<String>> rules,String landmark,String address,String description,List<File> ImageList)async{
     await CreateProject(projectName, rules,'CommercialArcade',landmark,address,description,ImageList);
-    for(int i =0;i <structure.length;i++ ){
-      await  collectionReference.doc(projectName).update({
-
-        'Reference':FieldValue.arrayUnion([structure[i].floorNumber.toString()]),
-      });
-      for(int j= 0 ;j<structure[i].shops.length;j++){
-        customerAndStructureDetails(projectName, structure[i].floorNumber.toString(), structure[i].shops[j].toString());
-        // await    collectionReference.doc(projectName).collection(structure[i].floorNumber.toString()).doc(structure[i].shops[j].toString()).set({
-        //   'FlatNumber':structure[i].shops[j].toString()
-        // });
-      }
-
+    List<String> res = [];
+    for(int i=0;i<structure.totalFloor;i++){
+      res.add(i.toString());
     }
+    for(int i = 0;i<res.length;i++){
+      await collectionReference.doc(projectName).update({
+
+        'Reference': FieldValue.arrayUnion(
+            [res[i]]),
+      });
+      await collectionReference.doc(projectName).collection(res[i]).doc().set({});
+    }
+
+    await collectionReference.doc(projectName).update({
+
+      'Structure': FieldValue.arrayUnion(
+          [ structure.toMap()]),
+    });
+
   }
 
-  Future createMixeduseStructure(List<CommercialArcadeModel> commercialStructure, List<BuildingStructureNumberModel> buildingStructure,String projectName,List<List<String>> rules,String landmark,String address,String description,List<File> ImageList)async {
+  Future createMixeduseStructure(CommercialArcadeModel commercialStructure, List<BuildingStructureNumberModel> buildingStructure,String projectName,List<List<String>> rules,String landmark,String address,String description,List<File> ImageList)async {
     await CreateProject(projectName, rules, 'Mixed-Use',landmark,address,description,ImageList);
 
    List<String> res = [];
-  for(int i=0;i<commercialStructure.length;i++){
-    res.add(commercialStructure[i].floorNumber.toString());
+  for(int i=0;i<commercialStructure.totalFloor;i++){
+    await collectionReference.doc(projectName).update({
+
+      'Structure': FieldValue.arrayUnion(
+          [  commercialStructure.toMap()]),
+    });
+    res.add(i.toString());
   }
+
     for(int i=0;i<buildingStructure.length;i++){
-      res.add(buildingStructure[i].buildingName.toUpperCase().toString());
+
+      res.add(buildingStructure[i].floorsandflats['BuildingName']);
     }
       res.sort((a,b)=>a.compareTo(b));
     print(res);
@@ -176,38 +179,50 @@ for(int i = 0;i<res.length;i++){
     'Reference': FieldValue.arrayUnion(
         [res[i]]),
   });
+  await collectionReference.doc(projectName).collection(res[i]).doc().set({});
 }
 
 
-    for (int i = 0; i < commercialStructure.length; i++) {
-      String docname = commercialStructure[i].floorNumber.toString();
-      // await collectionReference.doc(projectName).update({
-      //
-      //   'Reference': FieldValue.arrayUnion(
-      //       [docname]),
-      // });
-      for (int j = 0; j < commercialStructure[i].shops.length; j++) {
-        String docname = commercialStructure[i].floorNumber.toString();
-        customerAndStructureDetails(projectName, docname, commercialStructure[i].shops[j].toString());
-        
-      }
 
-      for(int i =0;i <buildingStructure.length;i++ ){
+   for(int k=0;k<buildingStructure.length;k++){
 
-        // await collectionReference.doc(projectName).update({
-        //   'Reference':FieldValue.arrayUnion([buildingStructure[i].buildingName])
-        // });
-        for(int j=0;j<buildingStructure[i].floorsandflats.length;j++){
-          for(int k=0;k<buildingStructure[i].floorsandflats[j].flats.length;k++){
-            String docName = buildingStructure[i].floorsandflats[j].flats[k].toString();
-            customerAndStructureDetails(projectName, buildingStructure[i].buildingName, docName);
-            // await    collectionReference.doc(projectName).collection(buildingStructure[i].buildingName).doc(docName).set({
-            //   'Number':docName
-            // });
-          }
-        }
-    }
-  }}
+     await collectionReference.doc(projectName).update({
+
+       'Structure': FieldValue.arrayUnion(
+           [  buildingStructure[k].floorsandflats]),
+     });
+   }
+
+  //   for (int i = 0; i < commercialStructure.length; i++) {
+  //     String docname = commercialStructure[i].totalFloor.toString();
+  //     // await collectionReference.doc(projectName).update({
+  //     //
+  //     //   'Reference': FieldValue.arrayUnion(
+  //     //       [docname]),
+  //     // });
+  //     // for (int j = 0; j < commercialStructure[i].shops.length; j++) {
+  //     //   String docname = commercialStructure[i].floorNumber.toString();
+  //     //   customerAndStructureDetails(projectName, docname, commercialStructure[i].shops[j].toString());
+  //     //
+  //     // }
+  //
+  //     for(int i =0;i <buildingStructure.length;i++ ){
+  //
+  //       // await collectionReference.doc(projectName).update({
+  //       //   'Reference':FieldValue.arrayUnion([buildingStructure[i].buildingName])
+  //       // });
+  //       for(int j=0;j<buildingStructure[i].floorsandflats.length;j++){
+  //         for(int k=0;k<buildingStructure[i].floorsandflats[j].flats.length;k++){
+  //           String docName = buildingStructure[i].floorsandflats[j].flats[k].toString();
+  //           //customerAndStructureDetails(projectName, buildingStructure[i].buildingName, docName);
+  //           // await    collectionReference.doc(projectName).collection(buildingStructure[i].buildingName).doc(docName).set({
+  //           //   'Number':docName
+  //           // });
+  //         }
+  //       }
+  //   }
+  // }
+  }
 
 
 

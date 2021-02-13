@@ -12,7 +12,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
       UserCredential result = await _auth.signInWithEmailAndPassword(email:email, password: password);
       print(result.user.email);
 
-      return  _personalinfo(result.user);;
+      return  _personalinfo(result.user);
     }
     catch(e){
       print(e.code);
@@ -60,7 +60,7 @@ Future<dynamic> loginWithGoogle() async {
 Future RegisterwithEmail(String email,String password)async{
     try{
       UserCredential result = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
-      return  _personalinfo(result.user);;
+      return  _personalinfo(result.user);
     }
     catch(e){
       if(e.code =='email-already-in-use'){

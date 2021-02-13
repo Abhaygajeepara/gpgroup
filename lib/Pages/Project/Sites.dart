@@ -30,7 +30,7 @@ class _SitesState extends State<Sites> {
                     return Card(
                       child: ListTile(
                         onTap: (){
-                            projectProvider.setProjectName(projectNameSanpshot.data[projectNameIndex].projectName);
+                            projectProvider.setProjectName(projectNameSanpshot.data[projectNameIndex].projectName,projectNameSanpshot.data[projectNameIndex].typeofBuilding);
                         // projectProvider.setProjectName(projectNameSanpshot.data[projectNameIndex].projectName);
                         // print( "Project Name" +projectProvider.projectName);
                           return    Navigator.push(context, PageRouteBuilder(

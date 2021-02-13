@@ -5,19 +5,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:gpgroup/Model/Project/InnerData.dart';
+import 'package:gpgroup/Model/Project/InnerData.dart';
+import 'package:gpgroup/Model/Project/InnerData.dart';
 
 import 'package:gpgroup/Model/Project/ProjectDetails.dart';
 import 'package:rxdart/subjects.dart';
 
 class ProjectRetrieve{
 
-String  ProjectName ='d';
+String  ProjectName ;
+String typeOfProject;
 
-
-  setProjectName(String val){
+  setProjectName(String val,String projectType){
     this.ProjectName  = val;
+    this.typeOfProject = projectType;
 
   }
+  final CollectionReference _collectionReference = FirebaseFirestore.instance.collection("Project");
     List<ProjectNameList> _projectnamelist(QuerySnapshot snapshot){
      return snapshot.docs.map((e) {
        return ProjectNameList(
@@ -46,7 +50,7 @@ String  ProjectName ='d';
    return FirebaseFirestore.instance.collection('Project').snapshots().map(_projectnamelist);
  }
 
-    CollectionReference _collectionReference = FirebaseFirestore.instance.collection('Project');
+    //CollectionReference _collectionReference = FirebaseFirestore.instance.collection('Project');
 
     ProjectNameList _projectname(DocumentSnapshot e){
 
@@ -129,49 +133,128 @@ String  ProjectName ='d';
     StreamController<List<InnerData>> _streamController = BehaviorSubject<List<InnerData>>();
     Stream<List<InnerData>> get STRUCTURESTREAM  =>_streamController.stream;
 
+
     void setListners ()async{
       List<InnerData> _inner  = [];
       final doc = await _collectionReference.doc(ProjectName).get();
       List<String> refs = List.from(doc.data()['Reference']).map((e) => e.toString()).toList();
-    //  List<String> commercialrefs = List.from(doc.data()['CommercialReference']).map((e) => e.toString()).toList();
-      // print(refs.toString());
-      // print(refs.length);
+
 
       for(int i = 0;i<refs.length;i++){
         final docdata=  await  _collectionReference.doc(ProjectName).collection(refs[i]).orderBy("Number",descending: false).get();
-        // InnerData data =InnerData.of(refs[i],docdata);
-        // _inner.add(data);
+
         _collectionReference.doc(ProjectName).collection(refs[i]).orderBy("Number",descending: false).snapshots().listen((event) {
           InnerData _innerdata = InnerData.of(refs[i],event);
           _inner.insert(i, _innerdata);
           _streamController.sink.add(_inner);
-          //  print(event.docs[1].id+"    ///  "+i.toString());
-          // _streamController.sink.add(_inner);
+
 
         });
 
 
       }
-      // for(int j = 0;j<commercialrefs.length;j++){
-      //   final docdata=  await  _collectionReference.doc(ProjectName).collection(commercialrefs[j]).orderBy("Number",descending: false).get();
-      //   InnerData data =InnerData.of(commercialrefs[j],docdata);
-      //   _inner.add(data);
-      //   _collectionReference.doc(ProjectName).collection(commercialrefs[j]).orderBy("Number",descending: false).snapshots().listen((event) {
-      //     InnerData _innerdata = InnerData.of(commercialrefs[j],event);
-      //     _inner.insert(j, _innerdata);
-      //     _streamController.sink.add(_inner);
-      //     //  print(event.docs[1].id+"    ///  "+i.toString());
-      //
-      //
-      //   });
-      //
-      //
-      // }
-
-      //_streamController.sink.add(_inner);
-
 
     }
+StreamController<List<ApartMentInnerData>> _apartmemtController = BehaviorSubject<List<ApartMentInnerData>>();
+Stream<List<ApartMentInnerData>> get APARTMENTESTREAM  =>_apartmemtController.stream;
+void apartMentSetListners ()async{
+
+  List<ApartMentInnerData> _apartment  = [];
+  final doc = await _collectionReference.doc(ProjectName).get();
+  List<String> refs = List.from(doc.data()['Reference']).map((e) => e.toString()).toList();
+
+
+  for(int i = 0;i<refs.length;i++){
+    final docdata=  await  _collectionReference.doc(ProjectName).collection(refs[i]).orderBy("Number",descending: false).get();
+    // InnerData data =InnerData.of(refs[i],docdata);
+    // _inner.add(data);
+    _collectionReference.doc(ProjectName).collection(refs[i]).orderBy("Number",descending: false).snapshots().listen((event) {
+      ApartMentInnerData _innerdata = ApartMentInnerData.of(refs[i],event);
+      _apartment.insert(i, _innerdata);
+      _apartmemtController.sink.add(_apartment);
+      //  print(event.docs[1].id+"    ///  "+i.toString());
+      // _streamController.sink.add(_inner);
+
+    });
+
+
+  }
+
+
+}
+StreamController<MixedUseStrcuture> _mixUsedStreamController = BehaviorSubject<MixedUseStrcuture>();
+Stream<MixedUseStrcuture> get MIXUSEDESTREAM  =>_mixUsedStreamController.stream;
+void MixedUse()async{
+  final doc = await _collectionReference.doc(ProjectName).get();
+  List<String> refs = List.from(doc.data()['Reference']).map((e) => e.toString()).toList();
+  refs.sort((a,b)=>a.toString().compareTo(b.toString()));
+  List<String> commercialList =List();
+  List<String> buildingList = List();
+  List<ApartMentInnerData> _apartment  = [];
+  List<InnerData> _inner  = [];
+  //int lastFloor ; // store value of last floor of commercial Structure
+  for(int i =0;i<refs.length;i++){
+      if(int.tryParse(refs[i]) != null){
+
+        commercialList.add(refs[i]);
+
+      }
+      else{
+        buildingList.add(refs[i]);
+      }
+  }
+
+  for(int i =0;i<commercialList.length;i++){
+
+     _collectionReference.doc(ProjectName).collection(commercialList[i]).orderBy("Number",descending: false).snapshots().listen((event) {
+       InnerData _innerdata = InnerData.of(refs[i],event);
+       _inner.insert(i, _innerdata);
+       _streamController.sink.add(_inner);
+    });
+  }
+  for(int j=0;j<buildingList.length;j++){
+      _collectionReference.doc(ProjectName).collection(buildingList[j]).orderBy("Number",descending: false).snapshots().listen((event) async{
+        ApartMentInnerData _innerdata = ApartMentInnerData.of(refs[j],event);
+        _apartment.insert(j, _innerdata);
+        _apartmemtController.sink.add(_apartment);
+    });
+  }
+
+
+
+ // MixedUseStrcuture mix =  MixedUseStrcuture.of(commercialList, buildingList);
+ //  _mixUsedStreamController.sink.add(mix);
+
+
+  // int predictedFloor =0;
+  // List<List<String>> _floor = [];
+  // List<String> flats = List();
+  // for(int k =lastFloor+1;k<refs.length;k++){
+  //   final docData = await _collectionReference.doc(ProjectName).collection(refs[k]).orderBy("Number",descending: false).get();
+  //     for(int i =0;i<docData.docs.length;i++){
+  //         int _predictedFloors = (int.parse(docData.docs[i].id)/100).round();
+  //         if(_predictedFloors != predictedFloor){
+  //
+  //           flats=[];
+  //         }
+  //           if(_predictedFloors == predictedFloor){
+  //
+  //             flats.add(docData.docs[i].id);
+  //           }
+  //           else{
+  //             predictedFloor = _predictedFloors;
+  //             _floor.add(flats);
+  //
+  //             flats.add(docData.docs[i].id);
+  //
+  //           }
+  //
+  //     }
+  //   print(_floor);
+  //
+  // }
+
+}
 
 }
 

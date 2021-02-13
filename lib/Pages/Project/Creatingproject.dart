@@ -91,7 +91,7 @@ class CreatingProjectState extends State<CreatingProject> {
   int floors = 0;
   int flats = 2;
   List<String> _buildingList=[];
-  List<BuildingStructureNumberModel> _buildingModel = List();
+  BuildingStructureNumberModel _buildingModel ;
   // commercial structure
   int commericalfloors = 0;
   int commericalShop_per_floor = 0;
@@ -99,17 +99,17 @@ class CreatingProjectState extends State<CreatingProject> {
   int commericalStaringnumber = 1;
   int commericalDifferentialvalue = 1000;
   int commericalNumber = 0;
-  List<CommercialArcadeModel> _commercialModel = List();
+  CommercialArcadeModel _commercialModel;
   // mixed-use
 
-  int mixupCommericalfloors = 0;
-  int mixupCommericalShop_per_floor = 0;
-  int mixupCommericalSelectdfloor ;
-  int mixupCommericalStaringnumber = 1;
-  int mixupCommericalDifferentialvalue = 1000;
-  int mixupCommericalNumber = 0;
+  int mixedUseCommericalfloors = 0;
+  int mixedUseCommericalShop_per_floor = 0;
+  int mixedUseCommericalSelectdfloor ;
+  int mixedUseCommericalStaringnumber = 1;
+  int mixedUseCommericalDifferentialvalue = 1000;
+  int mixedUseCommericalNumber = 0;
 
-  List<CommercialArcadeModel> _mixupcommercialModel = List();
+  CommercialArcadeModel _mixedUsecommercialModel ;
   final _MixuseApartmentformkey = GlobalKey<FormState>();
   final _mixeduseApartmentformkey0 = GlobalKey<FormState>();
   // int nu =15;
@@ -118,7 +118,7 @@ class CreatingProjectState extends State<CreatingProject> {
   int mixuseFlats = 2;
   List<String> _mixedusedbuildingList=[];
   int selectedBuilldingindex =0;
-  List<BuildingStructureNumberModel> _mixusebuildingModel = List();
+  List<BuildingStructureNumberModel> _mixusebuildingModel  = List();
   @override
   void initState() {
     // TODO: implement initState
@@ -135,38 +135,43 @@ class CreatingProjectState extends State<CreatingProject> {
   }
   getModel(int _floor,int _flats){
     //print(_floor);
+    _buildingList.sort((a,b)=>a.toString().compareTo(b.toString()));
+    Map<String,dynamic> BuildingStructure ={
+      "ListOfBuilding":_buildingList,
+        "TotalFloor":_floor,
+        "FlatPerFloor":flats
+    };
+    _buildingModel = BuildingStructureNumberModel(floorsandflats: BuildingStructure);
+   print(BuildingStructure);// for(int i = 0;i<_buildingList.length;i++){
+    //   List<BuildingStructureModel> _floorlist =List();
+    //   int staring = 100;
+    //   for(int j= 0;j<_floor;j++){
+    //
+    //
+    //     // List<int> _flatsList =List();
+    //     // for(int k =0;k<flats;k++){
+    //     //
+    //     //   _flatsList.add(staring + k+1);
+    //     //
+    //     // }
+    //
+    //     _floorlist.add(BuildingStructureModel(floorNumber: j+1, flats: _flatsList));
+    //     staring = staring +100;
+    //
+    //   }
+    //
+    //   _buildingModel.add(BuildingStructureNumberModel(buildingName: _buildingList[i],floorsandflats: _floorlist));
+    //
+    // }
 
-    _buildingModel.clear();
-    for(int i = 0;i<_buildingList.length;i++){
-      List<BuildingStructureModel> _floorlist =List();
-      int staring = 100;
-      for(int j= 0;j<_floor;j++){
-
-
-        List<int> _flatsList =List();
-        for(int k =0;k<flats;k++){
-
-          _flatsList.add(staring + k+1);
-
-        }
-
-        _floorlist.add(BuildingStructureModel(floorNumber: j+1, flats: _flatsList));
-        staring = staring +100;
-
-      }
-
-      _buildingModel.add(BuildingStructureNumberModel(buildingName: _buildingList[i],floorsandflats: _floorlist));
-
-    }
-
-    for(int i = 0;i<_buildingList.length;i++){
-      print(_buildingModel[i].buildingName);
-      for(int j= 0;j<_floor;j++){
-        print(_buildingModel[i].floorsandflats[j].flats);
-
-
-      }
-    }
+    // for(int i = 0;i<_buildingList.length;i++){
+    //   print(_buildingModel[i].buildingName);
+    //   for(int j= 0;j<_floor;j++){
+    //     print(_buildingModel[i].floorsandflats[j].flats);
+    //
+    //
+    //   }
+    // }
   }
   void allocationnumber(){
     if(commericalSelectdfloor != null){
@@ -176,83 +181,74 @@ class CreatingProjectState extends State<CreatingProject> {
   commericalGetModel(){
 
 
-    _commercialModel.clear();
-    for(int i  =0;i<commericalfloors;i++){
-      int staring = (i * commericalDifferentialvalue) +commericalStaringnumber;
-      List<int> _flatsList =List();
-      for(int j =0;j<commericalShop_per_floor;j++){
+    _commercialModel = CommercialArcadeModel(totalFloor: commericalfloors, shops:  commericalShop_per_floor,differentialValue: commericalDifferentialvalue,staring: commericalStaringnumber);
+print(_commercialModel.toMap());
 
-        _flatsList.add(staring + j);
-
-
-      }
-
-      _commercialModel.add(CommercialArcadeModel(floorNumber: i, shops:  _flatsList));
-      staring = staring +100;
-      // print(_commercialModel[i].floorNumber);
-      // print(_commercialModel[i].shops);
-    }
 
   }
-  void mixupAllocationnumber(){
-    if(mixupCommericalSelectdfloor != null){
-      mixupCommericalNumber = (mixupCommericalSelectdfloor * mixupCommericalDifferentialvalue) +mixupCommericalStaringnumber;
+  void mixedUseAllocationnumber(){
+    if(mixedUseCommericalSelectdfloor != null){
+      mixedUseCommericalNumber = (mixedUseCommericalSelectdfloor * mixedUseCommericalDifferentialvalue) +mixedUseCommericalStaringnumber;
     }
   }
-  mixupCommericalGetModel(){
+  mixedUseCommericalGetModel(){
 
 
-    _mixupcommercialModel.clear();
-    for(int i  =0;i<mixupCommericalfloors;i++){
-      int staring = (i * mixupCommericalDifferentialvalue) +mixupCommericalStaringnumber;
-      List<int> _flatsList =List();
-      for(int j =0;j<mixupCommericalShop_per_floor;j++){
-
-        _flatsList.add(staring + j);
-
-
-      }
-
-      _mixupcommercialModel.add(CommercialArcadeModel(floorNumber: i, shops:  _flatsList));
-      staring = staring +100;
-
-    }
+    _mixedUsecommercialModel = CommercialArcadeModel(totalFloor: mixedUseCommericalfloors, shops:  mixedUseCommericalShop_per_floor,differentialValue:mixedUseCommericalDifferentialvalue,staring: mixedUseCommericalStaringnumber);
+      print(_mixedUsecommercialModel.toMap());
 
   }
   MixuseGetModel(int _floor,int _flats){
-
-
     _mixusebuildingModel.clear();
-    for(int i = 0;i<_mixedusedbuildingList.length;i++){
-      List<BuildingStructureModel> _floorlist =List();
-      int staring = 100;
-      for(int j= 0;j<_floor;j++){
-
-
-        List<int> _flatsList =List();
-        for(int k =0;k<_flats;k++){
-
-          _flatsList.add(staring + k+1);
-
-        }
-
-        _floorlist.add(BuildingStructureModel(floorNumber: j+1, flats: _flatsList));
-        staring = staring +100;
-
+    // List<int> localFlorr;
+    List<int> flatPerFloor;
+    for(int i =0;i<_mixedusedbuildingList.length;i++){
+      flatPerFloor=[];
+      Map<String,dynamic> floorDetails = {};
+      for(int j=0;j<_floor;j++){
+        flatPerFloor.add(_flats);
       }
-
-      _mixusebuildingModel.add(BuildingStructureNumberModel(buildingName: _mixedusedbuildingList[i],floorsandflats: _floorlist));
+      floorDetails = {
+        "BuildingName":_mixedusedbuildingList[i],
+        "FlatPerFloor":flatPerFloor,
+        "Floor":_floor,
+      };
+      _mixusebuildingModel.add(BuildingStructureNumberModel(floorsandflats: floorDetails));
 
     }
+    print(_mixusebuildingModel.first.floorsandflats);
 
-    for(int i = 0;i<_mixusebuildingModel.length;i++){
-      print(_mixusebuildingModel[i].buildingName);
-      for(int j= 0;j<_floor;j++){
-        print(_mixusebuildingModel[i].floorsandflats[j].flats);
-
-
-      }
-    }
+    // _mixusebuildingModel.clear();
+    // for(int i = 0;i<_mixedusedbuildingList.length;i++){
+    //   List<BuildingStructureModel> _floorlist =List();
+    //   int staring = 100;
+    //   for(int j= 0;j<_floor;j++){
+    //
+    //
+    //     List<int> _flatsList =List();
+    //     for(int k =0;k<_flats;k++){
+    //
+    //       _flatsList.add(staring + k+1);
+    //
+    //     }
+    //
+    //     _floorlist.add(BuildingStructureModel(floorNumber: j+1, flats: _flatsList));
+    //     staring = staring +100;
+    //
+    //   }
+    //
+    //   _mixusebuildingModel.add(BuildingStructureNumberModel(buildingName: _mixedusedbuildingList[i],floorsandflats: _floorlist));
+    //
+    // }
+    //
+    // for(int i = 0;i<_mixusebuildingModel.length;i++){
+    //   print(_mixusebuildingModel[i].buildingName);
+    //   for(int j= 0;j<_floor;j++){
+    //     print(_mixusebuildingModel[i].floorsandflats[j].flats);
+    //
+    //
+    //   }
+    // }
   }
 
   @override
@@ -955,8 +951,7 @@ print(pageIndex);
                                 child: Card(
                                   color: partindex == selected_part ?Theme.of(context).primaryColor :Colors.white,
                                   shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                        color: partindex == selected_part ?Colors.white :Colors.black,
+                                      side: BorderSide(color: partindex == selected_part ?CommonAssets.selectedBorderColors :CommonAssets.unselectedBorderColors,
                                       ),
                                       borderRadius: BorderRadius.circular(10.0)
                                   ),
@@ -1255,7 +1250,9 @@ print(pageIndex);
               ),
 
             ),
-            _buildingModel.length > 0 ? Padding(
+            // _buildingModel.length > 0 ?
+
+            Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -1287,7 +1284,8 @@ print(pageIndex);
                   ),
                 ),
               ),
-            ):Container(),
+            )
+                //:Container(),
           ],
         )
     );
@@ -1474,7 +1472,7 @@ print(pageIndex);
                                   color: floorindex == commericalSelectdfloor ?Theme.of(context).primaryColor:Colors.white,
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
-                                          color: floorindex == commericalSelectdfloor ?Colors.white:Colors.black,
+                                          color: floorindex == commericalSelectdfloor ?CommonAssets.selectedBorderColors :CommonAssets.unselectedBorderColors,
                                       ),
                                       borderRadius: BorderRadius.circular(10.0)
                                   ),
@@ -1534,7 +1532,9 @@ print(pageIndex);
                     );
                   }),
             ),
-            _commercialModel.length >0?  Padding(
+           // _commercialModel.totalFloor >0?
+
+            Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -1564,7 +1564,8 @@ print(pageIndex);
                   ),
                 ),
               ),
-            ):Container(),
+            )
+                //:Container(),
           ],
         )
     );
@@ -1640,7 +1641,9 @@ print(pageIndex);
         ),
 
       ),
-          _mixusebuildingModel.length >0 && _mixupcommercialModel.length >0 ?Padding(
+          //_mixusebuildingModel.length >0 && _mixedUsecommercialModel.length >0 ?
+
+          Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: size.width * 0.01, vertical: size.height * 0.005),
             child: Center(
@@ -1655,7 +1658,7 @@ print(pageIndex);
                   setState(() {
                   isLoading = true;
                   });
-                  await ProjectsDatabaseService().createMixeduseStructure(_mixupcommercialModel, _mixusebuildingModel, projectname.toLowerCase(), rules,landmark,address,description,_imagefilelist);
+                  await ProjectsDatabaseService().createMixeduseStructure(_mixedUsecommercialModel, _mixusebuildingModel, projectname.toLowerCase(), rules,landmark,address,description,_imagefilelist);
                   Navigator.pop(context);
                 },
 
@@ -1669,7 +1672,8 @@ print(pageIndex);
                 ),
               ),
             ),
-          ):Container()
+          )
+              //:Container()
         ],
       );
 
@@ -1677,8 +1681,9 @@ print(pageIndex);
 
 
   Widget mixeduseShop(Size size) {
-    mixupAllocationnumber();
-    mixupCommericalGetModel();
+    mixedUseAllocationnumber();
+    mixedUseCommericalGetModel();
+
     return Container(
 
         child:Column(
@@ -1694,18 +1699,18 @@ print(pageIndex);
                       Row(
                         children: [
                           Expanded(child: TextFormField(
-                            initialValue: mixupCommericalfloors.toString(),
+                            initialValue: mixedUseCommericalfloors.toString(),
                             keyboardType: TextInputType.phone,
                             maxLength: 1,
-                            onChanged: (val)=> mixupCommericalfloors = int.parse(val),
+                            onChanged: (val)=> mixedUseCommericalfloors = int.parse(val),
                             decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Floors')),
                           )),
                           SizedBox(width: size.width *0.01,),
                           Expanded(child: TextFormField(
-                            initialValue: mixupCommericalShop_per_floor.toString(),
+                            initialValue: mixedUseCommericalShop_per_floor.toString(),
                             keyboardType: TextInputType.phone,
                             maxLength: 3,
-                            onChanged: (val)=> mixupCommericalShop_per_floor = int.parse(val),
+                            onChanged: (val)=> mixedUseCommericalShop_per_floor = int.parse(val),
                             decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('Shops')),
                           )),
 
@@ -1717,18 +1722,18 @@ print(pageIndex);
                         children: [
 
                           Expanded(child: TextFormField(
-                            initialValue: mixupCommericalStaringnumber.toString(),
+                            initialValue: mixedUseCommericalStaringnumber.toString(),
                             keyboardType: TextInputType.phone,
                             maxLength: 4,
-                            onChanged: (val)=> mixupCommericalStaringnumber = int.parse(val),
+                            onChanged: (val)=> mixedUseCommericalStaringnumber = int.parse(val),
                             decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('StartingNumber')),
                           )),
                           SizedBox(width: size.width *0.01,),
                           Expanded(child: TextFormField(
-                            initialValue: mixupCommericalDifferentialvalue.toString(),
+                            initialValue: mixedUseCommericalDifferentialvalue.toString(),
                             keyboardType: TextInputType.phone,
                             maxLength: 4,
-                            onChanged: (val)=> mixupCommericalDifferentialvalue = int.parse(val),
+                            onChanged: (val)=> mixedUseCommericalDifferentialvalue = int.parse(val),
                             decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('NumberGap')),
                           )),
                         ],
@@ -1761,8 +1766,8 @@ print(pageIndex);
                           ),
                           Padding(
                               padding:   EdgeInsets.only(right: size.width *0.02),
-                              child: mixupCommericalSelectdfloor !=  null ? Text(
-                                mixupCommericalSelectdfloor.toString(),
+                              child: mixedUseCommericalSelectdfloor !=  null ? Text(
+                                mixedUseCommericalSelectdfloor.toString(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: size.height *0.02
@@ -1775,15 +1780,15 @@ print(pageIndex);
                   Expanded(
                     child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: mixupCommericalfloors,
+                        itemCount: mixedUseCommericalfloors,
                         itemBuilder: (context,floorindex){
 
                           return GestureDetector(
                             onTap: (){
                               setState(() {
-                                mixupCommericalSelectdfloor = floorindex;
+                                mixedUseCommericalSelectdfloor = floorindex;
 
-                                print(mixupCommericalNumber);
+                                print(mixedUseCommericalNumber);
                                 // print(selectdfloor.toString());
                               });
                             },
@@ -1791,10 +1796,10 @@ print(pageIndex);
                                 width: size.width /3 ,
                                 //color: Colors.red,
                                 child: Card(
-                                  color: floorindex == mixupCommericalSelectdfloor ?Colors.black.withOpacity(0.5):Colors.white,
+                                  color: floorindex == mixedUseCommericalSelectdfloor ?Theme.of(context).primaryColor :Colors.white,
                                   shape: RoundedRectangleBorder(
                                       side: BorderSide(
-                                          color: Colors.black
+                                          color: floorindex == mixedUseCommericalSelectdfloor ?CommonAssets.selectedBorderColors :CommonAssets.unselectedBorderColors,
                                       ),
                                       borderRadius: BorderRadius.circular(10.0)
                                   ),
@@ -1803,7 +1808,7 @@ print(pageIndex);
                                       floorindex.toString(),
                                       style: TextStyle(
                                         fontSize: size.height *0.02,
-                                        color: floorindex == mixupCommericalSelectdfloor ?Colors.white:CommonAssets.standardtextcolor,
+                                        color: floorindex == mixedUseCommericalSelectdfloor ?Colors.white:CommonAssets.standardtextcolor,
                                       ),),
                                   ),
                                 )
@@ -1815,10 +1820,10 @@ print(pageIndex);
               ),
             ),
             Divider(color: CommonAssets.dividercolor,),
-            mixupCommericalSelectdfloor == null?Expanded(child: Container()):Expanded(
+            mixedUseCommericalSelectdfloor == null?Expanded(child: Container()):Expanded(
               child: GridView.builder(
 
-                  itemCount: mixupCommericalShop_per_floor,
+                  itemCount: mixedUseCommericalShop_per_floor,
                   gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 5,
                       childAspectRatio: (size.height /size.height *1.8)
@@ -1829,7 +1834,7 @@ print(pageIndex);
                     //  building.add([shopindex]);
 
 
-                    int localshopnumber = mixupCommericalNumber +shopindex;
+                    int localshopnumber = mixedUseCommericalNumber +shopindex;
 
                     return Container(
 
@@ -1854,7 +1859,9 @@ print(pageIndex);
                     );
                   }),
             ),
-            _mixupcommercialModel.length >0?  Padding(
+            //_mixedUsecommercialModel.length >0?
+
+            Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -1880,7 +1887,8 @@ print(pageIndex);
                   ),
                 ),
               ),
-            ):Container(),
+            )
+                //:Container(),
           ],
         )
     );
@@ -1925,6 +1933,7 @@ print(pageIndex);
                             if(!_mixedusedbuildingList.contains(mixeduseApartmentname)){
                               setState(() {
                                 _mixedusedbuildingList.add(mixeduseApartmentname);
+                                _mixedusedbuildingList.sort((a,b)=>a.toString().compareTo(b.toString()));
                                 MixuseGetModel(mixuseFloors,mixuseFlats);
                                 print( "list of part of ${_mixedusedbuildingList}");
                               });
@@ -2158,8 +2167,8 @@ print(pageIndex);
                   //_mixusebuildingModel[selectedBuilldingindex].floorsandflats.length
                     itemCount:   mixuseFloors,
                     itemBuilder: (context,index){
-
-                      return MixUseModelStructure(index,_mixusebuildingModel[selectedBuilldingindex].floorsandflats[index].flats.length);
+                      //  print('lentgh ${_mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][index]}');
+                      return MixUseModelStructure(index,_mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][index]);
                     }
                 ),
               ),
@@ -2198,11 +2207,12 @@ print(pageIndex);
   }
 
 
-  Widget MixUseModelStructure(int _floor,int _flats){
+   Widget MixUseModelStructure(int _floor,int _flats){
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
     int floornumber = _floor +1;
+    int flatsNumberStartvalue = 100 *floornumber;
 
 
     return Row(
@@ -2229,14 +2239,17 @@ print(pageIndex);
                 child: ListView.builder(
 
                     scrollDirection: Axis.horizontal,
-                    itemCount: _mixusebuildingModel[selectedBuilldingindex].floorsandflats[_floor].flats.length
+                    itemCount: _flats
                     ,itemBuilder: (context,indexflat){
-
+                int assignFlatNumber = (flatsNumberStartvalue +indexflat)+1;
 
                   return GestureDetector(
                     onTap: (){
                       setState(() {
-                        _mixusebuildingModel[selectedBuilldingindex].floorsandflats[_floor].flats.removeAt(indexflat);
+                        // Map<String,dynamic> newMixedUsedMap ={};
+                        _mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][_floor] =
+                            _mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][_floor]-1;
+                          print(_mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][_floor]);
                       });
                     },
                     child: Padding(
@@ -2249,7 +2262,7 @@ print(pageIndex);
                               border: Border.all(color: Colors.black)
                           ),
                           child: Center(child: Text(
-                            _mixusebuildingModel[selectedBuilldingindex].floorsandflats[_floor].flats[indexflat].toString()
+                            assignFlatNumber.toString()
                           ,style: TextStyle(
 
                               fontSize: height * 0.015,
@@ -2265,7 +2278,7 @@ print(pageIndex);
         )
       ],
     );
-  }
+   }
 
   String numbervalidtion(String value){
     Pattern pattern = '^[0-9]+';

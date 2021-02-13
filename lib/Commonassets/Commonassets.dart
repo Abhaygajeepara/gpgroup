@@ -19,6 +19,8 @@ class CommonAssets{
 
   static Color errorColor = Colors.red;
   static Color boxBorderColors= Colors.black;
+  static Color selectedBorderColors= Colors.white;
+  static Color unselectedBorderColors= Colors.black;
   static Color iconcolor = Colors.white;
   static Color iconBackGroundColor = Colors.black;
 
@@ -26,5 +28,6 @@ class CommonAssets{
   static Color unselectedpart = Colors.white;
   //server error
   static String snapshoterror = 'Server Error';
+  static Color soldProduct =Colors.black;
 
 }

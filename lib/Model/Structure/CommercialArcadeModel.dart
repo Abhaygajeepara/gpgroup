@@ -1,7 +1,17 @@
 import 'package:flutter/cupertino.dart';
 
 class CommercialArcadeModel{
-  int floorNumber;
-  List<int> shops;
-CommercialArcadeModel({@required this.floorNumber,@required this.shops});
+  int totalFloor;
+  //List<int> shops;
+  int differentialValue;
+  int staring;
+  int shops;
+  Map<String, dynamic> toMap() {
+    return {
+      'TotalFloor': totalFloor, // floor number
+      'Length': shops,// length = number of shop
+      'DifferentialValue':differentialValue,
+      'Staring':staring
+    };}
+CommercialArcadeModel({@required this.totalFloor,@required this.shops, @required this.differentialValue, @required  this.staring});
 }
