@@ -21,6 +21,7 @@ class _SitesState extends State<Sites> {
         body: StreamBuilder<List<ProjectNameList>>(
           stream: ProjectRetrieve().PROJECTNAMELIST,
           builder: (context,projectNameSanpshot){
+
             if(projectNameSanpshot.hasData){
               return ListView.builder(
 
@@ -28,13 +29,18 @@ class _SitesState extends State<Sites> {
                   itemBuilder: (context,projectNameIndex){
                     String ProjectNameUpperCase = projectNameSanpshot.data[projectNameIndex].projectName.substring(0,1).toUpperCase().toString()+projectNameSanpshot.data[projectNameIndex].projectName.substring(1).toString();
                     return Card(
+
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: CommonAssets.boxBorderColors,
+                              width: 0.1)),
                       child: ListTile(
                         onTap: (){
                             projectProvider.setProjectName(projectNameSanpshot.data[projectNameIndex].projectName,projectNameSanpshot.data[projectNameIndex].typeofBuilding);
                         // projectProvider.setProjectName(projectNameSanpshot.data[projectNameIndex].projectName);
                         // print( "Project Name" +projectProvider.projectName);
                           return    Navigator.push(context, PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => ProjectInfo(projectProvider: projectProvider,),
+                            pageBuilder: (_, __, ___) => ProjectInfo(projectProvider: projectProvider),
                             transitionDuration: Duration(seconds: 0),
                           ),);
                         },

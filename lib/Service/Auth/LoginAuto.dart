@@ -2,7 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:gpgroup/Model/UsersData.dart';
+import 'file:///E:/Work/Flutter/Order/gpgroup/lib/Model/Users/UsersData.dart';
 class LogInAndSignIn {
 final FirebaseAuth _auth = FirebaseAuth.instance;
 

@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 
 class ProjectInfo extends StatefulWidget {
   ProjectRetrieve  projectProvider;
+
   ProjectInfo({ @required this.projectProvider});
   @override
   _ProjectInfoState createState() => _ProjectInfoState();
@@ -29,19 +30,25 @@ class _ProjectInfoState extends State<ProjectInfo> {
       isInformationPage = true;
     });
   }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
 @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(widget.projectProvider.typeOfProject =="Society"||widget.projectProvider.typeOfProject =="CommercialArcade"){
-      widget.projectProvider.setListners();
-    }
-    else if(widget.projectProvider.typeOfProject =="Apartment") {
-      widget.projectProvider.apartMentSetListners();
-    }
-  else if(widget.projectProvider.typeOfProject =="Mixed-Use"){
-  widget.projectProvider.MixedUse();
-  }
+    widget.projectProvider.setListners();
+  //   if(widget.projectProvider.typeOfProject =="Society"||widget.projectProvider.typeOfProject =="CommercialArcade"){
+  //     widget.projectProvider.setListners();
+  //   }
+  //   else if(widget.projectProvider.typeOfProject =="Apartment") {
+  //     widget.projectProvider.apartMentSetListners();
+  //   }
+  // else if(widget.projectProvider.typeOfProject =="Mixed-Use"){
+  // widget.projectProvider.MixedUse();
+  // }
 
 
   }
@@ -50,7 +57,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     ProjectRetrieve projectProvider = Provider.of<ProjectRetrieve>(context,);
-    print(projectProvider.ProjectName);
+    // print(projectProvider.ProjectName);
 
 
 
@@ -298,19 +305,28 @@ class _ProjectInfoState extends State<ProjectInfo> {
     //       willpopChange();
     //     },
     //     child: houseStructure(data.projectName,context));
-    if(buildingType == "Society" ||buildingType == "CommercialArcade"){
+    if(buildingType == "Society" ){
+      //||buildingType == "CommercialArcade"
       return WillPopScope(
           onWillPop:  (){
             willpopChange();
           },
-          child: houseStructure(data.projectName,context));
+          child: houseStructure(data.projectName,context,data));
+    }
+     else if(buildingType == "CommercialArcade" ){
+
+      return WillPopScope(
+          onWillPop:  (){
+            willpopChange();
+          },
+          child: commercialStructure(data.projectName,context,data));
     }
     else if(buildingType == "Apartment"){
       return WillPopScope(
           onWillPop:  (){
             willpopChange();
           },
-          child: apartmentStructure(data.projectName,context));
+          child: apartmentStructure(data.projectName,context,data));
       return Text('Data type not exist add this to localization file');
     }
 
@@ -319,14 +335,14 @@ class _ProjectInfoState extends State<ProjectInfo> {
           onWillPop:  (){
             willpopChange();
           },
-          child: mixedUseStructure(data.projectName,context));
+          child: mixedUseStructure(data.projectName,context,data));
       return Text('Data type not exist add this to localization file');
     }
     else{
       return Text('other format');
     }
   }
-  Widget houseStructure(String projectName,BuildContext context) {
+  Widget houseStructure(String projectName,BuildContext context,ProjectNameList projectNameList) {
    // print('houseStructure');
     ProjectRetrieve projectProvider = Provider.of<ProjectRetrieve>(context,);
     final size = MediaQuery.of(context).size;
@@ -334,7 +350,8 @@ class _ProjectInfoState extends State<ProjectInfo> {
         stream: projectProvider.STRUCTURESTREAM,
         builder: (context,snapshot){
           if(snapshot.hasData){
-            print("Snapshot length = " +snapshot.data.length.toString());
+
+            //print("Snapshot length = " +snapshot.data.length.toString());
             return CarouselSlider.builder(
                 options: CarouselOptions(
 
@@ -353,8 +370,9 @@ class _ProjectInfoState extends State<ProjectInfo> {
 
                   scrollDirection: Axis.horizontal,
                 ),
-                itemCount: snapshot.data.length,
+                itemCount: projectNameList.Structure.length,
                 itemBuilder: (BuildContext context,index){
+
                   return Card(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -380,30 +398,37 @@ class _ProjectInfoState extends State<ProjectInfo> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: GridView.builder(
-                            itemCount: snapshot.data[index].cusList.length,
+                            itemCount: projectNameList.Structure[index]['Length'],
                             gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 5,
                               //  childAspectRatio: (size.height /size.height *1.8)
 
                             ) , itemBuilder: (context,indexCus){
+                              int currentHouseNumber = indexCus +1;
                           return Padding(
                             padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.005),
-                            child: Card(
-                                elevation: 30.0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                side:BorderSide(
-                                  color: !snapshot.data[index].cusList[indexCus].isLoanOn?
-                                        Theme.of(context).primaryColor:CommonAssets.soldProduct
-                                )
-                              ),
-                                shadowColor: Colors.transparent.withOpacity(0.2),
-                                child: Center(child: Text(
-                                    snapshot.data[index].cusList[indexCus].id,
-                                style: TextStyle(
-                                  fontSize: size.height  *0.02
+                            child: GestureDetector(
+                              onTap: ()async{
+
+                               projectProvider.customerUploadData(snapshot.data[index].name,currentHouseNumber);
+                              },
+                              child: Card(
+                                  elevation: 30.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  // side:BorderSide(
+                                  //   color: !snapshot.data[index].cusList[indexCus].isLoanOn?
+                                  //         Theme.of(context).primaryColor:CommonAssets.soldProduct
+                                  // )
                                 ),
-                                ))
+                                  shadowColor: Colors.transparent.withOpacity(0.2),
+                                  child: Center(child: Text(
+                                    currentHouseNumber.toString(),
+                                  style: TextStyle(
+                                    fontSize: size.height  *0.02
+                                  ),
+                                  ))
+                              ),
                             ),
                           );
                         }),
@@ -421,7 +446,112 @@ class _ProjectInfoState extends State<ProjectInfo> {
           }
         });
   }
-  Widget apartmentStructure(String projectName,BuildContext context) {
+
+  Widget commercialStructure(String projectName,BuildContext context,ProjectNameList projectNameList) {
+    // print('houseStructure');
+    ProjectRetrieve projectProvider = Provider.of<ProjectRetrieve>(context,);
+    final size = MediaQuery.of(context).size;
+    return StreamBuilder<List<InnerData>>(
+        stream: projectProvider.STRUCTURESTREAM,
+        builder: (context,snapshot){
+          if(snapshot.hasData){
+          //  print("Snapshot length = " +snapshot.data.length.toString());
+            return CarouselSlider.builder(
+                options: CarouselOptions(
+
+
+                  height: size.height,
+                  aspectRatio: 16/9,
+                  viewportFraction: 1,
+                  initialPage: 0,
+                  enableInfiniteScroll: false,
+                  reverse: false,
+                  autoPlay: false,
+                  autoPlayInterval: Duration(seconds: 3),
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enlargeCenterPage: true,
+
+                  scrollDirection: Axis.horizontal,
+                ),
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context,index){
+                  int startingShopNumber = (projectNameList.Structure[0]['DifferentialValue'] *index) +projectNameList.Structure[0]['Staring'];
+                  return Card(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          snapshot.data[index].name,
+                          style: TextStyle(
+                            color:  Theme.of(context).primaryColor,
+                            //color: CommonAssets.AppbarTextColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: size.height *0.035,
+
+                          ),
+                        ),
+
+                        Divider(
+                          color: Theme.of(context).primaryColor,
+                          thickness: 1,
+                        ),
+                        //  SizedBox(height: size.height *0.01,),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GridView.builder(
+                                // index of projectNameList.Structure[0]['TotalShop'] because there only one list value in database
+                                itemCount: projectNameList.Structure[0]['TotalShop'],
+                                gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 5,
+                                  //  childAspectRatio: (size.height /size.height *1.8)
+
+                                ) , itemBuilder: (context,indexCus){
+                                  int currenShop = indexCus +startingShopNumber;
+                              return Padding(
+                                padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.005),
+                                child: GestureDetector(
+                                  onTap: ()async{
+                                    projectProvider.customerUploadData(snapshot.data[index].name,currenShop);
+                                  },
+                                  child: Card(
+                                      elevation: 30.0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        // side:BorderSide(
+                                        //   color: !snapshot.data[index].cusList[indexCus].isLoanOn?
+                                        //         Theme.of(context).primaryColor:CommonAssets.soldProduct
+                                        // )
+                                      ),
+                                      shadowColor: Colors.transparent.withOpacity(0.2),
+                                      child: Center(child: Text(
+                                        currenShop.toString(),
+                                        style: TextStyle(
+                                            fontSize: size.height  *0.02
+                                        ),
+                                      ))
+                                  ),
+                                ),
+                              );
+                            }),
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }
+
+            );
+          }
+          else{
+            return CircularLoading();
+          }
+        });
+  }
+
+  Widget apartmentStructure(String projectName,BuildContext context,ProjectNameList projectNameList) {
 
     // print('houseStructure');
     ProjectRetrieve projectProvider = Provider.of<ProjectRetrieve>(context,);
@@ -430,8 +560,8 @@ class _ProjectInfoState extends State<ProjectInfo> {
 
 
 
-    return StreamBuilder<List<ApartMentInnerData>>(
-        stream: projectProvider.APARTMENTESTREAM,
+    return StreamBuilder<List<InnerData>>(
+        stream: projectProvider.STRUCTURESTREAM,
         builder: (context,snapshot){
           if(snapshot.hasData){
             //print("Snapshot length = " +snapshot.data.length.toString());
@@ -480,29 +610,35 @@ class _ProjectInfoState extends State<ProjectInfo> {
 
                         Expanded(
                           child: ListView.builder(
-                              itemCount: snapshot.data[index].numberOfFlats.length,
+                              itemCount: projectNameList.Structure[0]['TotalFloor'],
 
                               itemBuilder: (context,indexFloor){
-
+                                  int currentFloorStartingNumer = (indexFloor +1)*100;
                                 return Container(
                                   height: size.height *0.05,
                                   child: ListView.builder(
 
-                                      itemCount: snapshot.data[index].numberOfFlats[indexFloor].cusLists.length,
+                                      itemCount: projectNameList.Structure[0]['FlatPerFloor'],
 
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context,flatIndex){
+                                        int currentFlat = (flatIndex +1)+ currentFloorStartingNumer;
                                         return Container(
-                                          width: size.width /snapshot.data[index].numberOfFlats[indexFloor].cusLists.length ,
-                                          child: Card(
-                                            shape: RoundedRectangleBorder(
-                                              side: BorderSide(
-                                                color:
-                                                !snapshot.data[index].numberOfFlats[indexFloor].cusLists[flatIndex].isLoanOn?
-                                                Theme.of(context).primaryColor:CommonAssets.boxBorderColors
-                                              )
+                                          width: size.width /projectNameList.Structure[0]['FlatPerFloor'] ,
+                                          child: GestureDetector(
+                                            onTap: ()async{
+                                              projectProvider.customerUploadData(snapshot.data[index].name,currentFlat);
+                                            },
+                                            child: Card(
+                                              shape: RoundedRectangleBorder(
+                                                // side: BorderSide(
+                                                //   color:
+                                                //   !snapshot.data[index].numberOfFlats[indexFloor].cusLists[flatIndex].isLoanOn?
+                                                //   Theme.of(context).primaryColor:CommonAssets.boxBorderColors
+                                                // )
+                                              ),
+                                              child: Center(child: Text(currentFlat.toString())),
                                             ),
-                                            child: Center(child: Text(snapshot.data[index].numberOfFlats[indexFloor].cusLists[flatIndex].id)),
                                           ),
                                         );
                                       },
@@ -526,20 +662,15 @@ class _ProjectInfoState extends State<ProjectInfo> {
         });
   }
 
-  mixedUseStructure(String projectName, BuildContext context) {
+  mixedUseStructure(String projectName, BuildContext context,ProjectNameList projectNameList) {
     ProjectRetrieve projectProvider = Provider.of<ProjectRetrieve>(context,);
     final size = MediaQuery.of(context).size;
     return StreamBuilder<List<InnerData>>(
         stream: projectProvider.STRUCTURESTREAM,
         builder: (context,commercialSnapshot){
           if(commercialSnapshot.hasData){
-            print("Snapshot length = " +commercialSnapshot.data.length.toString());
-            return StreamBuilder<List<ApartMentInnerData>>(
-                stream: projectProvider.APARTMENTESTREAM,
-                builder: (context,snapshot){
-                  if(snapshot.hasData){
-                    //print("Snapshot length = " +snapshot.data.length.toString());
-                    // return  Text();
+           // print("Snapshot length = " +commercialSnapshot.data.length.toString());
+
                     return CarouselSlider.builder(
                         options: CarouselOptions(
 
@@ -558,81 +689,168 @@ class _ProjectInfoState extends State<ProjectInfo> {
 
                           scrollDirection: Axis.horizontal,
                         ),
-                        itemCount: snapshot.data.length,
+                        itemCount: commercialSnapshot.data.length,
                         itemBuilder: (BuildContext context,index){
-                          return Text(commercialSnapshot.data[0].cusList.first.id);
-                          return Card(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  snapshot.data[index].name,
-                                  style: TextStyle(
-                                    color:  Theme.of(context).primaryColor,
-                                    //color: CommonAssets.AppbarTextColor,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: size.height *0.035,
 
-                                  ),
-                                ),
+                       if(int.tryParse(commercialSnapshot.data[index].name) != null){
+                         int startingShopNumber = (projectNameList.Structure[0]['DifferentialValue'] *index) +projectNameList.Structure[0]['Staring'];
 
-                                Divider(
-                                  color: Theme.of(context).primaryColor,
-                                  thickness: 1,
-                                ),
+                         return  mixCommercial(commercialSnapshot.data[index].name, context, projectNameList,startingShopNumber,projectProvider);
+                       }
+                      else{
+                         int passIndex =projectNameList.Structure[0]['TotalFloor']-(index +1);
+                         passIndex= passIndex.abs();
+                        return mixApartment(commercialSnapshot.data[index].name, context, projectNameList, passIndex,projectProvider);
+                       }
 
-                                Expanded(
-                                  child: ListView.builder(
-                                      itemCount: snapshot.data[index].numberOfFlats.length,
 
-                                      itemBuilder: (context,indexFloor){
-
-                                        return Container(
-                                          height: size.height *0.05,
-                                          child: ListView.builder(
-
-                                            itemCount: snapshot.data[index].numberOfFlats[indexFloor].cusLists.length,
-
-                                            scrollDirection: Axis.horizontal,
-                                            itemBuilder: (context,flatIndex){
-                                              return Container(
-                                                width: size.width /snapshot.data[index].numberOfFlats[indexFloor].cusLists.length ,
-                                                child: Card(
-                                                  shape: RoundedRectangleBorder(
-                                                      side: BorderSide(
-                                                          color:
-                                                          !snapshot.data[index].numberOfFlats[indexFloor].cusLists[flatIndex].isLoanOn?
-                                                          Theme.of(context).primaryColor:CommonAssets.boxBorderColors
-                                                      )
-                                                  ),
-                                                  child: Center(child: Text(snapshot.data[index].numberOfFlats[indexFloor].cusLists[flatIndex].id)),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      }),
-                                ),
-
-                                SizedBox(height: size.height *0.01,),
-
-                              ],
-                            ),
-                          );
                         }
 
                     );
-                  }
-                  else{
-                    return CircularLoading();
-                  }
-                });
+
           }
           else{
             return CircularLoading();
           }
         });
+  }
+  Widget mixCommercial(String projectName, BuildContext context,ProjectNameList projectNameList,int startingShopNumber,ProjectRetrieve projectProvider){
+
+    final size= MediaQuery.of(context).size;
+    return Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            projectName.toString(),
+            style: TextStyle(
+              color:  Theme.of(context).primaryColor,
+              //color: CommonAssets.AppbarTextColor,
+              fontWeight: FontWeight.bold,
+              fontSize: size.height *0.035,
+
+            ),
+          ),
+
+          Divider(
+            color: Theme.of(context).primaryColor,
+            thickness: 1,
+          ),
+          //  SizedBox(height: size.height *0.01,),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                // index of projectNameList.Structure[0]['TotalShop'] because there only one list value in database
+                  itemCount: projectNameList.Structure[0]['TotalShop'],
+                  gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 5,
+                    //  childAspectRatio: (size.height /size.height *1.8)
+
+                  ) , itemBuilder: (context,indexCus){
+                int currenShop = indexCus +startingShopNumber;
+                return Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.005),
+                  child: GestureDetector(
+                    onTap: ()async{
+                      projectProvider.customerUploadData(projectName,currenShop);
+                    },
+                    child: Card(
+                        elevation: 30.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          // side:BorderSide(
+                          //   color: !snapshot.data[index].cusList[indexCus].isLoanOn?
+                          //         Theme.of(context).primaryColor:CommonAssets.soldProduct
+                          // )
+                        ),
+                        shadowColor: Colors.transparent.withOpacity(0.2),
+                        child: Center(child: Text(
+                          currenShop.toString(),
+                          style: TextStyle(
+                              fontSize: size.height  *0.02
+                          ),
+                        ))
+                    ),
+                  ),
+                );
+              }),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+  Widget mixApartment(String projectName, BuildContext context,ProjectNameList projectNameList,int index,ProjectRetrieve projectProvider){
+    final size = MediaQuery.of(context).size;
+    return Card(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            projectName.toString(),
+            style: TextStyle(
+              color:  Theme.of(context).primaryColor,
+              //color: CommonAssets.AppbarTextColor,
+              fontWeight: FontWeight.bold,
+              fontSize: size.height *0.035,
+
+            ),
+          ),
+
+          Divider(
+            color: Theme.of(context).primaryColor,
+            thickness: 1,
+          ),
+
+          Expanded(
+            child: ListView.builder(
+                itemCount: projectNameList.Structure[index]['FlatPerFloor'].length,
+
+                itemBuilder: (context,indexFloor){
+                  int currentFloorStartingNumer = (indexFloor +1)*100;
+                  // return Text(currentFloorStartingNumer.toString());
+                  return Container(
+                    height: size.height *0.05,
+                    child: ListView.builder(
+
+                      itemCount: projectNameList.Structure[index]['FlatPerFloor'][indexFloor],
+
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context,flatIndex){
+                        int currentFlat = (flatIndex +1)+ currentFloorStartingNumer;
+
+                        return Container(
+                          width: size.width /projectNameList.Structure[index]['FlatPerFloor'][indexFloor],
+                          child: GestureDetector(
+                            onTap: (){
+                              projectProvider.customerUploadData(projectName,currentFlat);
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                // side: BorderSide(
+                                //   color:
+                                //   !snapshot.data[index].numberOfFlats[indexFloor].cusLists[flatIndex].isLoanOn?
+                                //   Theme.of(context).primaryColor:CommonAssets.boxBorderColors
+                                // )
+                              ),
+                              child: Center(child: Text(currentFlat.toString())),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }),
+          ),
+
+          SizedBox(height: size.height *0.01,),
+
+        ],
+      ),
+    );
   }
 }
 

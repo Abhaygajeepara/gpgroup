@@ -5,6 +5,7 @@ class CommonAssets{
    //static Color AppbarColor =   Color(0xff73c5bc);
 //static Color AppbarColor =   Colors.black;
   static Color AppbarTextColor = Colors.white;
+  static Color buttonTextColor = Colors.white;
   static String apptitle = 'GP Group ';
   // only for loading page
   static Color registerTextColor =Colors.blue;

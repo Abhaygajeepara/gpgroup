@@ -73,6 +73,22 @@
   "SelectImage": "Select Image",
   "Update":"Update",
 
-  "ViewSite":"View Site"
+  "ViewSite":"View Site",
+
+  "Broker":"Broker",
+  "BrokersPhoto":"Broker's Photo",
+  "Document": "Document",
+  "ThisFieldIsMandatory": "This Field Is Mandatory",
+  "Name":"Name",
+  "MobileNumber": "Mobile Number",
+  "NumberOnly": "Number Only",
+  "NumberIsLessThan1": "Number Is Less Than 1",
+  "NumberIsMoreThan10": "Number Is More Than 10",
+  "NumberIsLessThan10": "Number Is Less Than 10",
+  "NumberIsMoreThan1": "Number Is More Than 1",
+  "CharactersOnly": "Character Only",
+  "CharactersIsMoreThan1": "Character Is More Than 1",
+  "BrokerExist": "Broker Exist",
+  "MinimumCharactersIs3": "Minimum Characters Is 3"
 
 }

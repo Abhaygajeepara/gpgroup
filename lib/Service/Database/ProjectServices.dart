@@ -5,9 +5,11 @@ import 'package:gpgroup/Model/Structure/BulidingStructureModel.dart';
 import 'package:gpgroup/Model/Structure/CommercialArcadeModel.dart';
 import 'package:gpgroup/Model/Structure/HousingModel.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:gpgroup/Model/Users/BrokerData.dart';
 
 class ProjectsDatabaseService{
   final CollectionReference collectionReference = FirebaseFirestore.instance.collection('Project');
+  final CollectionReference brokerReference = FirebaseFirestore.instance.collection('Broker');
   Future projectExist(String val)async{
 
     try{
@@ -89,7 +91,10 @@ class ProjectsDatabaseService{
 
       'Reference':FieldValue.arrayUnion([res[i]]),
     });
-    await collectionReference.doc(projectName).collection(res[i]).doc().set({});
+    await collectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
+
+
+
   }
   for(int i =0;i <structure.length;i++ ){
     structure[i].toMap();
@@ -124,7 +129,7 @@ class ProjectsDatabaseService{
 
         'Reference':FieldValue.arrayUnion([res[i]]),
       });
-      await collectionReference.doc(projectName).collection(res[i]).doc().set({});
+      await collectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
     }
 
   }
@@ -141,7 +146,7 @@ class ProjectsDatabaseService{
         'Reference': FieldValue.arrayUnion(
             [res[i]]),
       });
-      await collectionReference.doc(projectName).collection(res[i]).doc().set({});
+      await collectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
     }
 
     await collectionReference.doc(projectName).update({
@@ -179,7 +184,7 @@ for(int i = 0;i<res.length;i++){
     'Reference': FieldValue.arrayUnion(
         [res[i]]),
   });
-  await collectionReference.doc(projectName).collection(res[i]).doc().set({});
+  await collectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
 }
 
 
@@ -223,6 +228,55 @@ for(int i = 0;i<res.length;i++){
   //   }
   // }
   }
+
+
+  /////////////// new topics //////////////
+  // Broker //
+    Future brokerData (String uid ,String name ,int number,File image)async{
+
+      try{
+        firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+            .ref('/').child('/Broker/$uid') ;
+        firebase_storage.UploadTask uploadTask = ref.putFile(image);
+        firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+        taskSnapshot.ref.getDownloadURL().then(
+                (value)async{
+                  brokerReference.doc(uid).set({
+                    "Id":uid.toString(),
+                    "Name":name.toString(),
+                    "PhoneNumber":number,
+                    "ProfileUrl":value,
+                    "IsActive":true,
+                    "Password":"",
+
+                  });
+
+
+            }
+        );
+
+      }
+      catch(e){
+        print("Method name =  brokerData()");
+        print(e.toString());
+      }
+    }
+
+    Future<bool> brokerExist(String uid)async{
+      try{
+       final doc =  await brokerReference.doc(uid).get();
+       if(doc.exists){
+        return true;
+       }
+       else{
+         print('fas;e');
+         return false;
+       }
+      }
+      catch(e){
+        print(e.toString());
+      }
+    }
 
 
 

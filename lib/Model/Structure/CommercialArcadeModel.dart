@@ -9,7 +9,7 @@ class CommercialArcadeModel{
   Map<String, dynamic> toMap() {
     return {
       'TotalFloor': totalFloor, // floor number
-      'Length': shops,// length = number of shop
+      'TotalShop': shops,// length = number of shop
       'DifferentialValue':differentialValue,
       'Staring':staring
     };}

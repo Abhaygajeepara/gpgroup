@@ -72,5 +72,22 @@
   "SelectImage": "छवि चुने",
   "Update":"अपडेट करें",
 
-  "ViewSite":"साइट देखें"
+  "ViewSite":"साइट देखें",
+
+
+  "Broker":"ब्रोकर",
+  "BrokersPhoto":"ब्रोकर की फोटो",
+  "Document": "डॉक्यूमेंट",
+  "ThisFieldIsMandatory": "यह फील्ड अनिवार्य है",
+  "Name":"नाम",
+  "MobileNumber": "मोबाइल नंबर",
+  "NumberOnly": "नंबर ही",
+  "NumberIsMoreThan10": "संख्या 10 से अधिक है",
+  "NumberIsLessThan10": "संख्या 10 से कम है",
+  "NumberIsLessThan1": "संख्या 1 से कम है",
+  "CharactersOnly": "केवल अक्षर",
+  "CharactersIsMoreThan1": "अक्षर 1 से अधिक है",
+  "BrokerId": "ब्रोकर आईडी अस्तित्व",
+  "MinimumCharactersIs3": "न्यूनतम अक्षर 3 है"
+
 }

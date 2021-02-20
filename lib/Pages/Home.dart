@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gpgroup/Commonassets/Commonassets.dart';
+
+import 'package:gpgroup/Commonassets/Widgets/AppDrawer.dart';
 import 'package:gpgroup/Commonassets/Widgets/Bottombar.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Pages/Project/Creatingproject.dart';
@@ -40,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
             transitionDuration: Duration(milliseconds: 1),
           ));
         },
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).buttonColor,
         child: Icon(Icons.business),
       ) : Container(),
         // floatingActionButton: bottomTab == 1 ? FloatingActionButton(
@@ -54,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         //       child: Icon(Icons.business),
         //     ) : Container(),
         bottomNavigationBar:CustomButtomBar(context,bottomTab,Provider.of<BottomNavigationProvider>(context,listen: false)),
+    drawer: AppDrawer(),
     );
   }
 }

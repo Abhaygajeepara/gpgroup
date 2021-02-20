@@ -73,5 +73,21 @@
   "SelectImage": "છબી પસંદ કરો",
   "Update":"અપડેટ",
 
-  "ViewSite":"સાઇટ જુઓ"
+  "ViewSite":"સાઇટ જુઓ",
+
+
+  "Broker":"બ્રોકર",
+  "BrokersPhoto":"બ્રોકરનો ફોટો",
+  "Document": "Document",
+  "ThisFieldIsMandatory": "આ ફિલ્ડ ફરજિયાત છે",
+  "Name":"નામ",
+  "MobileNumber": "મોબાઇલ નંબર",
+  "NumberOnly": "ફક્ત નંબર",
+  "NumberIsMoreThan10": "સંખ્યા 10 કરતા વધારે છે",
+  "NumberIsLessThan10": "સંખ્યા 10 કરતા ઓછી છે",
+  "NumberIsMoreThan1": "સંખ્યા 1 કરતા વધારે છે",
+  "CharactersOnly": "ફક્ત અક્ષરો",
+  "CharactersIsMoreThan1": "અક્ષરો 1 કરતાં વધુ છે",
+  "BrokerExist": "બ્રોકર આઈડી અસ્તિત્વમાં છે",
+  "MinimumCharactersIs3": "ન્યૂનતમ અક્ષર 3 છે"
 }

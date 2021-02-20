@@ -134,7 +134,7 @@ class CreatingProjectState extends State<CreatingProject> {
 
   }
   getModel(int _floor,int _flats){
-    //print(_floor);
+    ////print(_floor);
     _buildingList.sort((a,b)=>a.toString().compareTo(b.toString()));
     Map<String,dynamic> BuildingStructure ={
       "ListOfBuilding":_buildingList,
@@ -142,7 +142,7 @@ class CreatingProjectState extends State<CreatingProject> {
         "FlatPerFloor":flats
     };
     _buildingModel = BuildingStructureNumberModel(floorsandflats: BuildingStructure);
-   print(BuildingStructure);// for(int i = 0;i<_buildingList.length;i++){
+   //print(BuildingStructure);// for(int i = 0;i<_buildingList.length;i++){
     //   List<BuildingStructureModel> _floorlist =List();
     //   int staring = 100;
     //   for(int j= 0;j<_floor;j++){
@@ -165,9 +165,9 @@ class CreatingProjectState extends State<CreatingProject> {
     // }
 
     // for(int i = 0;i<_buildingList.length;i++){
-    //   print(_buildingModel[i].buildingName);
+    //   //print(_buildingModel[i].buildingName);
     //   for(int j= 0;j<_floor;j++){
-    //     print(_buildingModel[i].floorsandflats[j].flats);
+    //     //print(_buildingModel[i].floorsandflats[j].flats);
     //
     //
     //   }
@@ -182,7 +182,7 @@ class CreatingProjectState extends State<CreatingProject> {
 
 
     _commercialModel = CommercialArcadeModel(totalFloor: commericalfloors, shops:  commericalShop_per_floor,differentialValue: commericalDifferentialvalue,staring: commericalStaringnumber);
-print(_commercialModel.toMap());
+//print(_commercialModel.toMap());
 
 
   }
@@ -195,7 +195,7 @@ print(_commercialModel.toMap());
 
 
     _mixedUsecommercialModel = CommercialArcadeModel(totalFloor: mixedUseCommericalfloors, shops:  mixedUseCommericalShop_per_floor,differentialValue:mixedUseCommericalDifferentialvalue,staring: mixedUseCommericalStaringnumber);
-      print(_mixedUsecommercialModel.toMap());
+      //print(_mixedUsecommercialModel.toMap());
 
   }
   MixuseGetModel(int _floor,int _flats){
@@ -216,46 +216,14 @@ print(_commercialModel.toMap());
       _mixusebuildingModel.add(BuildingStructureNumberModel(floorsandflats: floorDetails));
 
     }
-    print(_mixusebuildingModel.first.floorsandflats);
 
-    // _mixusebuildingModel.clear();
-    // for(int i = 0;i<_mixedusedbuildingList.length;i++){
-    //   List<BuildingStructureModel> _floorlist =List();
-    //   int staring = 100;
-    //   for(int j= 0;j<_floor;j++){
-    //
-    //
-    //     List<int> _flatsList =List();
-    //     for(int k =0;k<_flats;k++){
-    //
-    //       _flatsList.add(staring + k+1);
-    //
-    //     }
-    //
-    //     _floorlist.add(BuildingStructureModel(floorNumber: j+1, flats: _flatsList));
-    //     staring = staring +100;
-    //
-    //   }
-    //
-    //   _mixusebuildingModel.add(BuildingStructureNumberModel(buildingName: _mixedusedbuildingList[i],floorsandflats: _floorlist));
-    //
-    // }
-    //
-    // for(int i = 0;i<_mixusebuildingModel.length;i++){
-    //   print(_mixusebuildingModel[i].buildingName);
-    //   for(int j= 0;j<_floor;j++){
-    //     print(_mixusebuildingModel[i].floorsandflats[j].flats);
-    //
-    //
-    //   }
-    // }
   }
 
   @override
   Widget build(BuildContext context) {
     // String projectName ="Abhay";
     // String ProjectNameUpper =  projectName.substring(0,1).toUpperCase() + projectName.substring(1);
-    // print(ProjectNameUpper);
+    // //print(ProjectNameUpper);
     final size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: (){
@@ -341,7 +309,7 @@ print(_commercialModel.toMap());
                         if(_imagefilelist.length  <=0){
                           setState(() {
                             projectnNameError =AppLocalizations.of(context).translate('SelectTheImage');
-                            print(projectnNameError);
+                            //print(projectnNameError);
                           });
                         }
                         else{
@@ -355,7 +323,7 @@ print(_commercialModel.toMap());
 
                         setState(() {
                             projectnNameError =AppLocalizations.of(context).translate('ThisProjectNameisexist');
-                           print(projectnNameError);
+                           //print(projectnNameError);
                         });
                       }
 
@@ -435,7 +403,7 @@ print(_commercialModel.toMap());
   }
 
   Widget getbody(RulesModel _rulesModelGet) {
-   // print(pageIndex);
+   // //print(pageIndex);
     final size = MediaQuery.of(context).size;
     if (pageIndex == 0) {
       return mainScreen();
@@ -487,6 +455,7 @@ print(_commercialModel.toMap());
       child: Column(
         children: [
           Form(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             key: _formkey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -659,7 +628,7 @@ print(_commercialModel.toMap());
                             },
                             onLongPress: () {
                               setState(() {
-                                print('ss');
+                                //print('ss');
                                 showimageindex = -1;
                                 _imagefilelist.removeAt(index);
                               });
@@ -736,9 +705,9 @@ print(_commercialModel.toMap());
                   _gujaratiRules.remove(_rulesModel.gujarati[index]);
 
                 }
-                print("Selected rules ${_englishRules}");
-                print("_hindiRules rules ${_hindiRules}");
-                print("_gujaratiRules rules ${_gujaratiRules}");
+                //print("Selected rules ${_englishRules}");
+                //print("_hindiRules rules ${_hindiRules}");
+                //print("_gujaratiRules rules ${_gujaratiRules}");
               });
             },
             title: Text(
@@ -827,7 +796,7 @@ print(_commercialModel.toMap());
   //
 
   Widget housingStructure(Size size){
-print(pageIndex);
+//print(pageIndex);
     return Container(
 
         child:Column(
@@ -941,8 +910,8 @@ print(pageIndex);
                               setState(() {
                                 selected_part = partindex;
 
-                                print(number);
-                                // print(selected_part.toString());
+                                //print(number);
+                                // //print(selected_part.toString());
                               });
                             },
                             child: Container(
@@ -1023,7 +992,7 @@ print(pageIndex);
                   color: Theme.of(context).buttonColor,
                   onPressed: () async{
                     // TODO : ADD data in localization;s file
-                    print(_houseStructuure.length);
+                    //print(_houseStructuure.length);
                    List<List<String>> rules=  [_englishRules,_gujaratiRules,_hindiRules];
                    setState(() {
                 isLoading = true;
@@ -1038,7 +1007,7 @@ print(pageIndex);
                   child: Text(
                     AppLocalizations.of(context).translate("Add"),
                     style: TextStyle(
-                        color: CommonAssets.AppbarTextColor,
+                        color: CommonAssets.buttonTextColor,
                         fontWeight: FontWeight.w700,
                         fontSize: size.height * 0.020),
                   ),
@@ -1084,7 +1053,7 @@ print(pageIndex);
                         color: Colors.black,
                         iconSize: size.height *0.04,
                         onPressed: (){
-                          print(_buildingList);
+                          //print(_buildingList);
                           if(_apartmentformkey0.currentState.validate()){
 
                             if(!_buildingList.contains(apartmentname)){
@@ -1181,7 +1150,7 @@ print(pageIndex);
                           onChanged: (val){
                             setState(() {
                               floors =int.parse(val);
-                              print(floors);
+                              //print(floors);
 
                             });
                             getModel(floors,flats);
@@ -1207,7 +1176,7 @@ print(pageIndex);
 
                             }
                             else{
-                              // print('ss');
+                              // //print('ss');
                               Fluttertoast.showToast(
                                   msg: AppLocalizations.of(context).translate('numberofflatsare246'),
                                   toastLength: Toast.LENGTH_SHORT,
@@ -1278,7 +1247,7 @@ print(pageIndex);
 
                     AppLocalizations.of(context).translate("Add"),
                     style: TextStyle(
-                        color: CommonAssets.AppbarTextColor,
+                        color: CommonAssets.buttonTextColor,
                         fontWeight: FontWeight.w700,
                         fontSize: size.height * 0.020),
                   ),
@@ -1297,7 +1266,7 @@ print(pageIndex);
   Widget ModelStructure(int index){
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-// print(floor.toString());
+// //print(floor.toString());
     int floornumber = index +1;
     int staring =100 * (index+1);
 
@@ -1461,8 +1430,8 @@ print(pageIndex);
                               setState(() {
                                 commericalSelectdfloor = floorindex;
 
-                                print(commericalNumber);
-                                // print(selectdfloor.toString());
+                                //print(commericalNumber);
+                                // //print(selectdfloor.toString());
                               });
                             },
                             child: Container(
@@ -1558,7 +1527,7 @@ print(pageIndex);
 
                     AppLocalizations.of(context).translate("Add"),
                     style: TextStyle(
-                        color: CommonAssets.AppbarTextColor,
+                        color: CommonAssets.buttonTextColor,
                         fontWeight: FontWeight.w700,
                         fontSize: size.height * 0.020),
                   ),
@@ -1600,7 +1569,7 @@ print(pageIndex);
                 onTap: () {
                   setState(() {
                     pageIndex =  7+index;
-                    //print(pageIndex);
+                    ////print(pageIndex);
                   });
                 },
                 child: Card(
@@ -1666,7 +1635,7 @@ print(pageIndex);
 
                   AppLocalizations.of(context).translate("Add"),
                   style: TextStyle(
-                      color: CommonAssets.AppbarTextColor,
+                      color: CommonAssets.buttonTextColor,
                       fontWeight: FontWeight.w700,
                       fontSize: size.height * 0.020),
                 ),
@@ -1788,8 +1757,8 @@ print(pageIndex);
                               setState(() {
                                 mixedUseCommericalSelectdfloor = floorindex;
 
-                                print(mixedUseCommericalNumber);
-                                // print(selectdfloor.toString());
+                                //print(mixedUseCommericalNumber);
+                                // //print(selectdfloor.toString());
                               });
                             },
                             child: Container(
@@ -1881,7 +1850,7 @@ print(pageIndex);
 
                     AppLocalizations.of(context).translate("Add"),
                     style: TextStyle(
-                        color: CommonAssets.AppbarTextColor,
+                        color: CommonAssets.buttonTextColor,
                         fontWeight: FontWeight.w700,
                         fontSize: size.height * 0.020),
                   ),
@@ -1935,7 +1904,7 @@ print(pageIndex);
                                 _mixedusedbuildingList.add(mixeduseApartmentname);
                                 _mixedusedbuildingList.sort((a,b)=>a.toString().compareTo(b.toString()));
                                 MixuseGetModel(mixuseFloors,mixuseFlats);
-                                print( "list of part of ${_mixedusedbuildingList}");
+                                //print( "list of part of ${_mixedusedbuildingList}");
                               });
                             }
 
@@ -2048,7 +2017,7 @@ print(pageIndex);
                               MixuseGetModel(mixuseFloors,mixuseFlats);
                             }
                             else{
-                              // print('ss');
+                              // //print('ss');
                               Fluttertoast.showToast(
                                   msg: AppLocalizations.of(context).translate('numberofflatsare246'),
                                   toastLength: Toast.LENGTH_SHORT,
@@ -2119,7 +2088,7 @@ print(pageIndex);
                             onTap: (){
                               setState(() {
                                 selectedBuilldingindex = partindex;
-                                print("selectedBuilldingindex = ${selectedBuilldingindex}");
+                                //print("selectedBuilldingindex = ${selectedBuilldingindex}");
                               });
                             },
                             child: Container(
@@ -2167,7 +2136,7 @@ print(pageIndex);
                   //_mixusebuildingModel[selectedBuilldingindex].floorsandflats.length
                     itemCount:   mixuseFloors,
                     itemBuilder: (context,index){
-                      //  print('lentgh ${_mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][index]}');
+                      //  //print('lentgh ${_mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][index]}');
                       return MixUseModelStructure(index,_mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][index]);
                     }
                 ),
@@ -2194,7 +2163,7 @@ print(pageIndex);
 
                     AppLocalizations.of(context).translate("Add"),
                     style: TextStyle(
-                        color: CommonAssets.AppbarTextColor,
+                        color: CommonAssets.buttonTextColor,
                         fontWeight: FontWeight.w700,
                         fontSize: size.height * 0.020),
                   ),
@@ -2249,7 +2218,7 @@ print(pageIndex);
                         // Map<String,dynamic> newMixedUsedMap ={};
                         _mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][_floor] =
                             _mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][_floor]-1;
-                          print(_mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][_floor]);
+                          //print(_mixusebuildingModel[selectedBuilldingindex].floorsandflats['FlatPerFloor'][_floor]);
                       });
                     },
                     child: Padding(
@@ -2284,9 +2253,11 @@ print(pageIndex);
     Pattern pattern = '^[0-9]+';
     RegExp regExp = new RegExp(pattern);
     if (!regExp.hasMatch(value)) {
+      return AppLocalizations.of(context).translate("NumberOnly");
       return 'Enter The Number Only';
     }
     else if(value.length >3){
+      return AppLocalizations.of(context).translate("NumberIsLessThan1");
       return "Digits Is Grater Than One";
     }else {
       return null;
@@ -2296,9 +2267,11 @@ print(pageIndex);
     Pattern pattern = '^[a-zA-Z]+';
     RegExp regExp = new RegExp(pattern);
     if (!regExp.hasMatch(value)) {
+      return AppLocalizations.of(context).translate("CharactersOnly");
       return 'Enter The character Only';
     }
     else if(value.length >1){
+      return AppLocalizations.of(context).translate("CharactersIsMoreThan1");
       return "Character Is Grater Than One";
     }
     else {
@@ -2309,9 +2282,11 @@ print(pageIndex);
     Pattern pattern = '^[a-zA-Z]+';
     RegExp regExp = new RegExp(pattern);
     if (!regExp.hasMatch(value)) {
+      return AppLocalizations.of(context).translate("CharactersOnly");
       return 'Enter The character Only';
     }
     else if(value.length >2){
+      return AppLocalizations.of(context).translate("CharactersIsMoreThan1");
       return "Character Is Grater Than One";
     }
     else {

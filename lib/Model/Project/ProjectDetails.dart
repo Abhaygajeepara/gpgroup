@@ -10,7 +10,7 @@ class  ProjectNameList{
   List<String> gujaratiRules;
   List<String> hindiRules;
   List<String> reference;
-
+  List<Map<String,dynamic>> Structure;
   List<String> imagesUrl;
 
 
@@ -24,7 +24,7 @@ class  ProjectNameList{
     @required this.gujaratiRules,
     @required this.hindiRules,
     @required this.reference,
-
+    @required this.Structure,
     @required this.imagesUrl
 
   });
