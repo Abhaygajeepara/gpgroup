@@ -1,22 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class InnerData{
   String name; // structure number
   List<CustomerData> cusList;
+  List<int>soldList;
 
-  InnerData({this.name,this.cusList});
+  InnerData({@required this.name, @required this.cusList, @required this.soldList});
   factory InnerData.of(String nameOfStructure,QuerySnapshot snapshot){
 
     List<CustomerData> cusLists = [];
-
+    List<int> soldLists = [];
       for(int i  =0;i<snapshot.docs.length;i++){
         //print(snapshot.docs[i].id);
          // CustomerData data= CustomerData.of(snapshot.docs[i].data());
           cusLists.add(CustomerData.of(snapshot.docs[i]));
+          soldLists.add(int.parse(snapshot.docs[i].id));
       }
     return InnerData(
         name: nameOfStructure.toString(),
-      cusList: cusLists
+      cusList: cusLists,
+      soldList: soldLists
     );
   }
 }

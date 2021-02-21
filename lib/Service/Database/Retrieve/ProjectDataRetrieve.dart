@@ -144,17 +144,31 @@ final CollectionReference brokerReference = FirebaseFirestore.instance.collectio
 
       for(int i = 0;i<refs.length;i++){
 
-        final docdata=  await  _collectionReference.doc(ProjectName).collection(refs[i]).orderBy("Number",descending: false).get();
+        final  _storeData =  await _collectionReference.doc(ProjectName).collection(refs[i]).orderBy("Number",descending: false).get();
+          InnerData _innerData = InnerData.of(refs[i], _storeData);
+          _inner.add(_innerData);
+
+
+      }
+
+
+
+      for(int i = 0;i<refs.length;i++){
+
+        // final docdata=  await  _collectionReference.doc(ProjectName).collection(refs[i]).orderBy("Number",descending: false).get();
 
         _collectionReference.doc(ProjectName).collection(refs[i]).orderBy("Number",descending: false).snapshots().listen((event) {
-          InnerData _innerdata = InnerData.of(refs[i],event);
-          _inner.insert(i, _innerdata);
-          _streamController.sink.add(_inner);
 
+          InnerData _innerData = InnerData.of(refs[i], event);
+          _inner.removeAt(i);
+          _inner.insert(i, _innerData);
+          _streamController.sink.add(_inner);
 
         });
 
-
+        // for(int j = 0;j<refs.length;j++){
+        //   print(_inner[j].name);
+        // }
       }
 
     }

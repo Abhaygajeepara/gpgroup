@@ -346,11 +346,12 @@ class _ProjectInfoState extends State<ProjectInfo> {
    // print('houseStructure');
     ProjectRetrieve projectProvider = Provider.of<ProjectRetrieve>(context,);
     final size = MediaQuery.of(context).size;
+
     return StreamBuilder<List<InnerData>>(
         stream: projectProvider.STRUCTURESTREAM,
         builder: (context,snapshot){
-          if(snapshot.hasData){
 
+          if(snapshot.hasData){
             //print("Snapshot length = " +snapshot.data.length.toString());
             return CarouselSlider.builder(
                 options: CarouselOptions(
@@ -372,7 +373,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
                 ),
                 itemCount: projectNameList.Structure.length,
                 itemBuilder: (BuildContext context,index){
-
+          print(snapshot.data[index].soldList);
                   return Card(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -404,22 +405,23 @@ class _ProjectInfoState extends State<ProjectInfo> {
                               //  childAspectRatio: (size.height /size.height *1.8)
 
                             ) , itemBuilder: (context,indexCus){
+
                               int currentHouseNumber = indexCus +1;
+
                           return Padding(
                             padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.005),
                             child: GestureDetector(
                               onTap: ()async{
-
                                projectProvider.customerUploadData(snapshot.data[index].name,currentHouseNumber);
                               },
                               child: Card(
                                   elevation: 30.0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
-                                  // side:BorderSide(
-                                  //   color: !snapshot.data[index].cusList[indexCus].isLoanOn?
-                                  //         Theme.of(context).primaryColor:CommonAssets.soldProduct
-                                  // )
+                                  side:BorderSide(
+                                    color: snapshot.data[index].soldList.contains(currentHouseNumber)?
+                                    CommonAssets.soldProduct:Theme.of(context).primaryColor
+                                  )
                                 ),
                                   shadowColor: Colors.transparent.withOpacity(0.2),
                                   child: Center(child: Text(
@@ -520,10 +522,10 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                       elevation: 30.0,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10.0),
-                                        // side:BorderSide(
-                                        //   color: !snapshot.data[index].cusList[indexCus].isLoanOn?
-                                        //         Theme.of(context).primaryColor:CommonAssets.soldProduct
-                                        // )
+                                          side:BorderSide(
+                                              color: snapshot.data[index].soldList.contains(currenShop)?
+                                              CommonAssets.soldProduct:Theme.of(context).primaryColor
+                                          )
                                       ),
                                       shadowColor: Colors.transparent.withOpacity(0.2),
                                       child: Center(child: Text(
@@ -631,11 +633,10 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                             },
                                             child: Card(
                                               shape: RoundedRectangleBorder(
-                                                // side: BorderSide(
-                                                //   color:
-                                                //   !snapshot.data[index].numberOfFlats[indexFloor].cusLists[flatIndex].isLoanOn?
-                                                //   Theme.of(context).primaryColor:CommonAssets.boxBorderColors
-                                                // )
+                                                  side:BorderSide(
+                                                      color: snapshot.data[index].soldList.contains(currentFlat)?
+                                                      CommonAssets.soldProduct:Theme.of(context).primaryColor
+                                                  )
                                               ),
                                               child: Center(child: Text(currentFlat.toString())),
                                             ),
@@ -662,7 +663,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
         });
   }
 
-  mixedUseStructure(String projectName, BuildContext context,ProjectNameList projectNameList) {
+  mixedUseStructure(String projectName, BuildContext context,ProjectNameList projectNameList,) {
     ProjectRetrieve projectProvider = Provider.of<ProjectRetrieve>(context,);
     final size = MediaQuery.of(context).size;
     return StreamBuilder<List<InnerData>>(
@@ -695,12 +696,12 @@ class _ProjectInfoState extends State<ProjectInfo> {
                        if(int.tryParse(commercialSnapshot.data[index].name) != null){
                          int startingShopNumber = (projectNameList.Structure[0]['DifferentialValue'] *index) +projectNameList.Structure[0]['Staring'];
 
-                         return  mixCommercial(commercialSnapshot.data[index].name, context, projectNameList,startingShopNumber,projectProvider);
+                         return  mixCommercial(commercialSnapshot.data[index], context, projectNameList,startingShopNumber,projectProvider);
                        }
                       else{
                          int passIndex =projectNameList.Structure[0]['TotalFloor']-(index +1);
                          passIndex= passIndex.abs();
-                        return mixApartment(commercialSnapshot.data[index].name, context, projectNameList, passIndex,projectProvider);
+                        return mixApartment(commercialSnapshot.data[index], context, projectNameList, passIndex,projectProvider);
                        }
 
 
@@ -714,7 +715,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
           }
         });
   }
-  Widget mixCommercial(String projectName, BuildContext context,ProjectNameList projectNameList,int startingShopNumber,ProjectRetrieve projectProvider){
+  Widget mixCommercial(InnerData projectData, BuildContext context,ProjectNameList projectNameList,int startingShopNumber,ProjectRetrieve projectProvider,){
 
     final size= MediaQuery.of(context).size;
     return Card(
@@ -723,7 +724,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            projectName.toString(),
+            projectData.name,
             style: TextStyle(
               color:  Theme.of(context).primaryColor,
               //color: CommonAssets.AppbarTextColor,
@@ -754,16 +755,17 @@ class _ProjectInfoState extends State<ProjectInfo> {
                   padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.005),
                   child: GestureDetector(
                     onTap: ()async{
-                      projectProvider.customerUploadData(projectName,currenShop);
+                      projectProvider.customerUploadData(projectData.name,currenShop);
                     },
                     child: Card(
                         elevation: 30.0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
-                          // side:BorderSide(
-                          //   color: !snapshot.data[index].cusList[indexCus].isLoanOn?
-                          //         Theme.of(context).primaryColor:CommonAssets.soldProduct
-                          // )
+                            // todo
+                            side:BorderSide(
+                                color: projectData.soldList.contains(currenShop)?
+                                CommonAssets.soldProduct:Theme.of(context).primaryColor
+                            )
                         ),
                         shadowColor: Colors.transparent.withOpacity(0.2),
                         child: Center(child: Text(
@@ -782,7 +784,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
       ),
     );
   }
-  Widget mixApartment(String projectName, BuildContext context,ProjectNameList projectNameList,int index,ProjectRetrieve projectProvider){
+  Widget mixApartment(InnerData projectData, BuildContext context,ProjectNameList projectNameList,int index,ProjectRetrieve projectProvider,){
     final size = MediaQuery.of(context).size;
     return Card(
       child: Column(
@@ -790,7 +792,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            projectName.toString(),
+            projectData.name,
             style: TextStyle(
               color:  Theme.of(context).primaryColor,
               //color: CommonAssets.AppbarTextColor,
@@ -826,15 +828,14 @@ class _ProjectInfoState extends State<ProjectInfo> {
                           width: size.width /projectNameList.Structure[index]['FlatPerFloor'][indexFloor],
                           child: GestureDetector(
                             onTap: (){
-                              projectProvider.customerUploadData(projectName,currentFlat);
+                              projectProvider.customerUploadData(projectData.name,currentFlat);
                             },
                             child: Card(
                               shape: RoundedRectangleBorder(
-                                // side: BorderSide(
-                                //   color:
-                                //   !snapshot.data[index].numberOfFlats[indexFloor].cusLists[flatIndex].isLoanOn?
-                                //   Theme.of(context).primaryColor:CommonAssets.boxBorderColors
-                                // )
+                                  side:BorderSide(
+                                      color: projectData.soldList.contains(currentFlat)?
+                                      CommonAssets.soldProduct:Theme.of(context).primaryColor
+                                  )
                               ),
                               child: Center(child: Text(currentFlat.toString())),
                             ),
