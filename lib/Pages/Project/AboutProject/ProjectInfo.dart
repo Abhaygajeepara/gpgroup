@@ -6,6 +6,8 @@ import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Model/Project/InnerData.dart';
 import 'package:gpgroup/Model/Project/ProjectDetails.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:gpgroup/Pages/Project/AboutProject/Customer/EntryPage.dart';
+import 'package:gpgroup/Pages/Project/AboutProject/Customer/ExistingCustomerData.dart';
 import 'package:gpgroup/Pages/Project/AboutProject/UpdateDetails.dart';
 
 import 'package:gpgroup/Service/Database/Retrieve/ProjectDataRetrieve.dart';
@@ -22,7 +24,7 @@ class ProjectInfo extends StatefulWidget {
 
 class _ProjectInfoState extends State<ProjectInfo> {
 
-
+  List<Map<String,String>> _brokerList =[];
   bool isInformationPage  = true;
   void  willpopChange(){
 
@@ -39,7 +41,9 @@ class _ProjectInfoState extends State<ProjectInfo> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.projectProvider.setListners();
+
+    allocateDataOfBroker();
+    wating();
   //   if(widget.projectProvider.typeOfProject =="Society"||widget.projectProvider.typeOfProject =="CommercialArcade"){
   //     widget.projectProvider.setListners();
   //   }
@@ -52,7 +56,13 @@ class _ProjectInfoState extends State<ProjectInfo> {
 
 
   }
-
+  Future wating()async{
+    await widget.projectProvider.setListners();
+  }
+  Future allocateDataOfBroker()async{
+   _brokerList = await widget.projectProvider.GetBroker();
+   print("Data${_brokerList}");
+  }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -412,9 +422,29 @@ class _ProjectInfoState extends State<ProjectInfo> {
                             padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.005),
                             child: GestureDetector(
                               onTap: ()async{
-                               projectProvider.customerUploadData(snapshot.data[index].name,currentHouseNumber);
+                                if(snapshot.data[index].soldList.contains(currentHouseNumber)){
+                                  int  _indexFormList= snapshot.data[index].soldList.indexWhere((element) =>element == currentHouseNumber);
+                                  String ref = "Project/${projectName.toString()}/${ snapshot.data[index].name}/";
+                                  await projectProvider.setProperties(snapshot.data[index].cusList[_indexFormList].loanReferenceCollectionName);
+                                  Navigator.push(context, PageRouteBuilder(
+                                    //    pageBuilder: (_,__,____) => BuildingStructure(),
+                                    pageBuilder: (_,__,___)=> CustomerDetails(customerData: snapshot.data[index].cusList[_indexFormList],),
+                                    transitionDuration: Duration(milliseconds: 0),
+                                  ));
+                                }
+                                else{
+                                  Navigator.push(context, PageRouteBuilder(
+                                    //    pageBuilder: (_,__,____) => BuildingStructure(),
+                                    pageBuilder: (_,__,___)=>
+                                        FirstTimeCustomerEntry(brokerList: _brokerList,projectName: widget.projectProvider.ProjectName,
+                                          innerCollection: snapshot.data[index].name,allocatedNumber: currentHouseNumber,),
+                                    transitionDuration: Duration(milliseconds: 0),
+                                  ));
+                                }
+
                               },
                               child: Card(
+                                  color: snapshot.data[index].soldList.contains(currentHouseNumber)? Theme.of(context).primaryColor:Colors.white,
                                   elevation: 30.0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -427,6 +457,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                   child: Center(child: Text(
                                     currentHouseNumber.toString(),
                                   style: TextStyle(
+                                      color: snapshot.data[index].soldList.contains(currentHouseNumber)? CommonAssets.AppbarTextColor:CommonAssets.standardtextcolor,
                                     fontSize: size.height  *0.02
                                   ),
                                   ))
@@ -516,10 +547,35 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                 padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.005),
                                 child: GestureDetector(
                                   onTap: ()async{
-                                    projectProvider.customerUploadData(snapshot.data[index].name,currenShop);
+
+
+                                   if(snapshot.data[index].soldList.contains(currenShop)){
+                                     int  _indexFormList= snapshot.data[index].soldList.indexWhere((element) =>element == currenShop);
+                                     String ref = "Project/${projectName.toString()}/${ snapshot.data[index].name}/";
+                                     await projectProvider.setProperties(snapshot.data[index].cusList[_indexFormList].loanReferenceCollectionName);
+                                     print('id onfcustomer = ${snapshot.data[index].cusList[_indexFormList].id}');
+                                    Navigator.push(context, PageRouteBuilder(
+                                      //    pageBuilder: (_,__,____) => BuildingStructure(),
+                                      pageBuilder: (_,__,___)=> CustomerDetails(customerData: snapshot.data[index].cusList[_indexFormList],),
+                                      transitionDuration: Duration(milliseconds: 0),
+                                    ));
+                                   }
+                                   else{
+                                     Navigator.push(context, PageRouteBuilder(
+                                       //    pageBuilder: (_,__,____) => BuildingStructure(),
+                                       pageBuilder: (_,__,___)=>
+                                           FirstTimeCustomerEntry(brokerList: _brokerList,projectName: widget.projectProvider.ProjectName,
+                                             innerCollection: snapshot.data[index].name,allocatedNumber: currenShop,),
+                                       transitionDuration: Duration(milliseconds: 0),
+                                     ));
+                                   }
+
+
+
                                   },
                                   child: Card(
-                                      elevation: 30.0,
+                                    color: snapshot.data[index].soldList.contains(currenShop)? Theme.of(context).primaryColor:Colors.white,
+                                     // elevation: snapshot.data[index].soldList.contains(currenShop)?0.0:30.0,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10.0),
                                           side:BorderSide(
@@ -527,10 +583,11 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                               CommonAssets.soldProduct:Theme.of(context).primaryColor
                                           )
                                       ),
-                                      shadowColor: Colors.transparent.withOpacity(0.2),
+                                      //shadowColor: snapshot.data[index].soldList.contains(currenShop)? Colors.transparent:Colors.white,
                                       child: Center(child: Text(
                                         currenShop.toString(),
                                         style: TextStyle(
+                                            color: snapshot.data[index].soldList.contains(currenShop)? CommonAssets.AppbarTextColor:CommonAssets.standardtextcolor,
                                             fontSize: size.height  *0.02
                                         ),
                                       ))
@@ -629,16 +686,38 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                           width: size.width /projectNameList.Structure[0]['FlatPerFloor'] ,
                                           child: GestureDetector(
                                             onTap: ()async{
-                                              projectProvider.customerUploadData(snapshot.data[index].name,currentFlat);
+                                              if(snapshot.data[index].soldList.contains(currentFlat)){
+                                                int  _indexFormList= snapshot.data[index].soldList.indexWhere((element) =>element == currentFlat);
+
+                                                String ref = "Project/${projectName.toString()}/${ snapshot.data[index].name}/";
+                                                await projectProvider.setProperties( snapshot.data[index].cusList[_indexFormList].loanReferenceCollectionName);
+                                                Navigator.push(context, PageRouteBuilder(
+                                                  //    pageBuilder: (_,__,____) => BuildingStructure(),
+                                                  pageBuilder: (_,__,___)=> CustomerDetails(customerData: snapshot.data[index].cusList[_indexFormList],),
+                                                  transitionDuration: Duration(milliseconds: 0),
+                                                ));
+                                              }
+                                              else{
+                                                Navigator.push(context, PageRouteBuilder(
+                                                  //    pageBuilder: (_,__,____) => BuildingStructure(),
+                                                  pageBuilder: (_,__,___)=>
+                                                      FirstTimeCustomerEntry(brokerList: _brokerList,projectName: widget.projectProvider.ProjectName,
+                                                        innerCollection: snapshot.data[index].name,allocatedNumber: currentFlat,),
+                                                  transitionDuration: Duration(milliseconds: 0),
+                                                ));
+                                              }
                                             },
                                             child: Card(
+                                              color: snapshot.data[index].soldList.contains(currentFlat)? Theme.of(context).primaryColor:Colors.white,
                                               shape: RoundedRectangleBorder(
                                                   side:BorderSide(
                                                       color: snapshot.data[index].soldList.contains(currentFlat)?
                                                       CommonAssets.soldProduct:Theme.of(context).primaryColor
                                                   )
                                               ),
-                                              child: Center(child: Text(currentFlat.toString())),
+                                              child: Center(child: Text(currentFlat.toString(),style: TextStyle(
+                                                color: snapshot.data[index].soldList.contains(currentFlat)? CommonAssets.AppbarTextColor:CommonAssets.standardtextcolor,
+                                              ),)),
                                             ),
                                           ),
                                         );
@@ -696,12 +775,12 @@ class _ProjectInfoState extends State<ProjectInfo> {
                        if(int.tryParse(commercialSnapshot.data[index].name) != null){
                          int startingShopNumber = (projectNameList.Structure[0]['DifferentialValue'] *index) +projectNameList.Structure[0]['Staring'];
 
-                         return  mixCommercial(commercialSnapshot.data[index], context, projectNameList,startingShopNumber,projectProvider);
+                         return  mixCommercial(projectName,commercialSnapshot.data[index], context, projectNameList,startingShopNumber,projectProvider);
                        }
                       else{
                          int passIndex =projectNameList.Structure[0]['TotalFloor']-(index +1);
                          passIndex= passIndex.abs();
-                        return mixApartment(commercialSnapshot.data[index], context, projectNameList, passIndex,projectProvider);
+                        return mixApartment(projectName,commercialSnapshot.data[index], context, projectNameList, passIndex,projectProvider);
                        }
 
 
@@ -715,7 +794,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
           }
         });
   }
-  Widget mixCommercial(InnerData projectData, BuildContext context,ProjectNameList projectNameList,int startingShopNumber,ProjectRetrieve projectProvider,){
+  Widget mixCommercial(String projectName, InnerData projectData, BuildContext context,ProjectNameList projectNameList,int startingShopNumber,ProjectRetrieve projectProvider,){
 
     final size= MediaQuery.of(context).size;
     return Card(
@@ -755,9 +834,32 @@ class _ProjectInfoState extends State<ProjectInfo> {
                   padding:  EdgeInsets.symmetric(horizontal: size.width *0.01,vertical: size.height *0.005),
                   child: GestureDetector(
                     onTap: ()async{
-                      projectProvider.customerUploadData(projectData.name,currenShop);
+                      if(projectData.soldList.contains(currenShop)){
+                        int  _indexFormList= projectData.soldList.indexWhere((element) =>element == currenShop);
+
+                        String ref = "Project/${projectName.toString()}/${ projectData.name}/";
+
+                        await projectProvider.setProperties(projectData.cusList[indexCus].loanReferenceCollectionName);
+
+                        Navigator.push(context, PageRouteBuilder(
+                          //    pageBuilder: (_,__,____) => BuildingStructure(),
+                          pageBuilder: (_,__,___)=> CustomerDetails(customerData: projectData.cusList[indexCus]),
+                          transitionDuration: Duration(milliseconds: 0),
+                        ));
+                      }
+                      else{
+                        Navigator.push(context, PageRouteBuilder(
+                          //    pageBuilder: (_,__,____) => BuildingStructure(),
+                          pageBuilder: (_,__,___)=>
+                              FirstTimeCustomerEntry(brokerList: _brokerList,projectName: widget.projectProvider.ProjectName,
+                                innerCollection: projectData.name,allocatedNumber: currenShop,),
+                          transitionDuration: Duration(milliseconds: 0),
+                        ));
+                      }
+
                     },
                     child: Card(
+                        color: projectData.soldList.contains(currenShop)? Theme.of(context).primaryColor:Colors.white,
                         elevation: 30.0,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.0),
@@ -771,6 +873,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
                         child: Center(child: Text(
                           currenShop.toString(),
                           style: TextStyle(
+                             color:  projectData.soldList.contains(currenShop)?CommonAssets.AppbarTextColor:CommonAssets.standardtextcolor,
                               fontSize: size.height  *0.02
                           ),
                         ))
@@ -784,7 +887,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
       ),
     );
   }
-  Widget mixApartment(InnerData projectData, BuildContext context,ProjectNameList projectNameList,int index,ProjectRetrieve projectProvider,){
+  Widget mixApartment(String projectName, InnerData projectData, BuildContext context,ProjectNameList projectNameList,int index,ProjectRetrieve projectProvider,){
     final size = MediaQuery.of(context).size;
     return Card(
       child: Column(
@@ -827,17 +930,44 @@ class _ProjectInfoState extends State<ProjectInfo> {
                         return Container(
                           width: size.width /projectNameList.Structure[index]['FlatPerFloor'][indexFloor],
                           child: GestureDetector(
-                            onTap: (){
-                              projectProvider.customerUploadData(projectData.name,currentFlat);
+                            onTap: ()async{
+                              if(projectData.soldList.contains(currentFlat)){
+                                int  _indexFormList= projectData.soldList.indexWhere((element) =>element == currentFlat);
+
+                                String ref = "Project/${projectName.toString()}/${projectData.name}/";
+                                await projectProvider.setProperties(projectData.cusList[flatIndex].loanReferenceCollectionName);
+                                Navigator.push(context, PageRouteBuilder(
+                                  //    pageBuilder: (_,__,____) => BuildingStructure(),
+                                  pageBuilder: (_,__,___)=> CustomerDetails(customerData: projectData.cusList[flatIndex]),
+                                  transitionDuration: Duration(milliseconds: 0),
+                                ));
+                              }
+                              else{
+                                Navigator.push(context, PageRouteBuilder(
+                                  //    pageBuilder: (_,__,____) => BuildingStructure(),
+                                  pageBuilder: (_,__,___)=>
+                                      FirstTimeCustomerEntry(brokerList: _brokerList,projectName: widget.projectProvider.ProjectName,
+                                        innerCollection: projectData.name,allocatedNumber: currentFlat,),
+                                  transitionDuration: Duration(milliseconds: 0),
+                                ));
+                              }
+
                             },
                             child: Card(
+                              color: projectData.soldList.contains(currentFlat)? Theme.of(context).primaryColor:Colors.white,
                               shape: RoundedRectangleBorder(
                                   side:BorderSide(
                                       color: projectData.soldList.contains(currentFlat)?
                                       CommonAssets.soldProduct:Theme.of(context).primaryColor
                                   )
                               ),
-                              child: Center(child: Text(currentFlat.toString())),
+                              child: Center(
+                                  child: Text(
+                                    currentFlat.toString(),
+                                    style: TextStyle(
+                                      color: projectData.soldList.contains(currentFlat)? CommonAssets.AppbarTextColor:CommonAssets.standardtextcolor,
+                                    ),
+                                  )),
                             ),
                           ),
                         );

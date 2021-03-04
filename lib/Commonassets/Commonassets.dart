@@ -29,6 +29,8 @@ class CommonAssets{
   static Color unselectedpart = Colors.white;
   //server error
   static String snapshoterror = 'Server Error';
-  static Color soldProduct =Colors.black;
+  static Color soldProduct =Colors.white;
+  static Color paidEmiCardColor = Colors.grey;
+
 
 }

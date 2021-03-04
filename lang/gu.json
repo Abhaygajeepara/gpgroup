@@ -89,5 +89,27 @@
   "CharactersOnly": "ફક્ત અક્ષરો",
   "CharactersIsMoreThan1": "અક્ષરો 1 કરતાં વધુ છે",
   "BrokerExist": "બ્રોકર આઈડી અસ્તિત્વમાં છે",
-  "MinimumCharactersIs3": "ન્યૂનતમ અક્ષર 3 છે"
+  "MinimumCharactersIs3": "ન્યૂનતમ અક્ષર 3 છે",
+
+  "CustomerName": "ગ્રાહક નું નામ",
+  "PricePerSqFt": "સ્કઔરે ફીટ દીઠ ભાવ",
+  "EMIDuration": "ઇએમઆઈ સમયગાળો",
+  "SquareFeet": "સ્કઔરે ફીટ",
+  "BookingDate": "બુકિંગ તારીખ",
+  "StartingDateOfLoan": "લોનની શરૂઆતની તારીખ",
+  "MonthlyEMI": "માસિક ઇએમઆઈ",
+  "ExistingCustomer": "હાલનો ગ્રાહક",
+  "NewCustomer": "નવો ગ્રાહક",
+  "Id": "આઈ.ડી",
+  "BrokerID": "બ્રોકર આઈ.ડી",
+
+  "CustomerInformation": "ગ્રાહક માહિતી",
+  "LoanInformation": "લોન માહિતી",
+  "BrokerInformation": "બ્રોકર માહિતી",
+  "CustomerId": "ગ્રાહક આઈ.ડી",
+  "EndingDateOfLoan": "લોનની સમાપ્તિ તારીખ",
+  "BookingInformation":"બુકિંગ માહિતી",
+  "PropertyInformation": "સંપત્તિની માહિતી",
+  "LoanId": "લોન આઈ.ડી",
+  "TotalEMI": "ટોટલ ઇએમઆઈ"
 }

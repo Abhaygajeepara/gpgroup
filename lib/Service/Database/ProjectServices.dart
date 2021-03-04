@@ -6,9 +6,13 @@ import 'package:gpgroup/Model/Structure/CommercialArcadeModel.dart';
 import 'package:gpgroup/Model/Structure/HousingModel.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:gpgroup/Model/Users/BrokerData.dart';
+import 'package:rxdart/rxdart.dart';
 
 class ProjectsDatabaseService{
+
+
   final CollectionReference collectionReference = FirebaseFirestore.instance.collection('Project');
+  final CollectionReference customerReference = FirebaseFirestore.instance.collection('Customer');
   final CollectionReference brokerReference = FirebaseFirestore.instance.collection('Broker');
   Future projectExist(String val)async{
 
@@ -54,29 +58,173 @@ class ProjectsDatabaseService{
           }
       );
     }
+
   }
 
-  Future customerAndStructureDetails(String projectName,String  innerCollection,String innerDocument,)async{
+  Future<bool> customerExist(String number)async{
+    // number is id of customer
+    final doc = await customerReference.doc(number).get();
+    if(doc.exists){
+      return true;
+    }
+    else{
+      return false;
+    }
+
+  }
+  Future addNewCustomer(String projectName,String  innerCollection,String allocatedNumber,
+      String customerName,int phoneNumber,int squareFeet,int pricePerSquareFeet,
+      Timestamp bookingDate,Timestamp  startingDateOfLoan,String brokerReference,int emiDuration,int perMonthEMI,List<Timestamp> _emi
+      )async{
+    String loanId="(000)$projectName-$innerCollection-$allocatedNumber";
+    // String propertiesId= "$projectName/$innerCollection/$allocatedNumber";
+    // allocatedNumber = flats or shop or house number
       try{
-        await    collectionReference.doc(projectName).collection(innerCollection).doc(innerDocument.toString()).set({
-          "Number":int.parse(innerDocument),// house or shop number
-          "CustomerName":"",
-          "PhoneNumber":0,
-          "SquareFeet":0,
-          "PricePerSquareFeet":0,
-          "BookingDate":"0",
-          "Reference":"0",
-          "EMIDuration":0, // duration of emi
-          "PerMonthEMI":0, // payable amount of properties per month
-          "LoanReferenceCollection":"0", // reference of collection of loan
-          'IsLoanOn':false
+        final docDelete =  await collectionReference.doc(projectName).collection(innerCollection).doc('demo').get();
+        if(docDelete.exists)
+        {
+          await collectionReference.doc(projectName).collection(innerCollection).doc('demo').delete();
+        }
+        await customerReference.doc(phoneNumber.toString()).set({
+          "CustomerName":customerName,
+          "PhoneNumber":phoneNumber,
+          "Properties":FieldValue.arrayUnion(['${projectName}/${innerCollection}/${allocatedNumber}'])
         });
+
+
+
+
+        addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, phoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId);
+        emiCount(projectName, innerCollection, allocatedNumber, phoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId);
       }
       catch(e)
     {
       print('function name is customerAndStructureDetails ');
       print(e.toString());
     }
+  }
+
+
+  Future existingCustomer(String projectName,String  innerCollection,String allocatedNumber,
+      int phoneNumber,int squareFeet,int pricePerSquareFeet,
+      Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,int emiDuration,int perMonthEMI,List<Timestamp> _emi
+      )async{
+    String loanId="(000)$projectName-$innerCollection-$allocatedNumber";
+
+    // allocatedNumber = flats or shop or house number
+    try{
+
+
+
+      final docDelete =  await collectionReference.doc(projectName).collection(innerCollection).doc('demo').get();
+      if(docDelete.exists)
+      {
+        await collectionReference.doc(projectName).collection(innerCollection).doc('demo').delete();
+      }
+      await customerReference.doc(phoneNumber.toString()).update({
+
+        "Properties":FieldValue.arrayUnion(['${projectName}/${innerCollection}/${allocatedNumber}'])
+      });
+
+      final cusIno = await customerReference.doc(phoneNumber.toString()).get();
+      String customerName =  cusIno['CustomerName'];
+
+      addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, phoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId);
+     emiCount(projectName, innerCollection, allocatedNumber, phoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId);
+
+    }
+    catch(e)
+    {
+      print('function name is customerAndStructureDetails ');
+      print(e.toString());
+    }
+  }
+
+
+
+  Future emiCount (
+      String projectName,String  innerCollection,String allocatedNumber,
+      int phoneNumber,int squareFeet,int pricePerSquareFeet,
+      Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,
+      int emiDuration,int perMonthEMI,List<Timestamp> _emi,
+      String loanId
+      )async{
+
+
+    String propertiesId=  "$projectName/$innerCollection/$allocatedNumber";
+ final _projectDocInLaon =    await FirebaseFirestore.instance.collection("Loan").doc(projectName).get();
+ if(_projectDocInLaon.exists){
+   await FirebaseFirestore.instance.collection("Loan").doc(projectName).update({
+     "CollectionData":FieldValue.arrayUnion([loanId])
+   });
+ }
+ else{
+   await FirebaseFirestore.instance.collection("Loan").doc(projectName).set({
+     "CollectionData":FieldValue.arrayUnion([loanId])
+   });
+ }
+    await FirebaseFirestore.instance.collection("Loan").doc(projectName).collection(loanId).doc('BasicDetails').set({
+      "SquareFeet":squareFeet,
+      "PricePerSquareFeet":pricePerSquareFeet,
+      "LoanStartingDate":startingDateOfLoan,
+      'LoanEndingDate':_emi.last,
+      "BookingDate":bookingDate,
+      "BrokerReference":brokerReference,
+      "CustomerId":phoneNumber,
+
+      "EMIDuration":emiDuration, // duration of emi
+      "PerMonthEMI":perMonthEMI,
+      "ProjectName":propertiesId,
+      'CompletedEMI':FieldValue.arrayUnion([]),
+      "RemainingEMI":_emi
+
+
+    });
+
+    for(int i=0;i<_emi.length;i++){
+      await FirebaseFirestore.instance.collection("Loan").doc(projectName).collection(loanId).doc((i+1).toString()).set({
+        "InstallmentDate":_emi[i],
+        "EMIPending":true,
+        "TypeOfPayment":"",
+        "IFSC":"",
+        "UPIID":"",
+        "BankAccountNumber":"",
+        'PayerName':"",
+        "ReceiverName":"",
+        "Relation":"",
+        "Amount":0,
+        "IsEMI":true
+
+      });
+    }
+
+  }
+
+  Future addPropertiesData(String projectName,String  innerCollection,String allocatedNumber,
+      String customerName,
+      int phoneNumber,int squareFeet,int pricePerSquareFeet,
+      Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,
+      int emiDuration,int perMonthEMI,List<Timestamp> _emi,
+      String loanId )async{
+    Map<String,dynamic> _customerData = {};
+         _customerData =  {"CustomerId":phoneNumber.toString(),"LoanId":loanId};
+         print(_customerData);
+    await    collectionReference.doc(projectName).collection(innerCollection).doc(allocatedNumber.toString()).set({
+      "Number":int.parse(allocatedNumber),// house or shop number
+      "SquareFeet":squareFeet,
+      "PricePerSquareFeet":pricePerSquareFeet,
+      "BookingDate":bookingDate,
+      "StartDate":startingDateOfLoan,
+      'LoanEndingDate':_emi.last,
+      "BrokerReference":brokerReference,
+      "EMIDuration":emiDuration, //
+      "PerMonthEMI":perMonthEMI,
+      'CustomerId':phoneNumber.toString(),
+      "CustomerName":customerName,
+      "LoanReferenceCollection":loanId, // reference of collection of loan
+      'IsLoanOn':true,
+      "AllCustomer":FieldValue.arrayUnion([_customerData])
+    });
   }
 
   Future createHousingStructure(List<CreateHousingStrctureModel> structure,String projectName,List<List<String>> rules,String landmark,String address,String description,List<File> ImageList)async{
@@ -278,6 +426,6 @@ for(int i = 0;i<res.length;i++){
       }
     }
 
-
+Future calculateLoan(){}
 
 }

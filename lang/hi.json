@@ -88,6 +88,27 @@
   "CharactersOnly": "केवल अक्षर",
   "CharactersIsMoreThan1": "अक्षर 1 से अधिक है",
   "BrokerId": "ब्रोकर आईडी अस्तित्व",
-  "MinimumCharactersIs3": "न्यूनतम अक्षर 3 है"
+  "MinimumCharactersIs3": "न्यूनतम अक्षर 3 है",
 
+  "CustomerName": "ग्राहक का नाम",
+  "PricePerSqFt": "मूल्य प्रति स्क्वायर फीट",
+  "EMIDuration": "ईएमआई अवधि",
+  "SquareFeet": "स्क्वायर फीट",
+  "BookingDate": "बुक करने की तारीख",
+  "StartingDateOfLoan": "લलोन की शुरुआत की तारीख",
+  "MonthlyEMI": "मासिक ईएमआई.",
+  "ExistingCustomer": "मौजूदा ग्राहक",
+  "NewCustomer": "नए ग्राहक",
+  "Id": "आई.डी",
+  "BrokerID": "ब्रोकर आई.डी",
+
+  "CustomerInformation": "ग्राहक जानकारी",
+  "LoanInformation": "लोन जानकारी",
+  "BrokerInformation": "ब्रोकर जानकारी",
+  "CustomerId": "ग्राहक आई.डी",
+  "EndingDateOfLoan": "लोन की समाप्ति तारीख",
+  "BookingInformation":"बुकिंग जानकारी",
+  "PropertyInformation": "संपत्ति की जानकारी",
+  "LoanId": "लोन आई.डी",
+  "TotalEMI": "टोटल  ईएमआई"
 }

@@ -12,10 +12,9 @@ class InnerData{
     List<CustomerData> cusLists = [];
     List<int> soldLists = [];
       for(int i  =0;i<snapshot.docs.length;i++){
-        //print(snapshot.docs[i].id);
-         // CustomerData data= CustomerData.of(snapshot.docs[i].data());
+
           cusLists.add(CustomerData.of(snapshot.docs[i]));
-          soldLists.add(int.parse(snapshot.docs[i].id));
+          snapshot.docs[i]['IsLoanOn'] == true?soldLists.add(int.parse(snapshot.docs[i].id)):null;
       }
     return InnerData(
         name: nameOfStructure.toString(),
@@ -27,46 +26,60 @@ class InnerData{
 
 class CustomerData{
   String id;
-  String cusBookingDate;//TODO change to Date
+  Timestamp cusBookingDate;
+  Timestamp loanStartingDate;
+  Timestamp loanEndingDate;
   String customerName;
-  int emiDuration;
   bool isLoanOn;
   String loanReferenceCollectionName;
-  int perMonthEmi;
-  int phoneNumber;
-  int pricePerSquareFeet;
-  String reference;
+  String customerId;
+  String brokerReference;
+  List<Map<String ,dynamic>> allCustomer;
   int squareFeet;
+  int pricePerSquareFeet;
+  int totalEMI;
+  int perMonthEMI;
+
+
 
 
 
   CustomerData({
-    this.id,
-    this.cusBookingDate,
-    this.customerName,
-    this.emiDuration,
-    this.isLoanOn,
-    this.loanReferenceCollectionName,
-    this.perMonthEmi,
-    this.phoneNumber,
-    this.pricePerSquareFeet,
-    this.reference,
-    this.squareFeet
+   @required this.id,
+    @required  this.cusBookingDate,
+    @required  this.loanStartingDate,
+    @required this.loanEndingDate,
+    @required  this.isLoanOn,
+    @required  this.customerId,
+    @required this.customerName,
+    @required  this.loanReferenceCollectionName,
+    @required this.brokerReference,
+    @required this.allCustomer,
+    @required  this.squareFeet,
+    @required this.pricePerSquareFeet,
+    @required this.totalEMI,
+    @required this.perMonthEMI
+
   });
   factory  CustomerData.of(DocumentSnapshot snap){
 
       return  CustomerData(
         id: snap.id.toString(),
-           cusBookingDate:snap['BookingDate'],
-       customerName:snap['CustomerName'],
-          emiDuration:snap['EMIDuration'],
+       cusBookingDate:snap['BookingDate'],
+       loanStartingDate: snap['StartDate'],
+       loanEndingDate: snap['LoanEndingDate'],
        isLoanOn:snap['IsLoanOn'],
-           loanReferenceCollectionName:snap['LoanReferenceCollection'],
-           perMonthEmi:snap['PerMonthEMI'],
-           phoneNumber:snap['PhoneNumber'],
-           pricePerSquareFeet:snap['PricePerSquareFeet'],
-       reference:snap['Reference'],
-       squareFeet:snap['SquareFeet'],
+        customerId: snap['CustomerId'],
+        customerName: snap['CustomerName'],
+        loanReferenceCollectionName:snap['LoanReferenceCollection'],
+          brokerReference:snap['BrokerReference'],
+        allCustomer: List.from(snap['AllCustomer']),
+        squareFeet:snap['SquareFeet'],
+        pricePerSquareFeet:snap['PricePerSquareFeet'],
+        perMonthEMI: snap['PerMonthEMI'],
+        totalEMI: snap['EMIDuration'],
+
+
 
       );
   }

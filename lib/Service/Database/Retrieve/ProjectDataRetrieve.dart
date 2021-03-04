@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
+import 'package:gpgroup/Model/Loan/LoanInfo.dart';
 import 'package:gpgroup/Model/Project/InnerData.dart';
 import 'package:gpgroup/Model/Project/InnerData.dart';
 import 'package:gpgroup/Model/Project/InnerData.dart';
@@ -16,12 +17,26 @@ class ProjectRetrieve{
 
 String  ProjectName ;
 String typeOfProject;
+// use only for customer inform
+String loanRef;
+
+
+
+
 
   setProjectName(String val,String projectType){
     this.ProjectName  = val;
     this.typeOfProject = projectType;
 
   }
+  setProperties(String loanref, ){
+
+    this.loanRef = loanref;
+
+
+
+  }
+
   final CollectionReference _collectionReference = FirebaseFirestore.instance.collection("Project");
 final CollectionReference brokerReference = FirebaseFirestore.instance.collection('Broker');
     List<ProjectNameList> _projectnamelist(QuerySnapshot snapshot){
@@ -198,7 +213,8 @@ Future customerUploadData(String _collection,int _documents)async{
       "EMIDuration":0, // duration of emi
       "PerMonthEMI":0, // payable amount of properties per month
       "LoanReferenceCollection":"0", // reference of collection of loan
-      'IsLoanOn':false
+      'IsLoanOn':false,
+      "IsEMI":true
     });
     }
   }
@@ -219,12 +235,33 @@ List<BrokerModel> _brokerModel(QuerySnapshot snapshot){
   );
   }).toList();
 }
+Future<List<Map<String,String>>> GetBroker()async{
+      List<Map<String,String>> _data =[];
+  final _doc =  await FirebaseFirestore.instance.collection('Broker').get();
+for(int i =0;i<_doc.docs.length;i++){
+
+    _data.add({
+      "Id":_doc.docs[i].id,
+      "Name":_doc.docs[i]['Name']
+    });
+}
+return _data;
+}
 
 Stream<List<BrokerModel>> get BROKERDATA{
   return  brokerReference.orderBy('IsActive',descending: false).snapshots().map(_brokerModel);
   }
 
 
+Stream<List<SinglePropertiesLoanInfo>> get LOANINFO{
+      return FirebaseFirestore.instance.collection('Loan').doc(ProjectName).collection(loanRef).where("IsEMI",isEqualTo: true).snapshots().map((_listLoanData));
+}
+
+List<SinglePropertiesLoanInfo> _listLoanData (QuerySnapshot querySnapshot){
+      return querySnapshot.docs.map((e){
+        return SinglePropertiesLoanInfo.of(e);
+      }).toList();
+}
 
 }
 

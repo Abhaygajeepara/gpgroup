@@ -89,6 +89,27 @@
   "CharactersOnly": "Character Only",
   "CharactersIsMoreThan1": "Character Is More Than 1",
   "BrokerExist": "Broker Exist",
-  "MinimumCharactersIs3": "Minimum Characters Is 3"
+  "MinimumCharactersIs3": "Minimum Characters Is 3",
 
+  "CustomerName": "Customer Name",
+  "PricePerSqFt": "Price Per Sq.Ft",
+  "EMIDuration": "EMI Duration",
+  "SquareFeet": "Square Feet",
+  "BookingDate": "Booking Date",
+  "StartingDateOfLoan": "Starting Date Of Loan",
+  "MonthlyEMI": "Monthly EMI",
+  "ExistingCustomer": "Existing Customer",
+  "NewCustomer": "New Customer",
+  "Id": "Id",
+  "BrokerID": "Broker ID",
+
+  "CustomerInformation": "Customer Information",
+  "LoanInformation": "Loan Information",
+  "BrokerInformation": "Broker Information",
+  "CustomerId": "Customer Id",
+  "EndingDateOfLoan": "Ending Date Of Loan",
+  "BookingInformation":"Booking Information",
+  "PropertyInformation": "Property Information",
+  "LoanId": "Loan ID",
+  "TotalEMI": "Total EMI"
 }

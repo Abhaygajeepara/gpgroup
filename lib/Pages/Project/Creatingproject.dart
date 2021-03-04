@@ -455,7 +455,7 @@ class CreatingProjectState extends State<CreatingProject> {
       child: Column(
         children: [
           Form(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+
             key: _formkey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1221,7 +1221,7 @@ class CreatingProjectState extends State<CreatingProject> {
             ),
             // _buildingModel.length > 0 ?
 
-            Padding(
+            floors >0 && flats >0 ?Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -1253,7 +1253,7 @@ class CreatingProjectState extends State<CreatingProject> {
                   ),
                 ),
               ),
-            )
+            ):Container()
                 //:Container(),
           ],
         )
@@ -1503,7 +1503,7 @@ class CreatingProjectState extends State<CreatingProject> {
             ),
            // _commercialModel.totalFloor >0?
 
-            Padding(
+            commericalfloors>0 &&commericalShop_per_floor>0 ? Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -1533,7 +1533,7 @@ class CreatingProjectState extends State<CreatingProject> {
                   ),
                 ),
               ),
-            )
+            ):Container()
                 //:Container(),
           ],
         )
@@ -1611,8 +1611,10 @@ class CreatingProjectState extends State<CreatingProject> {
 
       ),
           //_mixusebuildingModel.length >0 && _mixedUsecommercialModel.length >0 ?
-
-          Padding(
+// abhay
+          mixedUseCommericalfloors >0 && mixedUseCommericalShop_per_floor>0
+              && mixedUseCommericalStaringnumber>0 &&mixedUseCommericalDifferentialvalue >0 &&mixuseFlats > 0 && mixuseFloors >0
+              ? Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: size.width * 0.01, vertical: size.height * 0.005),
             child: Center(
@@ -1641,7 +1643,7 @@ class CreatingProjectState extends State<CreatingProject> {
                 ),
               ),
             ),
-          )
+          ):Container(),
               //:Container()
         ],
       );
@@ -1830,7 +1832,9 @@ class CreatingProjectState extends State<CreatingProject> {
             ),
             //_mixedUsecommercialModel.length >0?
 
-            Padding(
+           mixedUseCommericalfloors >0 && mixedUseCommericalShop_per_floor>0
+               && mixedUseCommericalStaringnumber>0 &&mixedUseCommericalDifferentialvalue >0
+               ?  Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
@@ -1856,7 +1860,7 @@ class CreatingProjectState extends State<CreatingProject> {
                   ),
                 ),
               ),
-            )
+            ):Container()
                 //:Container(),
           ],
         )
@@ -2143,7 +2147,7 @@ class CreatingProjectState extends State<CreatingProject> {
               ),
 
             ),
-            _mixusebuildingModel.length > 0 ? Padding(
+            mixuseFlats > 0 && mixuseFloors >0 ? Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: size.width * 0.01, vertical: size.height * 0.005),
               child: Center(
