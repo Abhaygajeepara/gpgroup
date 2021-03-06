@@ -20,12 +20,21 @@ class _AddBrokerState extends State<AddBroker> {
   String name;
   String uid;
   int phoneNumber;
+  int alterNativeNumber ;
   bool loading = false;
   String error ;
+  String password;
+  bool isVisible = false;
+
   getImage(ImageSource source)async{
     PickedFile _pick = await ImagePicker().getImage(source: source);
     setState(() {
       _image = File(_pick.path);
+    });
+  }
+  visible(){
+    setState(() {
+      isVisible = !isVisible;
     });
   }
   @override
@@ -116,7 +125,7 @@ class _AddBrokerState extends State<AddBroker> {
                 ),
                 SizedBox(height: space),
                 TextFormField(
-                  maxLength: 6,
+                  maxLength: 8,
                   decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('BrokerID')),
                   onChanged: (val)=>uid = val,
                   validator: (val)=>val.isEmpty ? AppLocalizations.of(context).translate("ThisFieldIsMandatory"):null,
@@ -135,6 +144,28 @@ class _AddBrokerState extends State<AddBroker> {
                   decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('MobileNumber'),counterText: ""),
                   onChanged: (val)=>phoneNumber = int.parse(val),
                   validator:  numbervalidtion,
+                ),
+                 SizedBox(height: space),
+                TextFormField(
+                  maxLength: 10,
+                  keyboardType: TextInputType.phone,
+                  decoration: commoninputdecoration.copyWith(labelText: AppLocalizations.of(context).translate('AlterNativeNumber'),counterText: ""),
+                  onChanged: (val)=>alterNativeNumber = int.parse(val),
+                  validator:  numbervalidtion,
+                ),
+                SizedBox(height: space),
+                TextFormField(
+                  maxLength: 16,
+                   obscureText: isVisible,
+                  decoration: commoninputdecoration.copyWith(
+                                                      labelText: AppLocalizations.of(context).translate('Password'),
+                                                      counterText: "",
+                                                      suffixIcon: isVisible?
+                                                                  IconButton(icon: Icon(Icons.visibility_off), onPressed: (){visible();}):
+                                                                  IconButton(icon: Icon(Icons.visibility), onPressed: (){visible();})
+                                                      ),
+                  onChanged: (val)=>password = val,
+                  validator:  passwordValidation,
                 ),
 
                 SizedBox(height: space*2),
@@ -165,7 +196,7 @@ class _AddBrokerState extends State<AddBroker> {
                          setState(() {
                            loading = true;
                          });
-                         await ProjectsDatabaseService().brokerData(uid, name, phoneNumber, _image);
+                         await ProjectsDatabaseService().addBrokerData(uid, name, phoneNumber,alterNativeNumber, _image,password);
                          Navigator.pop(context);
                        }
                       }
@@ -195,6 +226,23 @@ class _AddBrokerState extends State<AddBroker> {
     }
     else if(value.length <10){
       return AppLocalizations.of(context).translate("NumberIsLessThan10");
+      return "Digits Is Grater Than One";
+    }else {
+      return null;
+    }
+  }
+  String passwordValidation(String value){
+
+    if (value.isEmpty) {
+      return AppLocalizations.of(context).translate("ThisFieldIsMandatory");
+      return 'Enter The Number Only';
+    }
+    else if(value.length <8){
+      return AppLocalizations.of(context).translate("NumberIsLessThan8");
+      return "Digits Is Grater Than One";
+    }
+    else if(value.length >16){
+      return AppLocalizations.of(context).translate("NumberIsLessThan16");
       return "Digits Is Grater Than One";
     }else {
       return null;

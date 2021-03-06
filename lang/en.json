@@ -81,10 +81,13 @@
   "ThisFieldIsMandatory": "This Field Is Mandatory",
   "Name":"Name",
   "MobileNumber": "Mobile Number",
+  "AlterNativeNumber": "AlterNative Number",
   "NumberOnly": "Number Only",
   "NumberIsLessThan1": "Number Is Less Than 1",
   "NumberIsMoreThan10": "Number Is More Than 10",
   "NumberIsLessThan10": "Number Is Less Than 10",
+  "NumberIsMoreThan16": "Number Is More Than 16",
+  "NumberIsLessThan8": "Number Is Less Than 8",
   "NumberIsMoreThan1": "Number Is More Than 1",
   "CharactersOnly": "Character Only",
   "CharactersIsMoreThan1": "Character Is More Than 1",
@@ -111,5 +114,9 @@
   "BookingInformation":"Booking Information",
   "PropertyInformation": "Property Information",
   "LoanId": "Loan ID",
-  "TotalEMI": "Total EMI"
+  "TotalEMI": "Total EMI",
+  "CommissionType": "Commission Type",
+  "BrokerCommission": "Broker Commission",
+  "BrokerName": "Broker Name",
+  "Clients": "Clients"
 }

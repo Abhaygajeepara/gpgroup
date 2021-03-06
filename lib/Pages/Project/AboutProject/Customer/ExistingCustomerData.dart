@@ -162,6 +162,26 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                             ],
                           ),
                           SizedBox(height: expanedTileSpace,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                AppLocalizations.of(context).translate('BrokerCommission'),
+                                style: TextStyle(
+                                    fontSize: titileSize,
+                                    fontWeight: fontWeight
+                                ),
+                              ),
+                              Text(
+                                widget.customerData.brokerCommission.toString(),
+                                style: TextStyle(
+                                  fontSize: normatTextSize,
+
+                                ),
+                              )
+                            ],
+                          ),
+                          SizedBox(height: expanedTileSpace,),
                         ],
                       ),
                       ExpansionTile(
@@ -385,7 +405,8 @@ class _CustomerDetailsState extends State<CustomerDetails> {
             return Container(
               child: Center(
                 child: Text(
-                 snapshot.error.toString(),
+                //snapshot.error.toString(),
+                 CommonAssets.snapshoterror,
                   style: TextStyle(
                       color: CommonAssets.errorColor
                   ),

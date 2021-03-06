@@ -19,7 +19,7 @@ String  ProjectName ;
 String typeOfProject;
 // use only for customer inform
 String loanRef;
-
+String brokerId;
 
 
 
@@ -32,9 +32,9 @@ String loanRef;
   setProperties(String loanref, ){
 
     this.loanRef = loanref;
-
-
-
+  }
+  setBroker(String id){
+    this.brokerId = id;
   }
 
   final CollectionReference _collectionReference = FirebaseFirestore.instance.collection("Project");
@@ -225,14 +225,7 @@ Future customerUploadData(String _collection,int _documents)async{
 
 List<BrokerModel> _brokerModel(QuerySnapshot snapshot){
   return snapshot.docs.map((e) {
-   return BrokerModel(
-         id: e.data()['Id'],
-       name: e.data()['Name'],
-      number: e.data()['PhoneNumber'],
-     image: e.data()['ProfileUrl'],
-     isActiveUser: e.data()['IsActive'],
-     password: e.data()['Password']
-  );
+     return BrokerModel.of(e);
   }).toList();
 }
 Future<List<Map<String,String>>> GetBroker()async{
@@ -248,13 +241,22 @@ for(int i =0;i<_doc.docs.length;i++){
 return _data;
 }
 
-Stream<List<BrokerModel>> get BROKERDATA{
+  BrokerModel _SingleBrokerModel(DocumentSnapshot snapshot){
+
+      return BrokerModel.of(snapshot);
+
+  }
+Stream<BrokerModel> get SINGLEBROKERDATA{
+  return  brokerReference.doc(brokerId).snapshots().map(_SingleBrokerModel);
+}
+
+Stream<List<BrokerModel>> get BROKERLISTDATA{
   return  brokerReference.orderBy('IsActive',descending: false).snapshots().map(_brokerModel);
   }
 
 
 Stream<List<SinglePropertiesLoanInfo>> get LOANINFO{
-      return FirebaseFirestore.instance.collection('Loan').doc(ProjectName).collection(loanRef).where("IsEMI",isEqualTo: true).snapshots().map((_listLoanData));
+      return FirebaseFirestore.instance.collection('Loan').doc(ProjectName).collection(loanRef).orderBy("InstallmentDate",descending:false ).snapshots().map((_listLoanData));
 }
 
 List<SinglePropertiesLoanInfo> _listLoanData (QuerySnapshot querySnapshot){

@@ -81,10 +81,13 @@
   "ThisFieldIsMandatory": "यह फील्ड अनिवार्य है",
   "Name":"नाम",
   "MobileNumber": "मोबाइल नंबर",
+  "AlterNativeNumber": "दूसरा नंबर",
   "NumberOnly": "नंबर ही",
   "NumberIsMoreThan10": "संख्या 10 से अधिक है",
   "NumberIsLessThan10": "संख्या 10 से कम है",
   "NumberIsLessThan1": "संख्या 1 से कम है",
+  "NumberIsMoreThan16": "संख्या 16 से अधिक है",
+  "NumberIsLessThan8": "संख्या 8 से कम है",
   "CharactersOnly": "केवल अक्षर",
   "CharactersIsMoreThan1": "अक्षर 1 से अधिक है",
   "BrokerId": "ब्रोकर आईडी अस्तित्व",
@@ -110,5 +113,9 @@
   "BookingInformation":"बुकिंग जानकारी",
   "PropertyInformation": "संपत्ति की जानकारी",
   "LoanId": "लोन आई.डी",
-  "TotalEMI": "टोटल  ईएमआई"
+  "TotalEMI": "टोटल  ईएमआई",
+  "CommissionType": "कमीशन प्रकार",
+  "BrokerCommission": "ब्रोकर कमीशन",
+  "BrokerName": "ब्रोकर का नाम",
+  "Clients": "ग्राहकों"
 }

@@ -49,7 +49,14 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
   bool isExistUser =false; // for existing user
   bool isUser =true;// new user
   bool loading = false;
+  int commissionPercentage= 0;
+  int commissionRupee = 0;
+  int finalCommission = 0;
+  bool isPercentage = true;
   List months = ['Jan', 'Feb', 'Mar', 'Apr', 'May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  String  selectedCommissionType;
+  List<String> commissionType = ["(%)","(₹)"];
+  DocumentSnapshot customerData;
   @override
   void initState() {
     // TODO: implement initState
@@ -57,25 +64,30 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
 
   if(widget.brokerList.isEmpty){
     selectedBroker = "";
+
   }
   else{
      selectedBroker = widget.brokerList[0]['Id']; // give error when Broker collection is not available
   }
-
+    selectedCommissionType = commissionType[0];
   }
 
   Future ISExistCustomer()async{
-    final result = await  ProjectsDatabaseService().customerExist(phoneNumber.toString());
+    final doc = await  ProjectsDatabaseService().customerExist(phoneNumber.toString());
+    final result = doc.exists;
+
     if(result == true){
       setState(() {
         isUser = true;
         isExistUser = true;
+        customerData = doc;
       });
     }
     else{
       setState(() {
         isUser  = false;
         isExistUser  = false;
+        customerData = null;
       });
     }
 
@@ -110,6 +122,14 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
       setState(() {
         isCalculate = true;
         perMonthEmi = (pricePerSquareFeet * squareFeet) /emiDuration;
+        if(isPercentage){
+         double _lastCommission= (((pricePerSquareFeet * squareFeet) *commissionPercentage) /100);
+        finalCommission = _lastCommission.toInt();
+        }
+        else{
+          finalCommission = commissionRupee;
+        }
+        print( 'finalCommission = ${finalCommission}');
       });
 
     }
@@ -263,7 +283,62 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                   suffixIcon: isExistUser ?Icon(Icons.verified_user_outlined,color: Theme.of(context).primaryColor,) : Icon(Icons.cancel_outlined,color: CommonAssets.errorColor,)
                 ),
               ),
+              customerData != null ?
+              customerData.exists?
+              SizedBox(
+                height: spaceBetweenVertical*2,
+              )
+                  :Container():Container(),
+              customerData != null ?
+              customerData.exists?Card(
+                elevation: 10.0,
+                shadowColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: CommonAssets.boxBorderColors,
 
+                    )
+
+                ),
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+
+                        AppLocalizations.of(context).translate('CustomerName'),
+                        style: TextStyle(
+                            fontSize: fontSize,
+                            color: CommonAssets.standardtextcolor,
+
+                            fontWeight: FontWeight.bold
+                        ),
+                        maxLines: 1,
+                      ),
+                      SizedBox(width: spaceBetweenHorizontal,),
+                      Expanded(
+                        child: AutoSizeText(
+                          customerData.data()['CustomerName'],
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            fontSize: fontSize,
+                            color: CommonAssets.standardtextcolor,
+
+                          ),
+                          maxLines: 2,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ):Container():Container(),
+              customerData != null ?
+              customerData.exists?
+              SizedBox(
+                height: spaceBetweenVertical*2,
+              )
+                  :Container():Container(),
               SizedBox(height: spaceBetweenVertical,),
               Row(
 
@@ -326,6 +401,113 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
               ),
               // extra space
 
+
+              // extra space
+
+              DropdownButtonFormField(
+                decoration: commoninputdecoration.copyWith(
+                    labelText: AppLocalizations.of(context)
+                        .translate('Broker')),
+                value: selectedBroker,
+                onChanged: (val){
+                  setState(() {
+                    selectedBroker =val.toString();
+                  });
+                },
+                items: widget.brokerList.map((e){
+                  return DropdownMenuItem(
+                      value: e['Id'],
+                      child: Row(
+                        children: [
+                          Text("${e['Id']} (${e['Name']})")
+                        ],
+
+                      )
+                  );
+                }).toList(),
+              ),
+
+              SizedBox(
+                height: spaceBetweenVertical,
+              ),
+              Row(
+                children: [
+                  Expanded(child: DropdownButtonFormField(
+                    decoration: commoninputdecoration.copyWith(
+                        labelText: AppLocalizations.of(context)
+                            .translate('CommissionType')),
+                    // commission
+                    value: selectedCommissionType,
+                    onChanged: (val){
+                      setState(() {
+                        selectedCommissionType =val.toString();
+                        isPercentage = !isPercentage;
+                      });
+                    },
+                    items: commissionType.map((e){
+                      return DropdownMenuItem(
+                          value: e,
+                          child: Row(
+                            children: [
+                              Text("${e} ")
+                            ],
+                          )
+                      );
+                    }).toList(),
+                  ),),
+                  SizedBox(width:  size.width *0.01,),
+                  Expanded(
+                    child: isPercentage ? TextFormField(
+                      initialValue: commissionPercentage.toString(),
+                      maxLength: 2,
+
+                      autofocus: false,
+                      keyboardType: TextInputType.number,
+                      onChanged: (val){
+                        setState(() {
+                          commissionPercentage =int.parse(val);
+                          calculate();
+                          emiCalcute();
+                        });
+                      },
+                      validator: (val) => numbervalidtion(val),
+                      decoration: commoninputdecoration.copyWith(
+                          labelText: AppLocalizations.of(context)
+                              .translate('EMIDuration'),
+                          counterText: '',
+
+                      ),
+
+                    ):
+                    TextFormField(
+                      initialValue: commissionRupee.toString(),
+                      maxLength: 7,
+
+                      autofocus: false,
+                      keyboardType: TextInputType.number,
+                      onChanged: (val){
+                        setState(() {
+                          commissionRupee =int.parse(val);
+                          calculate();
+                          emiCalcute();
+                        });
+                      },
+                      validator: (val) => numbervalidtion(val),
+                      decoration: commoninputdecoration.copyWith(
+                        labelText: AppLocalizations.of(context)
+                            .translate('EMIDuration'),
+                        counterText: '',
+
+                      ),
+
+                    ),
+                  ),
+                ],
+              ),
+              isCalculate ?SizedBox(
+                height: spaceBetweenVertical*2,
+              )
+                  :Container(),
               isCalculate?Card(
                 elevation: 10.0,
                 shadowColor: Colors.white,
@@ -345,7 +527,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
 
                         AppLocalizations.of(context).translate('MonthlyEMI'),
                         style: TextStyle(
-                  fontSize: fontSize,
+                            fontSize: fontSize,
                             color: CommonAssets.standardtextcolor,
 
                             fontWeight: FontWeight.bold
@@ -355,8 +537,8 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                       AutoSizeText(
                         perMonthEmi.toStringAsFixed(2),
                         style: TextStyle(
-                  fontSize: fontSize,
-                            color: CommonAssets.standardtextcolor,
+                          fontSize: fontSize,
+                          color: CommonAssets.standardtextcolor,
 
                         ),
                         maxLines: 1,
@@ -365,35 +547,53 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                   ),
                 ),
               ):Container(),
-              // extra space
-              isCalculate?SizedBox(
+              isCalculate ?SizedBox(
                 height: spaceBetweenVertical*2,
               )
                   :Container(),
-              DropdownButtonFormField(
-                decoration: commoninputdecoration.copyWith(
-                    labelText: AppLocalizations.of(context)
-                        .translate('Broker')),
-                value: selectedBroker,
-                onChanged: (val){
-                  setState(() {
-                    selectedBroker =val.toString();
-                  });
-                },
-                items: widget.brokerList.map((e){
-                  return DropdownMenuItem(
-                      value: e['Id'],
-                      child: Row(
-                        children: [
-                          Text("${e['Id']} (${e['Name']})")
-                        ],
+              isCalculate?Card(
+                elevation: 10.0,
+                shadowColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: CommonAssets.boxBorderColors,
+
+                    )
+
+                ),
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+
+                        AppLocalizations.of(context).translate('BrokerCommission'),
+                        style: TextStyle(
+                            fontSize: fontSize,
+                            color: CommonAssets.standardtextcolor,
+
+                            fontWeight: FontWeight.bold
+                        ),
+                        maxLines: 1,
+                      ),
+                      AutoSizeText(
+                        finalCommission.toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: CommonAssets.standardtextcolor,
+
+                        ),
+                        maxLines: 1,
                       )
-                  );
-                }).toList(),
-              ),
+                    ],
+                  ),
+                ),
+              ):Container(),
               SizedBox(
                 height: spaceBetweenVertical,
               ),
+
               Column(
                 children: [
                   Row(
@@ -503,7 +703,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                           loading = true;
                         });
                         await  ProjectsDatabaseService().existingCustomer(widget.projectName, widget.innerCollection,
-                            widget.allocatedNumber.toString(), phoneNumber, squareFeet, pricePerSquareFeet, cusBookingDate,loanStaring, selectedBroker, emiDuration, perMonthEmi.round(),_EmiDate);
+                            widget.allocatedNumber.toString(), phoneNumber, squareFeet, pricePerSquareFeet, cusBookingDate,loanStaring, selectedBroker, emiDuration, perMonthEmi.round(),_EmiDate,finalCommission);
                         Navigator.pop(context);
                       }
 
@@ -645,50 +845,50 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
               ),
               // extra space
 
-              isCalculate?Card(
-                elevation: 10.0,
-                shadowColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: CommonAssets.boxBorderColors,
-
-                    )
-
-                ),
-                child: Padding(
-                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AutoSizeText(
-
-                        AppLocalizations.of(context).translate('MonthlyEMI'),
-                        style: TextStyle(
-                  fontSize: fontSize,
-                            color: CommonAssets.standardtextcolor,
-
-                            fontWeight: FontWeight.bold
-                        ),
-                        maxLines: 1,
-                      ),
-                      AutoSizeText(
-                        perMonthEmi.toStringAsFixed(2),
-                        style: TextStyle(
-                  fontSize: fontSize,
-                            color: CommonAssets.standardtextcolor,
-
-                        ),
-                        maxLines: 1,
-                      )
-                    ],
-                  ),
-                ),
-              ):Container(),
-              // extra space
-              isCalculate?SizedBox(
-                height: spaceBetweenVertical*2,
-              )
-                  :Container(),
+              // // isCalculate  ?Card(
+              // //   elevation: 10.0,
+              // //   shadowColor: Colors.white,
+              // //   shape: RoundedRectangleBorder(
+              // //       side: BorderSide(
+              // //         color: CommonAssets.boxBorderColors,
+              // //
+              // //       )
+              // //
+              // //   ),
+              // //   child: Padding(
+              // //     padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
+              // //     child: Row(
+              // //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // //       children: [
+              // //         AutoSizeText(
+              // //
+              // //           AppLocalizations.of(context).translate('MonthlyEMI'),
+              // //           style: TextStyle(
+              // //     fontSize: fontSize,
+              // //               color: CommonAssets.standardtextcolor,
+              // //
+              // //               fontWeight: FontWeight.bold
+              // //           ),
+              // //           maxLines: 1,
+              // //         ),
+              // //         AutoSizeText(
+              // //           perMonthEmi.toStringAsFixed(2),
+              // //           style: TextStyle(
+              // //     fontSize: fontSize,
+              // //               color: CommonAssets.standardtextcolor,
+              // //
+              // //           ),
+              // //           maxLines: 1,
+              // //         )
+              // //       ],
+              // //     ),
+              // //   ),
+              // // ):Container(),
+              // // extra space
+              // isCalculate?SizedBox(
+              //   height: spaceBetweenVertical*2,
+              // )
+              //     :Container(),
               DropdownButtonFormField(
                 decoration: commoninputdecoration.copyWith(
                     labelText: AppLocalizations.of(context)
@@ -713,7 +913,166 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
               SizedBox(
                 height: spaceBetweenVertical*2,
               ),
+              Row(
+                children: [
+                  Expanded(child: DropdownButtonFormField(
+                    decoration: commoninputdecoration.copyWith(
+                        labelText: AppLocalizations.of(context)
+                            .translate('CommissionType')),
+                    // commission
+                    value: selectedCommissionType,
+                    onChanged: (val){
+                      setState(() {
+                        selectedCommissionType =val.toString();
+                        isPercentage = !isPercentage;
+                      });
+                    },
+                    items: commissionType.map((e){
+                      return DropdownMenuItem(
+                          value: e,
+                          child: Row(
+                            children: [
+                              Text("${e} ")
+                            ],
+                          )
+                      );
+                    }).toList(),
+                  ),),
+                  SizedBox(width:  size.width *0.01,),
+                  Expanded(
+                    child: isPercentage ? TextFormField(
+                      initialValue: commissionPercentage.toString(),
+                      maxLength: 2,
 
+                      autofocus: false,
+                      keyboardType: TextInputType.number,
+                      onChanged: (val){
+                        setState(() {
+                          commissionPercentage =int.parse(val);
+                          calculate();
+                          emiCalcute();
+                        });
+                      },
+                      validator: (val) => numbervalidtion(val),
+                      decoration: commoninputdecoration.copyWith(
+                        labelText: AppLocalizations.of(context)
+                            .translate('EMIDuration'),
+                        counterText: '',
+
+                      ),
+
+                    ):
+                    TextFormField(
+                      initialValue: commissionRupee.toString(),
+                      maxLength: 7,
+
+                      autofocus: false,
+                      keyboardType: TextInputType.number,
+                      onChanged: (val){
+                        setState(() {
+                          commissionRupee =int.parse(val);
+                          calculate();
+                          emiCalcute();
+                        });
+                      },
+                      validator: (val) => numbervalidtion(val),
+                      decoration: commoninputdecoration.copyWith(
+                        labelText: AppLocalizations.of(context)
+                            .translate('EMIDuration'),
+                        counterText: '',
+
+                      ),
+
+                    ),
+                  ),
+                ],
+              ),
+              isCalculate ?SizedBox(
+                height: spaceBetweenVertical*2,
+              )
+                  :Container(),
+              isCalculate?Card(
+                elevation: 10.0,
+                shadowColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: CommonAssets.boxBorderColors,
+
+                    )
+
+                ),
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+
+                        AppLocalizations.of(context).translate('MonthlyEMI'),
+                        style: TextStyle(
+                            fontSize: fontSize,
+                            color: CommonAssets.standardtextcolor,
+
+                            fontWeight: FontWeight.bold
+                        ),
+                        maxLines: 1,
+                      ),
+                      AutoSizeText(
+                        perMonthEmi.toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: CommonAssets.standardtextcolor,
+
+                        ),
+                        maxLines: 1,
+                      )
+                    ],
+                  ),
+                ),
+              ):Container(),
+              isCalculate ?SizedBox(
+                height: spaceBetweenVertical*2,
+              )
+                  :Container(),
+              isCalculate?Card(
+                elevation: 10.0,
+                shadowColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: CommonAssets.boxBorderColors,
+
+                    )
+
+                ),
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+
+                        AppLocalizations.of(context).translate('BrokerCommission'),
+                        style: TextStyle(
+                            fontSize: fontSize,
+                            color: CommonAssets.standardtextcolor,
+
+                            fontWeight: FontWeight.bold
+                        ),
+                        maxLines: 1,
+                      ),
+                      AutoSizeText(
+                        finalCommission.toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: CommonAssets.standardtextcolor,
+
+                        ),
+                        maxLines: 1,
+                      )
+                    ],
+                  ),
+                ),
+              ):Container(),
               Column(
                 children: [
                   Row(
@@ -824,7 +1183,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                         loading = true;
                       });
                       await  ProjectsDatabaseService().addNewCustomer(widget.projectName, widget.innerCollection,
-                          widget.allocatedNumber.toString(), customerName, phoneNumber, squareFeet, pricePerSquareFeet, cusBookingDate, loanStaring,selectedBroker, emiDuration, perMonthEmi.round(),_EmiDate);
+                          widget.allocatedNumber.toString(), customerName, phoneNumber, squareFeet, pricePerSquareFeet, cusBookingDate, loanStaring,selectedBroker, emiDuration, perMonthEmi.round(),_EmiDate,finalCommission);
                       Navigator.pop(context);
                     }
                     }

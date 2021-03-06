@@ -82,10 +82,13 @@
   "ThisFieldIsMandatory": "આ ફિલ્ડ ફરજિયાત છે",
   "Name":"નામ",
   "MobileNumber": "મોબાઇલ નંબર",
+  "AlterNativeNumber": "બીજો નંબર",
   "NumberOnly": "ફક્ત નંબર",
   "NumberIsMoreThan10": "સંખ્યા 10 કરતા વધારે છે",
   "NumberIsLessThan10": "સંખ્યા 10 કરતા ઓછી છે",
   "NumberIsMoreThan1": "સંખ્યા 1 કરતા વધારે છે",
+  "NumberIsMoreThan16": "સંખ્યા 16 કરતા વધારે છે",
+  "NumberIsLessThan8": "સંખ્યા 8 કરતા ઓછી છે",
   "CharactersOnly": "ફક્ત અક્ષરો",
   "CharactersIsMoreThan1": "અક્ષરો 1 કરતાં વધુ છે",
   "BrokerExist": "બ્રોકર આઈડી અસ્તિત્વમાં છે",
@@ -111,5 +114,9 @@
   "BookingInformation":"બુકિંગ માહિતી",
   "PropertyInformation": "સંપત્તિની માહિતી",
   "LoanId": "લોન આઈ.ડી",
-  "TotalEMI": "ટોટલ ઇએમઆઈ"
+  "TotalEMI": "ટોટલ ઇએમઆઈ",
+  "CommissionType": "કમિશન પ્રકાર",
+  "BrokerCommission": "બ્રોકર કમિશન",
+  "BrokerName": "બ્રોકર નું નામ",
+  "Clients": "ગ્રાહકો"
 }

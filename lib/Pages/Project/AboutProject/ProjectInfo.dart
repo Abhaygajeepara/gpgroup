@@ -109,26 +109,32 @@ class _ProjectInfoState extends State<ProjectInfo> {
     ),
     child:
 
-    isInformationPage?RaisedButton.icon(
-      color: Colors.white,
-        label: Text(
-          AppLocalizations.of(context).translate('ViewSite'),
-          style: TextStyle(
-            fontSize: size.height *0.03,
-            fontWeight: FontWeight.bold
+    isInformationPage?Padding(
+      padding:  EdgeInsets.all(8.0),
+      child: RaisedButton.icon(
+        shape: StadiumBorder(),
+       // color: Theme.of(context).primaryColor,
+          label: Text(
+            AppLocalizations.of(context).translate('ViewSite'),
+            style: TextStyle(
+                color: CommonAssets.buttonTextColor,
+              fontSize: size.height *0.03,
+              fontWeight: FontWeight.bold
+            ),
           ),
-        ),
-      onPressed: (){
-        setState(() {
-          isInformationPage = false;
+        onPressed: (){
+          setState(() {
+            isInformationPage = false;
 
-        });
-      },
-      icon: Icon(
-          Icons.construction,
-      size: size.height *0.03,
+          });
+        },
+        icon: Icon(
+            Icons.construction,
+        size: size.height *0.03,
+          color: CommonAssets.buttonTextColor,
+        ),
+        //label: AppLocalizations.of(context).translate('Home'),
       ),
-      //label: AppLocalizations.of(context).translate('Home'),
     ):Container(
       height: 0,
     ),
@@ -209,9 +215,10 @@ class _ProjectInfoState extends State<ProjectInfo> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                IconButton(icon: Icon(Icons.delete), onPressed: (){}),
+                IconButton(icon: Icon(Icons.delete), onPressed: (){},color: CommonAssets.editIconColor,),
                 SizedBox(width: size.width *0.03,),
-                IconButton(icon: Icon(Icons.edit), onPressed: (){
+                IconButton(icon: Icon(Icons.edit,color: CommonAssets.editIconColor,),
+                    onPressed: (){
                   return Navigator.push(context, PageRouteBuilder(pageBuilder:(_,__,___)=>UpdateProjectDetails(projectName:  singleProjectInfoSnapshot.projectName,)));
                 }),
               ],

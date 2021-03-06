@@ -4,7 +4,9 @@ import 'package:gpgroup/Commonassets/Commonassets.dart';
 import 'package:gpgroup/Commonassets/commonAppbar.dart';
 import 'package:gpgroup/Model/Users/BrokerData.dart';
 import 'package:gpgroup/Pages/Project/Broker/AddBroker.dart';
+import 'package:gpgroup/Pages/Project/Broker/BrokerProfile.dart';
 import 'package:gpgroup/Service/Database/Retrieve/ProjectDataRetrieve.dart';
+import 'package:provider/provider.dart';
 class Broker extends StatefulWidget {
   @override
   _BrokerState createState() => _BrokerState();
@@ -13,10 +15,11 @@ class Broker extends StatefulWidget {
 class _BrokerState extends State<Broker> {
   @override
   Widget build(BuildContext context) {
+    final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
     return Scaffold(
       appBar: CommonAppbar(Container()),
       body:StreamBuilder<List<BrokerModel>>(
-        stream: ProjectRetrieve().BROKERDATA,
+        stream: ProjectRetrieve().BROKERLISTDATA,
         builder: (context,snapshot){
           if(snapshot.hasData){
 
@@ -31,6 +34,17 @@ class _BrokerState extends State<Broker> {
                 color: CommonAssets.boxBorderColors,
                     width: 0.3)),
                   child: ListTile(
+                    onTap: ()async{
+
+
+                      return   await Navigator.push(
+                        context,
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => BrokerProfile(brokerUid:snapshot.data[index].id ,),
+                          transitionDuration: Duration(seconds: 0),
+                        ),
+                      );
+                    },
                       leading: CircleAvatar(
 
                                         backgroundImage: NetworkImage(

@@ -33,6 +33,7 @@ class CustomerData{
   bool isLoanOn;
   String loanReferenceCollectionName;
   String customerId;
+  int brokerCommission;
   String brokerReference;
   List<Map<String ,dynamic>> allCustomer;
   int squareFeet;
@@ -55,6 +56,7 @@ class CustomerData{
     @required  this.loanReferenceCollectionName,
     @required this.brokerReference,
     @required this.allCustomer,
+    @required this.brokerCommission,
     @required  this.squareFeet,
     @required this.pricePerSquareFeet,
     @required this.totalEMI,
@@ -74,6 +76,7 @@ class CustomerData{
         loanReferenceCollectionName:snap['LoanReferenceCollection'],
           brokerReference:snap['BrokerReference'],
         allCustomer: List.from(snap['AllCustomer']),
+        brokerCommission: snap['BrokerCommission'],
         squareFeet:snap['SquareFeet'],
         pricePerSquareFeet:snap['PricePerSquareFeet'],
         perMonthEMI: snap['PerMonthEMI'],

@@ -11,13 +11,13 @@ import 'package:rxdart/rxdart.dart';
 class ProjectsDatabaseService{
 
 
-  final CollectionReference collectionReference = FirebaseFirestore.instance.collection('Project');
-  final CollectionReference customerReference = FirebaseFirestore.instance.collection('Customer');
-  final CollectionReference brokerReference = FirebaseFirestore.instance.collection('Broker');
+  final CollectionReference collectionCollectionReference = FirebaseFirestore.instance.collection('Project');
+  final CollectionReference customerCollectionReference = FirebaseFirestore.instance.collection('Customer');
+  final CollectionReference brokerCollectionReference = FirebaseFirestore.instance.collection('Broker');
   Future projectExist(String val)async{
 
     try{
-      final doc = await collectionReference.doc(val.toLowerCase()).get();
+      final doc = await collectionCollectionReference.doc(val.toLowerCase()).get();
       if(doc.data().length>0){
         return "Name Exist";
       }
@@ -32,7 +32,7 @@ class ProjectsDatabaseService{
   }
 
   Future CreateProject(String projectName,List<List<String>> rules,String typeofBuilding,String landmark,String address,String description,List<File> ImageList)async{
-    await  collectionReference.doc(projectName).set({
+    await  collectionCollectionReference.doc(projectName).set({
       'EnglishRules':FieldValue.arrayUnion(rules[0]),
       'GujaratiRules':FieldValue.arrayUnion(rules[1]),
       'HindiRules':FieldValue.arrayUnion(rules[2]),
@@ -51,7 +51,7 @@ class ProjectsDatabaseService{
       taskSnapshot.ref.getDownloadURL().then(
               (value)async{
 
-                await  collectionReference.doc(projectName).update({
+                await  collectionCollectionReference.doc(projectName).update({
                   "ImageUrl":FieldValue.arrayUnion([value])
                 });
 
@@ -61,41 +61,43 @@ class ProjectsDatabaseService{
 
   }
 
-  Future<bool> customerExist(String number)async{
+  Future<DocumentSnapshot> customerExist(String number)async{
     // number is id of customer
-    final doc = await customerReference.doc(number).get();
-    if(doc.exists){
-      return true;
-    }
-    else{
-      return false;
-    }
+    final doc = await customerCollectionReference.doc(number).get();
+    return doc;
+    // if(doc.exists){
+    //   return true;
+    // }
+    // else{
+    //   return false;
+    // }
 
   }
   Future addNewCustomer(String projectName,String  innerCollection,String allocatedNumber,
-      String customerName,int phoneNumber,int squareFeet,int pricePerSquareFeet,
-      Timestamp bookingDate,Timestamp  startingDateOfLoan,String brokerReference,int emiDuration,int perMonthEMI,List<Timestamp> _emi
+      String customerName,int cusPhoneNumber,int squareFeet,int pricePerSquareFeet,
+      Timestamp bookingDate,Timestamp  startingDateOfLoan,String brokerReference,int emiDuration,int perMonthEMI,List<Timestamp> _emi,int brokerCommission
       )async{
     String loanId="(000)$projectName-$innerCollection-$allocatedNumber";
     // String propertiesId= "$projectName/$innerCollection/$allocatedNumber";
     // allocatedNumber = flats or shop or house number
       try{
-        final docDelete =  await collectionReference.doc(projectName).collection(innerCollection).doc('demo').get();
+        final docDelete =  await collectionCollectionReference.doc(projectName).collection(innerCollection).doc('demo').get();
         if(docDelete.exists)
         {
-          await collectionReference.doc(projectName).collection(innerCollection).doc('demo').delete();
+          await collectionCollectionReference.doc(projectName).collection(innerCollection).doc('demo').delete();
         }
-        await customerReference.doc(phoneNumber.toString()).set({
+        await customerCollectionReference.doc(cusPhoneNumber.toString()).set({
           "CustomerName":customerName,
-          "PhoneNumber":phoneNumber,
+          "cusPhoneNumber":cusPhoneNumber,
           "Properties":FieldValue.arrayUnion(['${projectName}/${innerCollection}/${allocatedNumber}'])
         });
 
 
 
 
-        addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, phoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId);
-        emiCount(projectName, innerCollection, allocatedNumber, phoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId);
+        addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,brokerCommission);
+        emiCount(projectName, innerCollection, allocatedNumber, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,brokerCommission);
+        addCommissionDetails(projectName, innerCollection, allocatedNumber, cusPhoneNumber, brokerReference, brokerCommission, loanId);
       }
       catch(e)
     {
@@ -106,8 +108,9 @@ class ProjectsDatabaseService{
 
 
   Future existingCustomer(String projectName,String  innerCollection,String allocatedNumber,
-      int phoneNumber,int squareFeet,int pricePerSquareFeet,
+      int cusPhoneNumber,int squareFeet,int pricePerSquareFeet,
       Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,int emiDuration,int perMonthEMI,List<Timestamp> _emi
+      ,int brokerCommission
       )async{
     String loanId="(000)$projectName-$innerCollection-$allocatedNumber";
 
@@ -116,22 +119,22 @@ class ProjectsDatabaseService{
 
 
 
-      final docDelete =  await collectionReference.doc(projectName).collection(innerCollection).doc('demo').get();
+      final docDelete =  await collectionCollectionReference.doc(projectName).collection(innerCollection).doc('demo').get();
       if(docDelete.exists)
       {
-        await collectionReference.doc(projectName).collection(innerCollection).doc('demo').delete();
+        await collectionCollectionReference.doc(projectName).collection(innerCollection).doc('demo').delete();
       }
-      await customerReference.doc(phoneNumber.toString()).update({
+      await customerCollectionReference.doc(cusPhoneNumber.toString()).update({
 
         "Properties":FieldValue.arrayUnion(['${projectName}/${innerCollection}/${allocatedNumber}'])
       });
 
-      final cusIno = await customerReference.doc(phoneNumber.toString()).get();
+      final cusIno = await customerCollectionReference.doc(cusPhoneNumber.toString()).get();
       String customerName =  cusIno['CustomerName'];
 
-      addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, phoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId);
-     emiCount(projectName, innerCollection, allocatedNumber, phoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId);
-
+      addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,brokerCommission);
+     emiCount(projectName, innerCollection, allocatedNumber, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,brokerCommission);
+    addCommissionDetails(projectName, innerCollection, allocatedNumber, cusPhoneNumber, brokerReference, brokerCommission, loanId);
     }
     catch(e)
     {
@@ -144,10 +147,10 @@ class ProjectsDatabaseService{
 
   Future emiCount (
       String projectName,String  innerCollection,String allocatedNumber,
-      int phoneNumber,int squareFeet,int pricePerSquareFeet,
+      int cusPhoneNumber,int squareFeet,int pricePerSquareFeet,
       Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,
       int emiDuration,int perMonthEMI,List<Timestamp> _emi,
-      String loanId
+      String loanId,int brokerCommission
       )async{
 
 
@@ -170,8 +173,8 @@ class ProjectsDatabaseService{
       'LoanEndingDate':_emi.last,
       "BookingDate":bookingDate,
       "BrokerReference":brokerReference,
-      "CustomerId":phoneNumber,
-
+      "CustomerId":cusPhoneNumber,
+      "BrokerCommission":brokerCommission,
       "EMIDuration":emiDuration, // duration of emi
       "PerMonthEMI":perMonthEMI,
       "ProjectName":propertiesId,
@@ -183,6 +186,7 @@ class ProjectsDatabaseService{
 
     for(int i=0;i<_emi.length;i++){
       await FirebaseFirestore.instance.collection("Loan").doc(projectName).collection(loanId).doc((i+1).toString()).set({
+
         "InstallmentDate":_emi[i],
         "EMIPending":true,
         "TypeOfPayment":"",
@@ -193,7 +197,7 @@ class ProjectsDatabaseService{
         "ReceiverName":"",
         "Relation":"",
         "Amount":0,
-        "IsEMI":true
+       // "IsEMI":true
 
       });
     }
@@ -202,14 +206,14 @@ class ProjectsDatabaseService{
 
   Future addPropertiesData(String projectName,String  innerCollection,String allocatedNumber,
       String customerName,
-      int phoneNumber,int squareFeet,int pricePerSquareFeet,
+      int cusPhoneNumber,int squareFeet,int pricePerSquareFeet,
       Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,
       int emiDuration,int perMonthEMI,List<Timestamp> _emi,
-      String loanId )async{
+      String loanId,int brokerCommission )async{
     Map<String,dynamic> _customerData = {};
-         _customerData =  {"CustomerId":phoneNumber.toString(),"LoanId":loanId};
+         _customerData =  {"CustomerId":cusPhoneNumber.toString(),"LoanId":loanId};
          print(_customerData);
-    await    collectionReference.doc(projectName).collection(innerCollection).doc(allocatedNumber.toString()).set({
+    await    collectionCollectionReference.doc(projectName).collection(innerCollection).doc(allocatedNumber.toString()).set({
       "Number":int.parse(allocatedNumber),// house or shop number
       "SquareFeet":squareFeet,
       "PricePerSquareFeet":pricePerSquareFeet,
@@ -217,14 +221,36 @@ class ProjectsDatabaseService{
       "StartDate":startingDateOfLoan,
       'LoanEndingDate':_emi.last,
       "BrokerReference":brokerReference,
+      "BrokerCommission":brokerCommission,
       "EMIDuration":emiDuration, //
       "PerMonthEMI":perMonthEMI,
-      'CustomerId':phoneNumber.toString(),
+      'CustomerId':cusPhoneNumber.toString(),
       "CustomerName":customerName,
       "LoanReferenceCollection":loanId, // reference of collection of loan
       'IsLoanOn':true,
       "AllCustomer":FieldValue.arrayUnion([_customerData])
     });
+  }
+
+  Future addCommissionDetails(String projectName,String  innerCollection,String allocatedNumber,
+     int cusPhoneNumber, String brokerReference,int brokerCommission,String loanId){
+    try{
+      if(brokerReference != null ||brokerReference != ''){
+        brokerCollectionReference.doc(brokerReference).collection('Commission').doc(loanId).set({
+          "LoanId":loanId,
+          "Property":"${projectName}/${innerCollection}/${allocatedNumber}",
+          "Commission":brokerCommission,
+          "CustomerId":cusPhoneNumber,
+
+
+
+        });
+      }
+    }
+    catch (e){
+      print("Erro in addCommissionDetails");
+      print(e.toString());
+    }
   }
 
   Future createHousingStructure(List<CreateHousingStrctureModel> structure,String projectName,List<List<String>> rules,String landmark,String address,String description,List<File> ImageList)async{
@@ -235,11 +261,11 @@ class ProjectsDatabaseService{
   }
   res.sort((a,b)=>a.compareTo(b));
   for(int i=0;i<res.length;i++){
-    await  collectionReference.doc(projectName).update({
+    await  collectionCollectionReference.doc(projectName).update({
 
       'Reference':FieldValue.arrayUnion([res[i]]),
     });
-    await collectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
+    await collectionCollectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
 
 
 
@@ -247,7 +273,7 @@ class ProjectsDatabaseService{
   for(int i =0;i <structure.length;i++ ){
     structure[i].toMap();
     print(structure[i].toMap());
-    await  collectionReference.doc(projectName).update({
+    await  collectionCollectionReference.doc(projectName).update({
 
       'Structure':FieldValue.arrayUnion([structure[i].toMap()]),
     });
@@ -268,16 +294,16 @@ class ProjectsDatabaseService{
       res.add(structure.floorsandflats['ListOfBuilding'][i]);
     }
     res.sort((a,b)=>a.compareTo(b));
-    await  collectionReference.doc(projectName).update({
+    await  collectionCollectionReference.doc(projectName).update({
 
       'Structure':FieldValue.arrayUnion([structure.floorsandflats]),
     });
     for(int i=0;i<res.length;i++){
-      await  collectionReference.doc(projectName).update({
+      await  collectionCollectionReference.doc(projectName).update({
 
         'Reference':FieldValue.arrayUnion([res[i]]),
       });
-      await collectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
+      await collectionCollectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
     }
 
   }
@@ -289,15 +315,15 @@ class ProjectsDatabaseService{
       res.add(i.toString());
     }
     for(int i = 0;i<res.length;i++){
-      await collectionReference.doc(projectName).update({
+      await collectionCollectionReference.doc(projectName).update({
 
         'Reference': FieldValue.arrayUnion(
             [res[i]]),
       });
-      await collectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
+      await collectionCollectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
     }
 
-    await collectionReference.doc(projectName).update({
+    await collectionCollectionReference.doc(projectName).update({
 
       'Structure': FieldValue.arrayUnion(
           [ structure.toMap()]),
@@ -310,7 +336,7 @@ class ProjectsDatabaseService{
 
    List<String> res = [];
   for(int i=0;i<commercialStructure.totalFloor;i++){
-    await collectionReference.doc(projectName).update({
+    await collectionCollectionReference.doc(projectName).update({
 
       'Structure': FieldValue.arrayUnion(
           [  commercialStructure.toMap()]),
@@ -327,19 +353,19 @@ class ProjectsDatabaseService{
 
     // store reference   in alphabetical order
 for(int i = 0;i<res.length;i++){
-  await collectionReference.doc(projectName).update({
+  await collectionCollectionReference.doc(projectName).update({
 
     'Reference': FieldValue.arrayUnion(
         [res[i]]),
   });
-  await collectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
+  await collectionCollectionReference.doc(projectName).collection(res[i]).doc("demo").set({});
 }
 
 
 
    for(int k=0;k<buildingStructure.length;k++){
 
-     await collectionReference.doc(projectName).update({
+     await collectionCollectionReference.doc(projectName).update({
 
        'Structure': FieldValue.arrayUnion(
            [  buildingStructure[k].floorsandflats]),
@@ -380,7 +406,7 @@ for(int i = 0;i<res.length;i++){
 
   /////////////// new topics //////////////
   // Broker //
-    Future brokerData (String uid ,String name ,int number,File image)async{
+    Future addBrokerData (String uid ,String name ,int number,int alertNativeNumber,File image,String password)async{
 
       try{
         firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
@@ -389,13 +415,15 @@ for(int i = 0;i<res.length;i++){
         firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
         taskSnapshot.ref.getDownloadURL().then(
                 (value)async{
-                  brokerReference.doc(uid).set({
+                  brokerCollectionReference.doc(uid).set({
                     "Id":uid.toString(),
                     "Name":name.toString(),
                     "PhoneNumber":number,
+                    "AlterNativeNumber":alertNativeNumber,
                     "ProfileUrl":value,
                     "IsActive":true,
-                    "Password":"",
+                    "Password":password,
+                    "RemainingEMI":FieldValue.arrayUnion([])
 
                   });
 
@@ -409,10 +437,55 @@ for(int i = 0;i<res.length;i++){
         print(e.toString());
       }
     }
+  Future updateBrokerData (String uid ,String name ,int number,int alterNativeNumber,File image,String password,bool isActive,String imageUrl)async{
+
+    try{
+      if(image == ""||image == null){
+        brokerCollectionReference.doc(uid).update({
+
+          "Name":name.toString(),
+          "PhoneNumber":number,
+          "AlterNativeNumber":alterNativeNumber,
+          "ProfileUrl":imageUrl,
+          "IsActive":isActive,
+          "Password":password,
+
+
+        });
+      }
+      else{
+        firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+            .ref('/').child('/Broker/$uid') ;
+        firebase_storage.UploadTask uploadTask = ref.putFile(image);
+        firebase_storage.TaskSnapshot taskSnapshot = await uploadTask;
+        taskSnapshot.ref.getDownloadURL().then(
+                (value)async{
+              brokerCollectionReference.doc(uid).update({
+
+                "Name":name.toString(),
+                "PhoneNumber":number,
+                "ProfileUrl":value,
+                "IsActive":true,
+                "Password":password,
+
+
+              });
+
+
+            }
+        );
+      }
+
+    }
+    catch(e){
+      print("Method name =  brokerData()");
+      print(e.toString());
+    }
+  }
 
     Future<bool> brokerExist(String uid)async{
       try{
-       final doc =  await brokerReference.doc(uid).get();
+       final doc =  await brokerCollectionReference.doc(uid).get();
        if(doc.exists){
         return true;
        }

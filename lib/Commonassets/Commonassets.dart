@@ -31,6 +31,7 @@ class CommonAssets{
   static String snapshoterror = 'Server Error';
   static Color soldProduct =Colors.white;
   static Color paidEmiCardColor = Colors.grey;
+  static Color editIconColor = Colors.black;
 
 
 }
