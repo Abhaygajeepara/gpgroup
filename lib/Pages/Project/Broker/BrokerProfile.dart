@@ -15,8 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 class BrokerProfile extends StatefulWidget {
-  String brokerUid;
-  BrokerProfile({@required this.brokerUid});
+  // String brokerUid;
+  // BrokerProfile({@required this.brokerUid});
   @override
   _BrokerProfileState createState() => _BrokerProfileState();
 }
@@ -56,7 +56,7 @@ class _BrokerProfileState extends State<BrokerProfile> {
   @override
   Widget build(BuildContext context) {
     final _projectRetrieve = Provider.of<ProjectRetrieve>(context);
-     _projectRetrieve.setBroker(widget.brokerUid);
+     // _projectRetrieve.setBroker(widget.brokerUid);
     final size = MediaQuery.of(context).size;
     final  labelWight = FontWeight.bold;
     final labelTextSize =  size.height *0.025;
@@ -101,7 +101,7 @@ class _BrokerProfileState extends State<BrokerProfile> {
             shape: StadiumBorder(),
             // color: Theme.of(context).primaryColor,
             label: Text(
-              AppLocalizations.of(context).translate('Clients'),
+              AppLocalizations.of(context).translate('SalesDetails'),
               style: TextStyle(
                   color: CommonAssets.buttonTextColor,
                   fontSize: size.height *0.03,
@@ -109,12 +109,12 @@ class _BrokerProfileState extends State<BrokerProfile> {
               ),
             ),
             onPressed: (){
-              setState(() {
+
                 return    Navigator.push(context, PageRouteBuilder(
                   pageBuilder: (_, __, ___) => BrokerClients(),
                   transitionDuration: Duration(seconds: 0),
                 ),);
-              });
+
             },
             icon: Icon(
               Icons.construction,

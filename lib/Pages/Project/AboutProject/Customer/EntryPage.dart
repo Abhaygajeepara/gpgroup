@@ -44,14 +44,27 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
   int phoneNumber;
   int pricePerSquareFeet=0;
   List<Timestamp> _EmiDate;
+  List<int> commissionList=[];
+ List<Map<String ,dynamic>> commissionPeriod =[];
   int squareFeet=0;
   String selectedBroker ;
   bool isExistUser =false; // for existing user
   bool isUser =true;// new user
   bool loading = false;
+  // int firstEmiCommissionPercentage;
+   int firstCommissionRupee;
+  // bool firstCommissionPercentage = true;
+  int averageCommissionRupee;
+  int averageCommissionOfBroker = 0;
+  int finalCommissionRupee;
+  List<int> brokerageList =[];
+  int remainingBrokerage = 0;
+  // int middleEmiCommissionPercentage;
+  // bool middleCommissionPercentage = false;
+  //  int lastBrokerage=0;
   int commissionPercentage= 0;
   int commissionRupee = 0;
-  int finalCommission = 0;
+  int totalCommission = 0;
   bool isPercentage = true;
   List months = ['Jan', 'Feb', 'Mar', 'Apr', 'May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   String  selectedCommissionType;
@@ -116,7 +129,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
       // });
   }
   void calculate(){
-    print('herre');
+    //print('herre');
 
     if(emiDuration > 0 && pricePerSquareFeet > 0 && squareFeet > 0 ){
       setState(() {
@@ -124,12 +137,12 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
         perMonthEmi = (pricePerSquareFeet * squareFeet) /emiDuration;
         if(isPercentage){
          double _lastCommission= (((pricePerSquareFeet * squareFeet) *commissionPercentage) /100);
-        finalCommission = _lastCommission.toInt();
+        totalCommission = _lastCommission.round();
         }
         else{
-          finalCommission = commissionRupee;
+          totalCommission = commissionRupee;
         }
-        print( 'finalCommission = ${finalCommission}');
+        //print( 'finalCommission = ${totalCommission}');
       });
 
     }
@@ -150,7 +163,23 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
         _EmiDate.add(Timestamp.fromDate(_nextMonth));
 
       }
-      // print('List ${_EmiDate}');
+      // //print('List ${_EmiDate}');
+  }
+  void calculateBrokerrage(){
+    brokerageList.clear();
+    remainingBrokerage = totalCommission - firstCommissionRupee;
+    double _perMonthCommission = averageCommissionRupee / (emiDuration -2);
+
+    averageCommissionOfBroker = _perMonthCommission.toInt();
+
+    finalCommissionRupee = totalCommission - (firstCommissionRupee+(averageCommissionOfBroker *(emiDuration -2)));
+    brokerageList.add(firstCommissionRupee);
+    for(int i =0;i<(emiDuration -2);i++){
+      brokerageList.add(averageCommissionOfBroker);
+    }
+    brokerageList.add(finalCommissionRupee);
+    //print("lastbRokarage ${brokerageList}");
+
   }
   @override
   Widget build(BuildContext context) {
@@ -168,7 +197,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
   }
   Widget screen(BuildContext context){
 
-
+print(emiDuration);
     if(pageNumber == 1){
     return ExistCustomer(context);
     }
@@ -250,6 +279,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
         return null;
       },
       child: Form(
+      
         key: _formKey,
         child: Padding(
           padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
@@ -392,6 +422,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                     emiDuration =int.parse(val);
                     calculate();
                     emiCalcute();
+                    calculateBrokerrage();
                   });
                 },
                 validator: (val) => numbervalidtion(val),
@@ -468,12 +499,13 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                           commissionPercentage =int.parse(val);
                           calculate();
                           emiCalcute();
+                          calculateBrokerrage();
                         });
                       },
                       validator: (val) => numbervalidtion(val),
                       decoration: commoninputdecoration.copyWith(
                           labelText: AppLocalizations.of(context)
-                              .translate('EMIDuration'),
+                              .translate('Commission'),
                           counterText: '',
 
                       ),
@@ -490,12 +522,13 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                           commissionRupee =int.parse(val);
                           calculate();
                           emiCalcute();
+                          calculateBrokerrage();
                         });
                       },
-                      validator: (val) => numbervalidtion(val),
+                      validator: numbervalidtion,
                       decoration: commoninputdecoration.copyWith(
                         labelText: AppLocalizations.of(context)
-                            .translate('EMIDuration'),
+                            .translate('Commission'),
                         counterText: '',
 
                       ),
@@ -504,6 +537,111 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: spaceBetweenVertical,
+              ),
+             Row(
+               children: [
+                 Expanded(
+                   child: TextFormField(
+                     autofocus: false,
+                     keyboardType: TextInputType.number,
+                     onChanged: (val){
+                       setState(() {
+                         firstCommissionRupee =int.parse(val);
+
+                         calculate();
+                         emiCalcute();
+                         calculateBrokerrage();
+                       });
+                     },
+                     validator:  commissionValidtion,
+                     // validator: (val)=>int.parse(val)>200?"Enter The ":null,
+                     decoration: commoninputdecoration.copyWith(
+                       labelText: AppLocalizations.of(context)
+                           .translate('FirstBrokerage'),
+                       counterText: '',
+
+                     ),
+
+                   ),
+                 ),
+                 SizedBox(width: spaceBetweenHorizontal,),
+                 Expanded(
+                   child: TextFormField(
+
+
+
+                     autofocus: false,
+                     keyboardType: TextInputType.number,
+                     onChanged: (val){
+                       setState(() {
+                         averageCommissionRupee =int.parse(val);
+
+                         calculate();
+                         emiCalcute();
+                         calculateBrokerrage();
+                       });
+                     },
+                     validator:  remainingCommissionValidation,
+                     // validator: (val)=>int.parse(val)>200?"Enter The ":null,
+                     decoration: commoninputdecoration.copyWith(
+                       labelText: AppLocalizations.of(context)
+                           .translate('AverageBrokerage'),
+                       counterText: '',
+
+                     ),
+
+                   ),
+                 ),
+               ],
+             ),
+
+
+              isCalculate ?SizedBox(
+                height: spaceBetweenVertical*2,
+              )
+                  :Container(),
+              isCalculate?Card(
+                elevation: 10.0,
+                shadowColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: CommonAssets.boxBorderColors,
+
+                    )
+
+                ),
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+
+                        AppLocalizations.of(context).translate('TotalAmount'),
+                        style: TextStyle(
+                            fontSize: fontSize,
+                            color: CommonAssets.standardtextcolor,
+
+                            fontWeight: FontWeight.bold
+                        ),
+                        maxLines: 1,
+                      ),
+                      AutoSizeText(
+                        (pricePerSquareFeet * squareFeet).toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: CommonAssets.standardtextcolor,
+
+                        ),
+                        maxLines: 1,
+                      )
+                    ],
+                  ),
+                ),
+              ):Container(),
+
               isCalculate ?SizedBox(
                 height: spaceBetweenVertical*2,
               )
@@ -563,31 +701,110 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                 ),
                 child: Padding(
                   padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     children: [
-                      AutoSizeText(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText(
 
-                        AppLocalizations.of(context).translate('BrokerCommission'),
-                        style: TextStyle(
-                            fontSize: fontSize,
-                            color: CommonAssets.standardtextcolor,
+                            AppLocalizations.of(context).translate('BrokerCommission'),
+                            style: TextStyle(
+                                fontSize: fontSize,
+                                color: CommonAssets.standardtextcolor,
 
-                            fontWeight: FontWeight.bold
-                        ),
-                        maxLines: 1,
+                                fontWeight: FontWeight.bold
+                            ),
+                            maxLines: 1,
+                          ),
+                          AutoSizeText(
+                            totalCommission.toStringAsFixed(2),
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              color: CommonAssets.standardtextcolor,
+
+                            ),
+                            maxLines: 1,
+                          )
+                        ],
                       ),
-                      AutoSizeText(
-                        finalCommission.toStringAsFixed(2),
-                        style: TextStyle(
-                          fontSize: fontSize,
-                          color: CommonAssets.standardtextcolor,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText(
 
-                        ),
-                        maxLines: 1,
-                      )
+                            AppLocalizations.of(context).translate('FirstBrokerage'),
+                            style: TextStyle(
+                                fontSize: fontSize,
+                                color: CommonAssets.standardtextcolor,
+
+                                fontWeight: FontWeight.bold
+                            ),
+                            maxLines: 1,
+                          ),
+                          AutoSizeText(
+                            firstCommissionRupee.toString(),
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              color: CommonAssets.standardtextcolor,
+
+                            ),
+                            maxLines: 1,
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText(
+
+                            AppLocalizations.of(context).translate('AverageBrokerage'),
+                            style: TextStyle(
+                                fontSize: fontSize,
+                                color: CommonAssets.standardtextcolor,
+
+                                fontWeight: FontWeight.bold
+                            ),
+                            maxLines: 1,
+                          ),
+                          AutoSizeText(
+                            averageCommissionOfBroker.toString()+"(${emiDuration -2})",
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              color: CommonAssets.standardtextcolor,
+
+                            ),
+                            maxLines: 1,
+                          )
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AutoSizeText(
+
+                            AppLocalizations.of(context).translate('FinalBrokerage'),
+                            style: TextStyle(
+                                fontSize: fontSize,
+                                color: CommonAssets.standardtextcolor,
+
+                                fontWeight: FontWeight.bold
+                            ),
+                            maxLines: 1,
+                          ),
+                          AutoSizeText(
+                            finalCommissionRupee.toString(),
+                            style: TextStyle(
+                              fontSize: fontSize,
+                              color: CommonAssets.standardtextcolor,
+
+                            ),
+                            maxLines: 1,
+                          )
+                        ],
+                      ),
                     ],
-                  ),
+                  )
                 ),
               ):Container(),
               SizedBox(
@@ -703,7 +920,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                           loading = true;
                         });
                         await  ProjectsDatabaseService().existingCustomer(widget.projectName, widget.innerCollection,
-                            widget.allocatedNumber.toString(), phoneNumber, squareFeet, pricePerSquareFeet, cusBookingDate,loanStaring, selectedBroker, emiDuration, perMonthEmi.round(),_EmiDate,finalCommission);
+                            widget.allocatedNumber.toString(), phoneNumber, squareFeet, pricePerSquareFeet, cusBookingDate,loanStaring, selectedBroker, emiDuration, perMonthEmi.round(),_EmiDate,totalCommission,brokerageList);
                         Navigator.pop(context);
                       }
 
@@ -733,6 +950,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
       },
       child: Form(
         key: _formKey,
+      
         child: Padding(
           padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
           child: Column(
@@ -836,9 +1054,10 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                     emiDuration =int.parse(val);
                     calculate();
                     emiCalcute();
+                    calculateBrokerrage();
                   });
                 },
-                validator: (val) => numbervalidtion(val),
+                validator: numbervalidtion,
                 decoration: commoninputdecoration.copyWith(
                     labelText: AppLocalizations.of(context)
                         .translate('EMIDuration')),
@@ -951,12 +1170,13 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                           commissionPercentage =int.parse(val);
                           calculate();
                           emiCalcute();
+                          calculateBrokerrage();
                         });
                       },
                       validator: (val) => numbervalidtion(val),
                       decoration: commoninputdecoration.copyWith(
                         labelText: AppLocalizations.of(context)
-                            .translate('EMIDuration'),
+                            .translate('Commission'),
                         counterText: '',
 
                       ),
@@ -973,12 +1193,13 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                           commissionRupee =int.parse(val);
                           calculate();
                           emiCalcute();
+                          calculateBrokerrage();
                         });
                       },
                       validator: (val) => numbervalidtion(val),
                       decoration: commoninputdecoration.copyWith(
                         labelText: AppLocalizations.of(context)
-                            .translate('EMIDuration'),
+                            .translate('Commission'),
                         counterText: '',
 
                       ),
@@ -987,6 +1208,111 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                   ),
                 ],
               ),
+              SizedBox(
+                height: spaceBetweenVertical,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      autofocus: false,
+                      keyboardType: TextInputType.number,
+                      onChanged: (val){
+                        setState(() {
+                          firstCommissionRupee =int.parse(val);
+
+                          calculate();
+                          emiCalcute();
+                          calculateBrokerrage();
+                        });
+                      },
+                      validator:  commissionValidtion,
+                      // validator: (val)=>int.parse(val)>200?"Enter The ":null,
+                      decoration: commoninputdecoration.copyWith(
+                        labelText: AppLocalizations.of(context)
+                            .translate('FirstBrokerage'),
+                        counterText: '',
+
+                      ),
+
+                    ),
+                  ),
+                  SizedBox(width: spaceBetweenHorizontal,),
+                  Expanded(
+                    child: TextFormField(
+
+
+
+                      autofocus: false,
+                      keyboardType: TextInputType.number,
+                      onChanged: (val){
+                        setState(() {
+                          averageCommissionRupee =int.parse(val);
+
+                          calculate();
+                          emiCalcute();
+                          calculateBrokerrage();
+                        });
+                      },
+                      validator:  remainingCommissionValidation,
+                      // validator: (val)=>int.parse(val)>200?"Enter The ":null,
+                      decoration: commoninputdecoration.copyWith(
+                        labelText: AppLocalizations.of(context)
+                            .translate('AverageBrokerage'),
+                        counterText: '',
+
+                      ),
+
+                    ),
+                  ),
+                ],
+              ),
+
+
+              isCalculate ?SizedBox(
+                height: spaceBetweenVertical*2,
+              )
+                  :Container(),
+              isCalculate?Card(
+                elevation: 10.0,
+                shadowColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                      color: CommonAssets.boxBorderColors,
+
+                    )
+
+                ),
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AutoSizeText(
+
+                        AppLocalizations.of(context).translate('TotalAmount'),
+                        style: TextStyle(
+                            fontSize: fontSize,
+                            color: CommonAssets.standardtextcolor,
+
+                            fontWeight: FontWeight.bold
+                        ),
+                        maxLines: 1,
+                      ),
+                      AutoSizeText(
+                        (pricePerSquareFeet * squareFeet).toStringAsFixed(2),
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          color: CommonAssets.standardtextcolor,
+
+                        ),
+                        maxLines: 1,
+                      )
+                    ],
+                  ),
+                ),
+              ):Container(),
+
               isCalculate ?SizedBox(
                 height: spaceBetweenVertical*2,
               )
@@ -1045,34 +1371,116 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
 
                 ),
                 child: Padding(
-                  padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AutoSizeText(
+                    padding:  EdgeInsets.symmetric(vertical: size.height *0.01,horizontal: size.height*0.01),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AutoSizeText(
 
-                        AppLocalizations.of(context).translate('BrokerCommission'),
-                        style: TextStyle(
-                            fontSize: fontSize,
-                            color: CommonAssets.standardtextcolor,
+                              AppLocalizations.of(context).translate('BrokerCommission'),
+                              style: TextStyle(
+                                  fontSize: fontSize,
+                                  color: CommonAssets.standardtextcolor,
 
-                            fontWeight: FontWeight.bold
+                                  fontWeight: FontWeight.bold
+                              ),
+                              maxLines: 1,
+                            ),
+                            AutoSizeText(
+                              totalCommission.toStringAsFixed(2),
+                              style: TextStyle(
+                                fontSize: fontSize,
+                                color: CommonAssets.standardtextcolor,
+
+                              ),
+                              maxLines: 1,
+                            )
+                          ],
                         ),
-                        maxLines: 1,
-                      ),
-                      AutoSizeText(
-                        finalCommission.toStringAsFixed(2),
-                        style: TextStyle(
-                          fontSize: fontSize,
-                          color: CommonAssets.standardtextcolor,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AutoSizeText(
 
+                              AppLocalizations.of(context).translate('FirstBrokerage'),
+                              style: TextStyle(
+                                  fontSize: fontSize,
+                                  color: CommonAssets.standardtextcolor,
+
+                                  fontWeight: FontWeight.bold
+                              ),
+                              maxLines: 1,
+                            ),
+                            AutoSizeText(
+                              firstCommissionRupee.toString(),
+                              style: TextStyle(
+                                fontSize: fontSize,
+                                color: CommonAssets.standardtextcolor,
+
+                              ),
+                              maxLines: 1,
+                            )
+                          ],
                         ),
-                        maxLines: 1,
-                      )
-                    ],
-                  ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AutoSizeText(
+
+                              AppLocalizations.of(context).translate('AverageBrokerage'),
+                              style: TextStyle(
+                                  fontSize: fontSize,
+                                  color: CommonAssets.standardtextcolor,
+
+                                  fontWeight: FontWeight.bold
+                              ),
+                              maxLines: 1,
+                            ),
+                            AutoSizeText(
+                              averageCommissionOfBroker.toString()+"(${emiDuration -2})",
+                              style: TextStyle(
+                                fontSize: fontSize,
+                                color: CommonAssets.standardtextcolor,
+
+                              ),
+                              maxLines: 1,
+                            )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AutoSizeText(
+
+                              AppLocalizations.of(context).translate('FinalBrokerage'),
+                              style: TextStyle(
+                                  fontSize: fontSize,
+                                  color: CommonAssets.standardtextcolor,
+
+                                  fontWeight: FontWeight.bold
+                              ),
+                              maxLines: 1,
+                            ),
+                            AutoSizeText(
+                              finalCommissionRupee.toString(),
+                              style: TextStyle(
+                                fontSize: fontSize,
+                                color: CommonAssets.standardtextcolor,
+
+                              ),
+                              maxLines: 1,
+                            )
+                          ],
+                        ),
+                      ],
+                    )
                 ),
               ):Container(),
+              SizedBox(
+                height: spaceBetweenVertical,
+              ),
               Column(
                 children: [
                   Row(
@@ -1183,7 +1591,7 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
                         loading = true;
                       });
                       await  ProjectsDatabaseService().addNewCustomer(widget.projectName, widget.innerCollection,
-                          widget.allocatedNumber.toString(), customerName, phoneNumber, squareFeet, pricePerSquareFeet, cusBookingDate, loanStaring,selectedBroker, emiDuration, perMonthEmi.round(),_EmiDate,finalCommission);
+                          widget.allocatedNumber.toString(), customerName, phoneNumber, squareFeet, pricePerSquareFeet, cusBookingDate, loanStaring,selectedBroker, emiDuration, perMonthEmi.round(),_EmiDate,totalCommission,brokerageList);
                       Navigator.pop(context);
                     }
                     }
@@ -1202,11 +1610,51 @@ class _FirstTimeCustomerEntryState extends State<FirstTimeCustomerEntry> {
       return AppLocalizations.of(context).translate("NumberOnly");
       return 'Enter The Number Only';
     }
-    else if(value=="0")
+    else if(value==0.toString())
       {
+
         return AppLocalizations.of(context).translate("ThisFieldIsMandatory");
       }
   else {
+      return null;
+    }
+  }
+  String commissionValidtion(String value){
+    Pattern pattern = '^[0-9]+';
+    RegExp regExp = new RegExp(pattern);
+    if (!regExp.hasMatch(value)) {
+      return AppLocalizations.of(context).translate("NumberOnly");
+      return 'Enter The Number Only';
+    }
+    else if(value==0.toString())
+    {
+
+      return AppLocalizations.of(context).translate("ThisFieldIsMandatory");
+    }
+    else  if (int.parse(value ) > totalCommission){
+      return "< ${totalCommission.toString()}";
+    }
+    else {
+      return null;
+    }
+  }
+  String remainingCommissionValidation(String value){
+    Pattern pattern = '^[0-9]+';
+    RegExp regExp = new RegExp(pattern);
+    print(value);
+    if (!regExp.hasMatch(value)) {
+      return AppLocalizations.of(context).translate("NumberOnly");
+      return 'Enter The Number Only';
+    }
+    // else if(value=="0")
+    // {
+    //
+    //   return AppLocalizations.of(context).translate("ThisFieldIsMandatory");
+    // }
+    else  if (int.parse(value ) > remainingBrokerage){
+      return "< ${remainingBrokerage.toString()}";
+    }
+    else {
       return null;
     }
   }

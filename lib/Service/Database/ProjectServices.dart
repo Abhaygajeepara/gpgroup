@@ -26,7 +26,7 @@ class ProjectsDatabaseService{
       }
     }
     catch(e){
-      print(e.toString());
+      //print(e.toString());
     }
 
   }
@@ -58,6 +58,15 @@ class ProjectsDatabaseService{
           }
       );
     }
+    DateTime now = DateTime.now();
+    String docName = "${now.day}-${now.month}-${now.year}";
+    await  collectionCollectionReference.doc(projectName).collection('Income').doc(docName).set({
+      "Income":FieldValue.arrayUnion([])
+    });
+    await  collectionCollectionReference.doc(projectName).collection('Expanse').doc(docName).set({
+      "Expanse":FieldValue.arrayUnion([])
+    });
+    
 
   }
 
@@ -75,7 +84,7 @@ class ProjectsDatabaseService{
   }
   Future addNewCustomer(String projectName,String  innerCollection,String allocatedNumber,
       String customerName,int cusPhoneNumber,int squareFeet,int pricePerSquareFeet,
-      Timestamp bookingDate,Timestamp  startingDateOfLoan,String brokerReference,int emiDuration,int perMonthEMI,List<Timestamp> _emi,int brokerCommission
+      Timestamp bookingDate,Timestamp  startingDateOfLoan,String brokerReference,int emiDuration,int perMonthEMI,List<Timestamp> _emi,int totalBrokerCommission,List<int> brokerageList
       )async{
     String loanId="(000)$projectName-$innerCollection-$allocatedNumber";
     // String propertiesId= "$projectName/$innerCollection/$allocatedNumber";
@@ -88,21 +97,21 @@ class ProjectsDatabaseService{
         }
         await customerCollectionReference.doc(cusPhoneNumber.toString()).set({
           "CustomerName":customerName,
-          "cusPhoneNumber":cusPhoneNumber,
+          "CustomerPhoneNumber":cusPhoneNumber,
           "Properties":FieldValue.arrayUnion(['${projectName}/${innerCollection}/${allocatedNumber}'])
         });
 
 
+    
 
-
-        addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,brokerCommission);
-        emiCount(projectName, innerCollection, allocatedNumber, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,brokerCommission);
-        addCommissionDetails(projectName, innerCollection, allocatedNumber, cusPhoneNumber, brokerReference, brokerCommission, loanId);
+        addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,totalBrokerCommission);
+        emiCount(projectName, innerCollection, allocatedNumber, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,totalBrokerCommission,brokerageList);
+     addCommissionDetails(projectName, innerCollection, allocatedNumber, cusPhoneNumber, customerName, brokerReference, totalBrokerCommission, loanId, bookingDate,brokerageList,_emi);
       }
       catch(e)
     {
-      print('function name is customerAndStructureDetails ');
-      print(e.toString());
+      //print('function name is customerAndStructureDetails ');
+      //print(e.toString());
     }
   }
 
@@ -110,7 +119,7 @@ class ProjectsDatabaseService{
   Future existingCustomer(String projectName,String  innerCollection,String allocatedNumber,
       int cusPhoneNumber,int squareFeet,int pricePerSquareFeet,
       Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,int emiDuration,int perMonthEMI,List<Timestamp> _emi
-      ,int brokerCommission
+      ,int totalBrokerCommission,List<int> brokerageList
       )async{
     String loanId="(000)$projectName-$innerCollection-$allocatedNumber";
 
@@ -132,14 +141,14 @@ class ProjectsDatabaseService{
       final cusIno = await customerCollectionReference.doc(cusPhoneNumber.toString()).get();
       String customerName =  cusIno['CustomerName'];
 
-      addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,brokerCommission);
-     emiCount(projectName, innerCollection, allocatedNumber, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,brokerCommission);
-    addCommissionDetails(projectName, innerCollection, allocatedNumber, cusPhoneNumber, brokerReference, brokerCommission, loanId);
+      addPropertiesData(projectName, innerCollection, allocatedNumber, customerName, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,totalBrokerCommission);
+     emiCount(projectName, innerCollection, allocatedNumber, cusPhoneNumber, squareFeet, pricePerSquareFeet, bookingDate, startingDateOfLoan, brokerReference, emiDuration, perMonthEMI, _emi, loanId,totalBrokerCommission,brokerageList);
+   addCommissionDetails(projectName, innerCollection, allocatedNumber, cusPhoneNumber, customerName, brokerReference, totalBrokerCommission, loanId, bookingDate,brokerageList,_emi);
     }
     catch(e)
     {
-      print('function name is customerAndStructureDetails ');
-      print(e.toString());
+      //print('function name is customerAndStructureDetails ');
+      //print(e.toString());
     }
   }
 
@@ -150,7 +159,7 @@ class ProjectsDatabaseService{
       int cusPhoneNumber,int squareFeet,int pricePerSquareFeet,
       Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,
       int emiDuration,int perMonthEMI,List<Timestamp> _emi,
-      String loanId,int brokerCommission
+      String loanId,int totalBrokerCommission,List<int> brokerageList
       )async{
 
 
@@ -174,7 +183,7 @@ class ProjectsDatabaseService{
       "BookingDate":bookingDate,
       "BrokerReference":brokerReference,
       "CustomerId":cusPhoneNumber,
-      "BrokerCommission":brokerCommission,
+      "BrokerCommission":totalBrokerCommission,
       "EMIDuration":emiDuration, // duration of emi
       "PerMonthEMI":perMonthEMI,
       "ProjectName":propertiesId,
@@ -197,6 +206,7 @@ class ProjectsDatabaseService{
         "ReceiverName":"",
         "Relation":"",
         "Amount":0,
+        "BrokerMonthlyCommission":brokerageList[i]
        // "IsEMI":true
 
       });
@@ -209,10 +219,10 @@ class ProjectsDatabaseService{
       int cusPhoneNumber,int squareFeet,int pricePerSquareFeet,
       Timestamp bookingDate,Timestamp startingDateOfLoan,String brokerReference,
       int emiDuration,int perMonthEMI,List<Timestamp> _emi,
-      String loanId,int brokerCommission )async{
+      String loanId,int totalBrokerCommission )async{
     Map<String,dynamic> _customerData = {};
          _customerData =  {"CustomerId":cusPhoneNumber.toString(),"LoanId":loanId};
-         print(_customerData);
+         //print(_customerData);
     await    collectionCollectionReference.doc(projectName).collection(innerCollection).doc(allocatedNumber.toString()).set({
       "Number":int.parse(allocatedNumber),// house or shop number
       "SquareFeet":squareFeet,
@@ -221,7 +231,7 @@ class ProjectsDatabaseService{
       "StartDate":startingDateOfLoan,
       'LoanEndingDate':_emi.last,
       "BrokerReference":brokerReference,
-      "BrokerCommission":brokerCommission,
+      "BrokerCommission":totalBrokerCommission,
       "EMIDuration":emiDuration, //
       "PerMonthEMI":perMonthEMI,
       'CustomerId':cusPhoneNumber.toString(),
@@ -233,23 +243,110 @@ class ProjectsDatabaseService{
   }
 
   Future addCommissionDetails(String projectName,String  innerCollection,String allocatedNumber,
-     int cusPhoneNumber, String brokerReference,int brokerCommission,String loanId){
+     int cusPhoneNumber,String customerName, String brokerReference,int totalBrokerCommission,String loanId, Timestamp bookingDate, List<int> brokerageList,List<Timestamp> _emi)async{
     try{
-      if(brokerReference != null ||brokerReference != ''){
-        brokerCollectionReference.doc(brokerReference).collection('Commission').doc(loanId).set({
+      final databaseQuery =brokerCollectionReference.doc(brokerReference).collection('Commission');
+      final projectDatabaseQuery =collectionCollectionReference.doc(projectName).collection('Income');
+      List<String> docInCollection = [];
+      List<String> docInProject  = [];
+      final docProject = await projectDatabaseQuery.get();
+      for(int i =0;i<docProject.docs.length;i++){
+        docInProject.add(docProject.docs[i].id);
+      }
+
+      for(int i= 0;i<_emi.length;i++){
+
+
+        DateTime _incomeDate = _emi[i].toDate();
+        String _month = "${_incomeDate.month}-${_incomeDate.year}";
+
+        Map<String,dynamic> _commissionAndDate = {
           "LoanId":loanId,
           "Property":"${projectName}/${innerCollection}/${allocatedNumber}",
-          "Commission":brokerCommission,
+          "Commission":brokerageList[i],
           "CustomerId":cusPhoneNumber,
+          "BookingDate":bookingDate,
+          "EMIDate":_emi[i],
+          "CustomerName":customerName,
+          'ProjectName':projectName,
+          "IsPay":false,
+        };
 
 
 
-        });
+        if(docInProject.contains(_month)== true){
+          //print('doc exist');
+          projectDatabaseQuery.doc(_month).update({
+            "Commission":FieldValue.arrayUnion([_commissionAndDate])
+          });
+        }
+        else{
+          DateTime emiMonth= DateTime(_incomeDate.year,_incomeDate.month,1);
+          Timestamp monthTimeStamp = Timestamp.fromDate(emiMonth);
+          projectDatabaseQuery.doc(_month).set({
+            "Commission":FieldValue.arrayUnion([_commissionAndDate]),
+            "MonthTimeStamp":monthTimeStamp
+          });
+          docInProject.add(_month);
+        }
+      }
+
+
+      if(brokerReference != null ||brokerReference != ''){
+        final totalDoc = await databaseQuery.get();
+        for(int i =0;i<totalDoc.docs.length;i++){
+          docInCollection.add(totalDoc.docs[i].id);
+        }
+      //print("list of doc =${docInCollection}");
+       for(int i= 0;i<_emi.length;i++){
+         DateTime _emiDate = _emi[i].toDate();
+         String _month = "${_emiDate.month}-${_emiDate.year}";
+         //print( _month);
+         Map<String,dynamic> _commissionAndDate = {
+           "LoanId":loanId,
+           "Property":"${projectName}/${innerCollection}/${allocatedNumber}",
+           "Commission":brokerageList[i],
+           "CustomerId":cusPhoneNumber,
+           "BookingDate":bookingDate,
+           "EMIDate":_emi[i],
+           "CustomerName":customerName,
+           'ProjectName':projectName,
+           "IsPay":false,
+         };
+   // //print('result = ${docInCollection.contains(_month)}');
+         if(docInCollection.contains(_month)== true){
+          //print('doc exist');
+           databaseQuery.doc(_month).update({
+             "Commission":FieldValue.arrayUnion([_commissionAndDate])
+           });
+         }
+         else{
+           //print('doc not exist');
+           DateTime emiMonth= DateTime(_emiDate.year,_emiDate.month,1);
+           Timestamp monthTimeStamp = Timestamp.fromDate(emiMonth);
+           databaseQuery.doc(_month).set({
+             "Commission":FieldValue.arrayUnion([_commissionAndDate]),
+             "MonthTimeStamp":monthTimeStamp
+           });
+           docInCollection.add(_month);
+         }
+       }
+
+        // brokerCollectionReference.doc(brokerReference).collection('Commission').doc(loanId).set({
+        //   "LoanId":loanId,
+        //   "Property":"${projectName}/${innerCollection}/${allocatedNumber}",
+        //   "Commission":totalBrokerCommission,
+        //   "CustomerId":cusPhoneNumber,
+        //   "BookingDate":bookingDate,
+        //   "CustomerName":customerName
+        //
+        //
+        // });
       }
     }
     catch (e){
-      print("Erro in addCommissionDetails");
-      print(e.toString());
+      //print("Erro in addCommissionDetails");
+      //print(e.toString());
     }
   }
 
@@ -272,7 +369,7 @@ class ProjectsDatabaseService{
   }
   for(int i =0;i <structure.length;i++ ){
     structure[i].toMap();
-    print(structure[i].toMap());
+    //print(structure[i].toMap());
     await  collectionCollectionReference.doc(projectName).update({
 
       'Structure':FieldValue.arrayUnion([structure[i].toMap()]),
@@ -349,7 +446,7 @@ class ProjectsDatabaseService{
       res.add(buildingStructure[i].floorsandflats['BuildingName']);
     }
       res.sort((a,b)=>a.compareTo(b));
-    print(res);
+    //print(res);
 
     // store reference   in alphabetical order
 for(int i = 0;i<res.length;i++){
@@ -424,7 +521,11 @@ for(int i = 0;i<res.length;i++){
                     "IsActive":true,
                     "Password":password,
                     "RemainingEMI":FieldValue.arrayUnion([])
-
+                  });
+                  DateTime now = DateTime.now();
+                  String _docName =  "${now.month}-${now.year}";
+                  brokerCollectionReference.doc(uid).collection("Commission").doc(_docName).set({
+                    'Commission':FieldValue.arrayUnion([])
                   });
 
 
@@ -433,8 +534,8 @@ for(int i = 0;i<res.length;i++){
 
       }
       catch(e){
-        print("Method name =  brokerData()");
-        print(e.toString());
+        //print("Method name =  brokerData()");
+        //print(e.toString());
       }
     }
   Future updateBrokerData (String uid ,String name ,int number,int alterNativeNumber,File image,String password,bool isActive,String imageUrl)async{
@@ -478,8 +579,8 @@ for(int i = 0;i<res.length;i++){
 
     }
     catch(e){
-      print("Method name =  brokerData()");
-      print(e.toString());
+      //print("Method name =  brokerData()");
+      //print(e.toString());
     }
   }
 
@@ -490,12 +591,12 @@ for(int i = 0;i<res.length;i++){
         return true;
        }
        else{
-         print('fas;e');
+         //print('fas;e');
          return false;
        }
       }
       catch(e){
-        print(e.toString());
+        //print(e.toString());
       }
     }
 

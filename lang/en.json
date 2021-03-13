@@ -118,5 +118,15 @@
   "CommissionType": "Commission Type",
   "BrokerCommission": "Broker Commission",
   "BrokerName": "Broker Name",
-  "Clients": "Clients"
+  "Clients": "Clients",
+  "SalesDetails": "Sales Details",
+  "Commission": "Commission",
+  "Property": "Property",
+  "TotalAmount":"Total Amount",
+    "FirstBrokerage": "First Brokerage",
+  "AverageBrokerage": "Average Brokerage",
+  "FinalBrokerage": "Final Brokerage",
+  "EMIDate": "EMI Date",
+  "ReceivedAmount": "Received Amount"
+
 }

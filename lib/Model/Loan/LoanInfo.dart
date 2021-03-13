@@ -14,6 +14,7 @@ class SinglePropertiesLoanInfo{
   String relation;
   int amount;
 
+
   SinglePropertiesLoanInfo({
     @required  this.emiId,
   @required this.installmentDate,
@@ -26,6 +27,7 @@ class SinglePropertiesLoanInfo{
     @required this.receiverName,
   @required this.relation,
     @required this.amount,
+
   });
   factory SinglePropertiesLoanInfo.of(DocumentSnapshot snapshot){
     print(snapshot['InstallmentDate']);
@@ -41,6 +43,7 @@ class SinglePropertiesLoanInfo{
       receiverName: snapshot['ReceiverName'],
       relation: snapshot['Relation'],
       amount: snapshot['Amount'],
+
 
 
     );

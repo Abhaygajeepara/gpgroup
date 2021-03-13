@@ -36,11 +36,11 @@ class _BrokerState extends State<Broker> {
                   child: ListTile(
                     onTap: ()async{
 
-
+                      _projectRetrieve.setBroker(snapshot.data[index].id);
                       return   await Navigator.push(
                         context,
                         PageRouteBuilder(
-                          pageBuilder: (_, __, ___) => BrokerProfile(brokerUid:snapshot.data[index].id ,),
+                          pageBuilder: (_, __, ___) => BrokerProfile(),
                           transitionDuration: Duration(seconds: 0),
                         ),
                       );

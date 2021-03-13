@@ -265,6 +265,16 @@ List<SinglePropertiesLoanInfo> _listLoanData (QuerySnapshot querySnapshot){
       }).toList();
 }
 
+List<BrokerSaleDetails> _brokerSales(QuerySnapshot snapshot){
+     return  snapshot.docs.map((e) {
+        return BrokerSaleDetails.of(e);
+      }).toList();
+}
+Stream<List<BrokerSaleDetails>> get BROKERSALESDETAILS{
+      print(brokerId);
+      return brokerReference.doc(brokerId).collection('Commission').orderBy("MonthTimeStamp",descending: false).snapshots().map(_brokerSales);
+}
+
 }
 
 

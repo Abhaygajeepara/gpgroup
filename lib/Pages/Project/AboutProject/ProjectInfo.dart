@@ -103,38 +103,72 @@ class _ProjectInfoState extends State<ProjectInfo> {
           }
         }
       ),
+
       bottomNavigationBar:  Theme(
         data: Theme.of(context).copyWith(
         primaryColor: CommonAssets.bottomBarActiveButtonColor
     ),
     child:
 
-    isInformationPage?Padding(
-      padding:  EdgeInsets.all(8.0),
-      child: RaisedButton.icon(
-        shape: StadiumBorder(),
-       // color: Theme.of(context).primaryColor,
-          label: Text(
-            AppLocalizations.of(context).translate('ViewSite'),
-            style: TextStyle(
-                color: CommonAssets.buttonTextColor,
-              fontSize: size.height *0.03,
-              fontWeight: FontWeight.bold
+    isInformationPage?Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding:  EdgeInsets.all(8.0),
+          child: RaisedButton.icon(
+            shape: StadiumBorder(),
+            // color: Theme.of(context).primaryColor,
+            label: Text(
+              AppLocalizations.of(context).translate('ViewSite'),
+              style: TextStyle(
+                  color: CommonAssets.buttonTextColor,
+                  fontSize: size.height *0.03,
+                  fontWeight: FontWeight.bold
+              ),
             ),
-          ),
-        onPressed: (){
-          setState(() {
-            isInformationPage = false;
+            onPressed: (){
+              setState(() {
+                isInformationPage = false;
 
-          });
-        },
-        icon: Icon(
-            Icons.construction,
-        size: size.height *0.03,
-          color: CommonAssets.buttonTextColor,
+              });
+            },
+            icon: Icon(
+              Icons.construction,
+              size: size.height *0.03,
+              color: CommonAssets.buttonTextColor,
+            ),
+            //label: AppLocalizations.of(context).translate('Home'),
+          ),
         ),
-        //label: AppLocalizations.of(context).translate('Home'),
-      ),
+        Padding(
+          padding:  EdgeInsets.all(8.0),
+          child: RaisedButton.icon(
+            shape: StadiumBorder(),
+            // color: Theme.of(context).primaryColor,
+            label: Text(
+              AppLocalizations.of(context).translate('ViewSite'),
+              style: TextStyle(
+                  color: CommonAssets.buttonTextColor,
+                  fontSize: size.height *0.03,
+                  fontWeight: FontWeight.bold
+              ),
+            ),
+            onPressed: (){
+              setState(() {
+                isInformationPage = false;
+
+              });
+            },
+            icon: Icon(
+              Icons.construction,
+              size: size.height *0.03,
+              color: CommonAssets.buttonTextColor,
+            ),
+            //label: AppLocalizations.of(context).translate('Home'),
+          ),
+        )
+      ],
     ):Container(
       height: 0,
     ),
@@ -435,7 +469,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                   await projectProvider.setProperties(snapshot.data[index].cusList[_indexFormList].loanReferenceCollectionName);
                                   Navigator.push(context, PageRouteBuilder(
                                     //    pageBuilder: (_,__,____) => BuildingStructure(),
-                                    pageBuilder: (_,__,___)=> CustomerDetails(customerData: snapshot.data[index].cusList[_indexFormList],),
+                                    pageBuilder: (_,__,___)=> LoanInfo(customerData: snapshot.data[index].cusList[_indexFormList],),
                                     transitionDuration: Duration(milliseconds: 0),
                                   ));
                                 }
@@ -563,7 +597,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                      print('id onfcustomer = ${snapshot.data[index].cusList[_indexFormList].id}');
                                     Navigator.push(context, PageRouteBuilder(
                                       //    pageBuilder: (_,__,____) => BuildingStructure(),
-                                      pageBuilder: (_,__,___)=> CustomerDetails(customerData: snapshot.data[index].cusList[_indexFormList],),
+                                      pageBuilder: (_,__,___)=> LoanInfo(customerData: snapshot.data[index].cusList[_indexFormList],),
                                       transitionDuration: Duration(milliseconds: 0),
                                     ));
                                    }
@@ -700,7 +734,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                                 await projectProvider.setProperties( snapshot.data[index].cusList[_indexFormList].loanReferenceCollectionName);
                                                 Navigator.push(context, PageRouteBuilder(
                                                   //    pageBuilder: (_,__,____) => BuildingStructure(),
-                                                  pageBuilder: (_,__,___)=> CustomerDetails(customerData: snapshot.data[index].cusList[_indexFormList],),
+                                                  pageBuilder: (_,__,___)=> LoanInfo(customerData: snapshot.data[index].cusList[_indexFormList],),
                                                   transitionDuration: Duration(milliseconds: 0),
                                                 ));
                                               }
@@ -850,7 +884,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
 
                         Navigator.push(context, PageRouteBuilder(
                           //    pageBuilder: (_,__,____) => BuildingStructure(),
-                          pageBuilder: (_,__,___)=> CustomerDetails(customerData: projectData.cusList[indexCus]),
+                          pageBuilder: (_,__,___)=> LoanInfo(customerData: projectData.cusList[indexCus]),
                           transitionDuration: Duration(milliseconds: 0),
                         ));
                       }
@@ -945,7 +979,7 @@ class _ProjectInfoState extends State<ProjectInfo> {
                                 await projectProvider.setProperties(projectData.cusList[flatIndex].loanReferenceCollectionName);
                                 Navigator.push(context, PageRouteBuilder(
                                   //    pageBuilder: (_,__,____) => BuildingStructure(),
-                                  pageBuilder: (_,__,___)=> CustomerDetails(customerData: projectData.cusList[flatIndex]),
+                                  pageBuilder: (_,__,___)=> LoanInfo(customerData: projectData.cusList[flatIndex]),
                                   transitionDuration: Duration(milliseconds: 0),
                                 ));
                               }

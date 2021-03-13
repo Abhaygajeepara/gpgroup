@@ -24,7 +24,7 @@ class _AddBrokerState extends State<AddBroker> {
   bool loading = false;
   String error ;
   String password;
-  bool isVisible = false;
+  bool isVisible = true;
 
   getImage(ImageSource source)async{
     PickedFile _pick = await ImagePicker().getImage(source: source);

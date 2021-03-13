@@ -11,14 +11,14 @@ import 'package:gpgroup/Model/Project/InnerData.dart';
 import 'package:gpgroup/Service/Database/Retrieve/ProjectDataRetrieve.dart';
 import 'package:gpgroup/app_localization/app_localizations.dart';
 import 'package:provider/provider.dart';
-class CustomerDetails extends StatefulWidget {
+class LoanInfo extends StatefulWidget {
   CustomerData customerData;
-  CustomerDetails({@required this.customerData});
+  LoanInfo({@required this.customerData});
   @override
-  _CustomerDetailsState createState() => _CustomerDetailsState();
+  _LoanInfoState createState() => _LoanInfoState();
 }
 
-class _CustomerDetailsState extends State<CustomerDetails> {
+class _LoanInfoState extends State<LoanInfo> {
   final  _formKey = GlobalKey<FormState>();
   bool emiPage = false;
   @override
@@ -60,7 +60,8 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                       Divider(color: Theme.of(context).primaryColor,thickness:2 ,),
                       // customer information
                       ExpansionTile(
-
+                        //childrenPadding: EdgeInsets.all(8),
+                        //childrenPadding: EdgeInsets.all(8),
                         title: Text(
                           AppLocalizations.of(context).translate('CustomerInformation'),
                           style: TextStyle(
@@ -125,7 +126,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                       ),
                       // SizedBox(height: verticalSizeBox,),
                       ExpansionTile(
-
+                        childrenPadding: EdgeInsets.all(8),
                         title: Text(
                           AppLocalizations.of(context).translate('BrokerInformation'),
                           style: TextStyle(
@@ -185,7 +186,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                         ],
                       ),
                       ExpansionTile(
-
+                        childrenPadding: EdgeInsets.all(8),
                         title: Text(
                           AppLocalizations.of(context).translate('PropertyInformation'),
                           style: TextStyle(
@@ -259,7 +260,7 @@ class _CustomerDetailsState extends State<CustomerDetails> {
                         ],
                       ),
                       ExpansionTile(
-
+                        childrenPadding: EdgeInsets.all(8),
                         title: Text(
                           AppLocalizations.of(context).translate('LoanInformation'),
                           style: TextStyle(
